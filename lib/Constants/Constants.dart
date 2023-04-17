@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 
 class Constants{
+    //regular expressions
+    static  RegExp emailRegex =  RegExp(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
+    static  RegExp passwordRegex = RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
     //Authentication constants
     static const String email = "email";
     static const String password = "password";

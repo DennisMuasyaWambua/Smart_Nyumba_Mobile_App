@@ -7,7 +7,11 @@ import '../auth_repository.dart';
 
 class LoginBloc extends Bloc<LoginEvent,LoginState>{
   final AuthRepository? authRepo;
-  LoginBloc({this.authRepo}):super(LoginState());
+  LoginBloc({this.authRepo}):super(LoginState()){
+    on <LoginEvent>(
+        (event,emit){}
+    );
+  }
 
  @override
   Stream<LoginState>mapEventToState(LoginEvent event)async*{

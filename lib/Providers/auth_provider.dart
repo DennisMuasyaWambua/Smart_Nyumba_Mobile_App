@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class Auth{
+class Auth with ChangeNotifier{
   Future<LoginResponseMessage> login(String email, password) async {
     const headers = {
       'Content-Type': 'application/json',
@@ -36,6 +36,6 @@ class Auth{
       log(e.toString(), name: "Exception message from login");
       throw Exception(e.toString());
     }
-
+    notifyListeners();
   }
 }

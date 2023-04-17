@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_nyumba/Authentication/auth_repository.dart';
 import 'package:smart_nyumba/Constants/Logo.dart';
 import 'package:smart_nyumba/Providers/auth_provider.dart';
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_nyumba/Authentication/register/register.dart';
 
 import 'package:smart_nyumba/Constants/Logo.dart';
 import 'package:smart_nyumba/Widgets/AuthButton.dart';
@@ -31,65 +32,80 @@ class _LoginState extends State<Login> {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
-            image:DecorationImage(
+            image: DecorationImage(
                 image: AssetImage("assets/images/smart_nyumba.jpeg"),
-                fit: BoxFit.cover
-            ),
-
+                fit: BoxFit.cover),
           ),
           child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _loginForm(),
-
-
             ],
           ),
         ),
       ),
     );
   }
-  Widget _emailField(){
-      return TextFormField(
-        controller: _emailController,
-        decoration: InputDecoration(
-            icon: Icon(Icons.mail),
-            hintText: Constants.email
-        ),
-      );
-  }
-  Widget _passwordField(){
-    return TextFormField(
 
-      obscureText:_passwordVisible ,
+  Widget _emailField() {
+    return TextFormField(
+      controller: _emailController,
+      decoration:
+          InputDecoration(icon: Icon(Icons.mail), hintText: Constants.email),
+    );
+  }
+
+  Widget _passwordField() {
+    return TextFormField(
+      obscureText: _passwordVisible,
       controller: _passwordController,
       decoration: InputDecoration(
           icon: Icon(Icons.security),
-          suffixIcon: InkWell(onTap: _tooglePasswordVisibility,child: _passwordVisible?Icon(Icons.visibility):Icon(Icons.visibility_off)),
-          hintText: Constants.password
-      ),
+          suffixIcon: InkWell(
+              onTap: _tooglePasswordVisibility,
+              child: _passwordVisible
+                  ? Icon(Icons.visibility)
+                  : Icon(Icons.visibility_off)),
+          hintText: Constants.password),
     );
   }
-  Widget _buttonSubmitField(){
-      return
-      AuthButton(
-        onClick: (){
-          email = _emailController.text;
-          password = _passwordController.text;
-          print(email);
-          print(password);
-          final login = Auth().login(email, password);
 
-          login.then((value) {
-            print(value.message);
-          });
-        },
-        bgColor: Constants.buttonColor,
-        text: Constants.login,
-        textColor: Colors.white,
-      );
+  Widget _buttonSubmitField() {
+    return AuthButton(
+      onClick: () {
+        email = _emailController.text;
+        password = _passwordController.text;
+        print(email);
+        print(password);
+        final login = Auth().login(email, password);
+
+        login.then((value) {
+          print(value.message);
+        });
+      },
+      bgColor: Constants.buttonColor,
+      text: Constants.login,
+      textColor: Colors.white,
+    );
   }
-  Widget _loginForm(){
+
+  Widget _registerPage() {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Center(
+          child: GestureDetector(
+              onTap: () {
+                Navigator.pushReplacement(context, new MaterialPageRoute(builder: (_)=>Register()));
+              },
+              child: Text(
+                Constants.joinMessage + '' + Constants.register,
+                style: GoogleFonts.publicSans(
+                    color: Constants.buttonColor, fontSize: 13),
+              ))),
+    );
+  }
+
+  Widget _loginForm() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: Card(
@@ -98,24 +114,28 @@ class _LoginState extends State<Login> {
           padding: const EdgeInsets.all(8.0),
           child: Form(
             key: _formKey,
-              child:Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Logo(height: 90, width: 90,),
-                  _emailField(),
-                  _passwordField(),
-                  _buttonSubmitField()
-                ],
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Logo(
+                  height: 90,
+                  width: 90,
+                ),
+                _emailField(),
+                _passwordField(),
+                _buttonSubmitField(),
+                _registerPage()
+              ],
+            ),
           ),
         ),
       ),
     );
   }
-  void _tooglePasswordVisibility(){
+
+  void _tooglePasswordVisibility() {
     setState(() {
       _passwordVisible = !_passwordVisible;
     });
-
   }
 }

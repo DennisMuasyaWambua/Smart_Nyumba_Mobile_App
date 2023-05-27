@@ -1,16 +1,19 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:smart_nyumba/Models/login_response_message.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:smart_nyumba/Models/register_response_message.dart';
 import 'dart:convert';
 
-enum loginStatus { loggedIn, InvalidDataProvided, wronCredentials }
+import 'package:smart_nyumba/Tenant/tenantDashboard.dart';
 
-class Auth with ChangeNotifier {
+import '../Constants/Constants.dart';
+
+class Auth {
   Future<LoginResponseMessage> login(String email, password) async {
-    String loginEndpoint =
-        "https://b5e4-41-80-116-212.ngrok-free.app/apps/api/v1/user/auth/user-login/";
+    String loginEndpoint = "${Constants.USER_BASEURL}/auth/user-login/";
 
     try {
       final response = await http.post(Uri.parse(loginEndpoint),
@@ -24,6 +27,7 @@ class Auth with ChangeNotifier {
       if (loginResponseMessage.status == true) {
         log(loginResponseMessage.status.toString(), name: "Status");
         log(loginResponseMessage.message.toString(), name: "Success message");
+
         return loginResponseMessage;
       } else {
         log(loginResponseMessage.status.toString(), name: "Status");
@@ -38,7 +42,30 @@ class Auth with ChangeNotifier {
     }
   }
 
-  void register(String email, password, confirmPassword) {
-    String registerEndpoint = "";
+  Future<RegisterResponse> register(String email, firstName, lastName, idNumber,
+      blockNumber, houseNumber, mobileNumber, password) async {
+    String registerEndpoint = "${Constants.USER_BASEURL}/auth/user-register";
+    try {
+      Uri register = Uri.parse(registerEndpoint);
+      final response = await http.post(register, body: {
+        'email': email,
+        'firstName': firstName,
+        'lastName': lastName,
+        'idNumber': idNumber,
+        'blockNumber': blockNumber
+      });
+      RegisterResponse registerResponse =
+          RegisterResponse.fromJson(jsonDecode(response.body));
+
+      if (registerResponse.status == true) {
+        return registerResponse;
+      } else {
+        return registerResponse;
+      }
+    } catch (e) {
+      // Navigator.pushNamed(context, "/otp");
+      log(e.toString(), name: "Exception message from user register");
+      throw Exception(e.toString());
+    }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:get/get.dart';
@@ -9,6 +11,8 @@ import 'package:smart_nyumba/Constants/Logo.dart';
 import 'package:smart_nyumba/Tenant/tenantDashboard.dart';
 import 'package:smart_nyumba/Widgets/AuthButton.dart';
 
+import '../../Providers/auth_provider.dart';
+
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
 
@@ -18,11 +22,23 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   String email = " ";
+  String FirstName = " ";
+  String LastName = " ";
+  String IdNumber = " ";
+  String BlockNumber = " ";
+  String HouseNumber = " ";
+  String MobileNumber = " ";
   String password = " ";
   String confirmPassword = " ";
   bool _isVisible = true;
   bool _isConfirmVisible = true;
   var _emailController = TextEditingController();
+  var _firstNameController = TextEditingController();
+  var _lastNameController = TextEditingController();
+  var _idNumberController = TextEditingController();
+  var _blockNumberController = TextEditingController();
+  var _houseNumberController = TextEditingController();
+  var _mobileNumberController = TextEditingController();
   var _passwordController = TextEditingController();
   var _confirmPasswordController = TextEditingController();
   @override
@@ -40,7 +56,7 @@ class _RegisterState extends State<Register> {
             child: Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(40.0, 100, 10, 5),
+                  padding: const EdgeInsets.fromLTRB(40.0, 5.0, 10, 5),
                   child: Neumorphic(
                     style: NeumorphicStyle(
                         shape: NeumorphicShape.concave,
@@ -51,19 +67,19 @@ class _RegisterState extends State<Register> {
                         lightSource: LightSource.topLeft,
                         intensity: 20),
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.85,
-                      height: MediaQuery.of(context).size.height * 0.7,
+                      width: MediaQuery.of(context).size.width * 0.90,
+                      height: MediaQuery.of(context).size.height * 0.95,
                       child: Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: 20),
+                            padding: const EdgeInsets.only(top: 5.0),
                             child: Logo(
                               height: 120,
                               width: 120,
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                            padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                             child: Text(
                               Constants.register,
                               style: GoogleFonts.publicSans(
@@ -71,13 +87,14 @@ class _RegisterState extends State<Register> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                            padding:
+                                const EdgeInsets.fromLTRB(2.0, 3.0, 2.0, 0),
                             child: TextFormField(
                               onSaved: (newValue) => email,
                               controller: _emailController,
                               decoration: InputDecoration(
                                 prefixIcon: Icon(
-                                  Icons.person,
+                                  Icons.mail,
                                   color: Color(0xfff4eaaf),
                                 ),
                                 hintText: Constants.email,
@@ -85,7 +102,91 @@ class _RegisterState extends State<Register> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                            padding: const EdgeInsets.fromLTRB(0, 3.0, 0, 0),
+                            child: TextFormField(
+                              onSaved: (newValue) => FirstName,
+                              controller: _firstNameController,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.person,
+                                  color: Color(0xfff4eaaf),
+                                ),
+                                hintText: Constants.firstName,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 3.0, 0, 0),
+                            child: TextFormField(
+                              onSaved: (newValue) => LastName,
+                              controller: _lastNameController,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.person,
+                                  color: Color(0xfff4eaaf),
+                                ),
+                                hintText: Constants.lastName,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 3.0, 0, 0),
+                            child: TextFormField(
+                              onSaved: (newValue) => IdNumber,
+                              controller: _idNumberController,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.credit_card_rounded,
+                                  color: Color(0xfff4eaaf),
+                                ),
+                                hintText: Constants.idNumber,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 3.0, 0, 0),
+                            child: TextFormField(
+                              onSaved: (newValue) => BlockNumber,
+                              controller: _blockNumberController,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.apartment_rounded,
+                                  color: Color(0xfff4eaaf),
+                                ),
+                                hintText: Constants.blockNumber,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 3.0, 0, 0),
+                            child: TextFormField(
+                              onSaved: (newValue) => HouseNumber,
+                              controller: _houseNumberController,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.house,
+                                  color: Color(0xfff4eaaf),
+                                ),
+                                hintText: Constants.houseNumber,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 3.0, 0, 0),
+                            child: TextFormField(
+                              onSaved: (newValue) => MobileNumber,
+                              controller: _mobileNumberController,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.phone,
+                                  color: Color(0xfff4eaaf),
+                                ),
+                                hintText: Constants.mobileNumber,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 3.0, 0, 0),
                             child: TextFormField(
                               onSaved: (newValue) => password,
                               controller: _passwordController,
@@ -104,7 +205,7 @@ class _RegisterState extends State<Register> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                            padding: const EdgeInsets.fromLTRB(0, 3.0, 0, 0),
                             child: TextFormField(
                               onSaved: (newValue) => confirmPassword,
                               controller: _confirmPasswordController,
@@ -123,24 +224,30 @@ class _RegisterState extends State<Register> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(3.0),
                             child: AuthButton(
                                 text: Constants.register,
                                 onClick: () {
-                                  //implement bloc state management
-                                  Navigator.pushReplacement(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (_)=>Otp()));
+                                  setState(() {
+                                    email = _emailController.text;
+                                    FirstName = _firstNameController.text;
+                                    LastName = _lastNameController.text;
+                                    IdNumber = _idNumberController.text;
+                                    BlockNumber = _blockNumberController.text;
+                                    HouseNumber = _houseNumberController.text;
+                                    MobileNumber = _mobileNumberController.text;
+                                    password = _passwordController.text;
+                                  });
+                           
+                                  Navigator.pushNamed(context, '/otp');
+                                
                                 },
                                 bgColor: Constants.buttonColor,
                                 textColor: Colors.white),
                           ),
                           GestureDetector(
                             onTap: () {
-                              //Transitioning using Get
-                              // Get.to(()=>const Register(),transition: Transition.fade,duration: Duration(seconds: 1));
-                              
+                            
                             },
                             child: Text(
                               Constants.login,

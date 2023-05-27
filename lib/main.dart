@@ -1,16 +1,14 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:provider/provider.dart';
-import 'package:smart_nyumba/Constants/Logo.dart';
-import 'package:smart_nyumba/Providers/auth_provider.dart';
 
 import 'Authentication/login/login.dart';
+import 'Authentication/otp.dart';
+import 'Authentication/register/register.dart';
+import 'Tenant/tenantDashboard.dart';
 
 void main() {
-  runApp(MultiProvider(providers:[ChangeNotifierProvider(create: (_)=>Auth())],child: const MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -51,7 +49,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return MaterialApp(
 
-      home:Login()
+      home:Login(),
+      routes: {
+        '/login':(context)=>Login(),
+        '/register':(context)=>Register(),
+        '/otp':(context) => Otp(),
+        '/tenantsDashboard':(context)=>TenantDashboard(),      
+
+      },
 
     );
   }

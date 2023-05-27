@@ -40,3 +40,4 @@ class LoginResponseMessage {
     "token_type": tokenType,
   };
 }
+

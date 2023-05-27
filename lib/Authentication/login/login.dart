@@ -4,11 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_nyumba/Authentication/register/register.dart';
 
 import 'package:smart_nyumba/Constants/Logo.dart';
+
 import 'package:smart_nyumba/Widgets/AuthButton.dart';
 import 'package:smart_nyumba/form_submission_status.dart';
 
 import '../../Constants/Constants.dart';
 import '../../Providers/auth_provider.dart';
+import '../../Tenant/tenantDashboard.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -81,6 +83,7 @@ class _LoginState extends State<Login> {
 
         login.then((value) {
           print(value.message);
+          Navigator.push(context, new MaterialPageRoute(builder: (_)=>TenantDashboard()));
         });
       },
       bgColor: Constants.buttonColor,

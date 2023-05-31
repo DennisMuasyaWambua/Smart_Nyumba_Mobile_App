@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_nyumba/Authentication/login/login.dart';
 import 'package:smart_nyumba/Constants/Constants.dart';
-import 'package:smart_nyumba/Models/send_otp.dart';
 import 'package:smart_nyumba/Providers/auth_provider.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/Widgets/AuthButton.dart';

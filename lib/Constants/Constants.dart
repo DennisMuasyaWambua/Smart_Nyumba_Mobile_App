@@ -40,6 +40,14 @@ class Constants {
   static const purple = Color(0xff6246ea);
 
   // URL constants
-  static const String USER_BASEURL =
-      "https://82b3-41-80-117-42.ngrok-free.app/apps/api/v1/user/";
+
+  //authentication related constants
+  static const String AUTHENTICATION_BASE_URL =
+      "http://54.170.27.114/apps/user/api/v1/auth";
+  static const String LOGIN_URL = "$AUTHENTICATION_BASE_URL/user-login/";
+  static const String REGISTER_URL = "$AUTHENTICATION_BASE_URL/user-register/";
+  static const String VERIFY_OTP =
+      "$AUTHENTICATION_BASE_URL/user-register-verification/";
+
+  static const String RESEND_OTP = "$AUTHENTICATION_BASE_URL/user-resend-otp/";
 }

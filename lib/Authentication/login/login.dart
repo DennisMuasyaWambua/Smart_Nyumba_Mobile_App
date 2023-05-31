@@ -1,12 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_nyumba/Authentication/register/register.dart';
 
 import 'package:smart_nyumba/Constants/Logo.dart';
 
 import 'package:smart_nyumba/Widgets/AuthButton.dart';
-import 'package:smart_nyumba/form_submission_status.dart';
 
 import '../../Constants/Constants.dart';
 import '../../Providers/auth_provider.dart';
@@ -83,7 +83,26 @@ class _LoginState extends State<Login> {
 
         login.then((value) {
           print(value.message);
-          Navigator.push(context, new MaterialPageRoute(builder: (_)=>TenantDashboard()));
+
+          if (value.accessToken != null) {
+            Navigator.push(context,
+                new MaterialPageRoute(builder: (_) => TenantDashboard()));
+          } else {
+            Timer(const Duration(seconds: 3), () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    Future.delayed(new Duration(seconds: 3), () {
+                      Navigator.of(context).pop();
+                    });
+                    return AlertDialog(
+                      title: Text("ERROR"),
+                      content: Text("${value.message}"),
+                    );
+                  });
+              
+            });
+          }
         });
       },
       bgColor: Constants.buttonColor,
@@ -98,7 +117,8 @@ class _LoginState extends State<Login> {
       child: Center(
           child: GestureDetector(
               onTap: () {
-                Navigator.pushReplacement(context, new MaterialPageRoute(builder: (_)=>Register()));
+                Navigator.pushReplacement(
+                    context, new MaterialPageRoute(builder: (_) => Register()));
               },
               child: Text(
                 Constants.joinMessage + '' + Constants.register,

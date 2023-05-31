@@ -2,13 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:get/get.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_nyumba/Authentication/otp.dart';
 import 'package:smart_nyumba/Constants/Constants.dart';
 import 'package:smart_nyumba/Constants/Logo.dart';
-import 'package:smart_nyumba/Tenant/tenantDashboard.dart';
+import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/Widgets/AuthButton.dart';
 
 import '../../Providers/auth_provider.dart';
@@ -238,17 +235,55 @@ class _RegisterState extends State<Register> {
                                     MobileNumber = _mobileNumberController.text;
                                     password = _passwordController.text;
                                   });
-                           
+
+                                  SharedPrefrenceBuilder.setKey('email', email);
+
+                                  final register = Auth().register(
+                                      email,
+                                      FirstName,
+                                      LastName,
+                                      IdNumber,
+                                      BlockNumber,
+                                      HouseNumber,
+                                      MobileNumber,
+                                      password);
+
+                                  register.then((value) {
+                                    log(value.message.toString(),name:" register response message");
+                                    if (value.status =true) {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                           
+                                            
+                                            return AlertDialog(
+                                              title: Text("Success"),
+                                              content: Text("${value.message}"),
+                                            );
+                                          });
+                                          Navigator.pushNamed(context, "/otp");
+                                    } else {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            Future.delayed(
+                                                const Duration(seconds: 3), () {
+                                              Navigator.of(context).pop();
+                                            });
+                                            return AlertDialog(
+                                              title: Text("Error"),
+                                              content: Text("${value.message}"),
+                                            );
+                                          });
+                                    }
+                                  });
                                   Navigator.pushNamed(context, '/otp');
-                                
                                 },
                                 bgColor: Constants.buttonColor,
                                 textColor: Colors.white),
                           ),
                           GestureDetector(
-                            onTap: () {
-                            
-                            },
+                            onTap: () {},
                             child: Text(
                               Constants.login,
                               style: GoogleFonts.publicSans(

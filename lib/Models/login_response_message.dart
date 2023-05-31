@@ -2,7 +2,6 @@
 //
 //     final loginResponseMessage = loginResponseMessageFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 // LoginResponseMessage loginResponseMessageFromJson(String str) => LoginResponseMessage.fromJson(json.decode(str));

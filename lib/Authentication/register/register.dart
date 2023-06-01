@@ -225,6 +225,7 @@ class _RegisterState extends State<Register> {
                             child: AuthButton(
                                 text: Constants.register,
                                 onClick: () {
+                                  // SharedPrefrenceBuilder.init();
                                   setState(() {
                                     email = _emailController.text;
                                     FirstName = _firstNameController.text;
@@ -236,7 +237,17 @@ class _RegisterState extends State<Register> {
                                     password = _passwordController.text;
                                   });
 
-                                  SharedPrefrenceBuilder.setKey('email', email);
+                                  
+                                  String usermail = email.toString();
+                                  log(usermail.toString(),name: "mail from input");
+
+                                  SharedPrefrenceBuilder.setUserEmail(email);
+
+                                  var storedMail =
+                                      SharedPrefrenceBuilder().getUserEmail;
+
+                                  log(storedMail.toString(),
+                                      name: "Stored Mail");
 
                                   final register = Auth().register(
                                       email,
@@ -249,19 +260,19 @@ class _RegisterState extends State<Register> {
                                       password);
 
                                   register.then((value) {
-                                    log(value.message.toString(),name:" register response message");
-                                    if (value.status =true) {
+                                    log(value.message.toString(),
+                                        name: " register response message");
+                                    if (value.message !=
+                                        "User with this email already registered.") {
                                       showDialog(
                                           context: context,
                                           builder: (context) {
-                                           
-                                            
                                             return AlertDialog(
                                               title: Text("Success"),
                                               content: Text("${value.message}"),
                                             );
                                           });
-                                          Navigator.pushNamed(context, "/otp");
+                                      Navigator.pushNamed(context, "/otp");
                                     } else {
                                       showDialog(
                                           context: context,

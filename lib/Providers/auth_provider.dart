@@ -57,6 +57,7 @@ class Auth {
         "house_number": houseNumber,
         'password': password,
       });
+       log(response.statusCode.toString(), name: "Register status code");
       log(response.body.toString(), name: "Register response");
       RegisterResponse registerResponse =
           RegisterResponse.fromJson(jsonDecode(response.body));

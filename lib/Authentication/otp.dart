@@ -17,7 +17,14 @@ class Otp extends StatefulWidget {
 }
 
 class _OtpState extends State<Otp> {
-  var ot1, ot2, ot3, ot4 = TextEditingController();
+  var ot1 = TextEditingController();
+  var ot2 = TextEditingController();
+  var ot3 = TextEditingController();
+  var ot4 = TextEditingController();
+  String box1 = '';
+  String box2 = '';
+  String box3 = '';
+  String box4 = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,25 +92,28 @@ class _OtpState extends State<Otp> {
                       onClick: () {
                         // verify the OTP field
                         // get email from shared prefferences
-                        String otp = '$ot1$ot2$ot3$ot4';
+                        setState(() {
+                          box1 = ot1.text;
+                          box2 = ot2.text;
+                          box3 = ot3.text;
+                          box4 = ot4.text;
+                        });
+                        String otp = '$box1$box2$box3$box4';
                         log(otp.toString(), name: "OTP NUMBER");
-                        var mail = SharedPrefrenceBuilder.getKey("email");
-                        log(mail.toString(), name: "mail from string");
-                        final SendOtp = Auth().sendOtp(mail, otp);
+                        var mail = SharedPrefrenceBuilder().getUserEmail;
+                         log(mail.toString(), name: "mail from storage");
+                        final SendOtp = Auth().sendOtp(mail.toString(), otp.toString());
 
                         // check
                         SendOtp.then((value) {
                           if (value.status = true) {
-
                             showDialog(
                                 context: context,
                                 builder: (context) {
-                             
-                                  return  AlertDialog(
-                                      title: Text("Success"),
-                                      content: Text("${value.message}"),
-                                    );
-                                  
+                                  return AlertDialog(
+                                    title: Text("Success"),
+                                    content: Text("${value.message}"),
+                                  );
                                 });
 
                             Navigator.pushNamed(context, "/login");
@@ -111,16 +121,13 @@ class _OtpState extends State<Otp> {
                             showDialog(
                                 context: context,
                                 builder: (context) {
-                             
-                                  return  AlertDialog(
-                                      title: Text("Error"),
-                                      content: Text("${value.message}"),
-                                    );
-                                  
+                                  return AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text("${value.message}"),
+                                  );
                                 });
                           }
                         });
-                        
                       },
                       bgColor: Constants.buttonColor,
                       textColor: Colors.white),

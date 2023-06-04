@@ -17,10 +17,13 @@ class _OtpFieldState extends State<OtpField> {
       height: 60,
       child: TextFormField(
         controller: numberInput,
+        onChanged: (value) {
+          value = numberInput.text;
+        },
         maxLength: 1,
         textAlign: TextAlign.center,
+        keyboardType: TextInputType.number,
         decoration: InputDecoration(
-            counterText: '',
             border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(8.0)),

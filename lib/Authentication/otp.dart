@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pinput/pinput.dart';
 import 'package:smart_nyumba/Authentication/login/login.dart';
 import 'package:smart_nyumba/Constants/Constants.dart';
+import 'package:smart_nyumba/Models/send_otp.dart';
 import 'package:smart_nyumba/Providers/auth_provider.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/Widgets/AuthButton.dart';
@@ -25,6 +27,17 @@ class _OtpState extends State<Otp> {
   String box2 = '';
   String box3 = '';
   String box4 = '';
+  var mail = SharedPrefrenceBuilder().getUserEmail;
+
+  final defaultPinTheme = PinTheme(
+      width: 56,
+      height: 60,
+      textStyle: const TextStyle(fontSize: 22, color: Colors.black),
+      decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.transparent)));
+  final List<String> Otp = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,25 +78,62 @@ class _OtpState extends State<Otp> {
                       image: DecorationImage(
                           image: AssetImage("assets/images/home.png"))),
                 ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.1,
-                    ),
-                    OtpField(numberInput: ot1),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    OtpField(numberInput: ot2),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    OtpField(numberInput: ot3),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    OtpField(numberInput: ot4)
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: [
+                      Pinput(
+                        length: 4,
+                        defaultPinTheme: defaultPinTheme,
+                        focusedPinTheme: defaultPinTheme.copyWith(
+                            decoration: defaultPinTheme.decoration!.copyWith(
+                                border:
+                                    Border.all(color: Constants.buttonColor))),
+                        onCompleted: (pin) {
+                          // int ot = pin as int;
+                          var authentication =
+                              Auth().sendOtp(mail.toString(), pin);
+
+                          authentication.then((value) {
+                            if (value.status = true) {
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => SimpleDialog(
+                                        title: Text(
+                                          "Activated",
+                                          style: GoogleFonts.urbanist(
+                                              color: Constants.buttonColor,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        children: [
+                                          Center(
+                                            child: Text("${value.message}"),
+                                          )
+                                        ],
+                                      ));
+                              Navigator.pushReplacementNamed(context, '/login');
+                            } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (_) => SimpleDialog(
+                                        title: Text(
+                                          "Failed",
+                                          style: GoogleFonts.urbanist(
+                                              color: Constants.buttonColor,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        children: [
+                                          Center(
+                                            child: Text("${value.message}"),
+                                          )
+                                        ],
+                                      ));
+                            }
+                          });
+                        },
+                      )
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -97,16 +147,21 @@ class _OtpState extends State<Otp> {
                           box2 = ot2.text;
                           box3 = ot3.text;
                           box4 = ot4.text;
+                          Otp.addAll([box1, box2, box3, box4]);
                         });
-                        String otp = '$box1$box2$box3$box4';
+                        String otp = "$box1$box2$box3$box4";
+                        List<int> digits = Otp.map(int.parse).toList();
+                        log(digits.toString(), name: "OTP NUMBER");
+                        var y = digits.join('');
+                        var code = int.parse(y);
                         log(otp.toString(), name: "OTP NUMBER");
-                        var mail = SharedPrefrenceBuilder().getUserEmail;
-                         log(mail.toString(), name: "mail from storage");
-                        final SendOtp = Auth().sendOtp(mail.toString(), otp.toString());
 
+                        log(mail.toString(), name: "mail from storage");
+                        final SendOtp = Auth().sendOtp(mail.toString(), y);
+                        log(code.toString(), name: "OTP CODE");
                         // check
                         SendOtp.then((value) {
-                          if (value.status = true) {
+                          if (value.status.toString() == true) {
                             showDialog(
                                 context: context,
                                 builder: (context) {

@@ -57,7 +57,7 @@ class Auth {
         "house_number": houseNumber,
         'password': password,
       });
-       log(response.statusCode.toString(), name: "Register status code");
+      log(response.statusCode.toString(), name: "Register status code");
       log(response.body.toString(), name: "Register response");
       RegisterResponse registerResponse =
           RegisterResponse.fromJson(jsonDecode(response.body));
@@ -77,6 +77,8 @@ class Auth {
   // send otp
   Future<SendOtp> sendOtp(String email, String otp) async {
     try {
+      log(email.toString(), name: "OTP EMAIL");
+      log(otp.toString(), name: "OTP CODE FROM BOXES");
       String otpVerificationUrl = Constants.VERIFY_OTP;
       Uri otpVerification = Uri.parse(otpVerificationUrl);
 
@@ -87,6 +89,7 @@ class Auth {
       SendOtp result = SendOtp.fromJson(jsonDecode(verifyOtp.body));
 
       if (result.status = true) {
+      
         return result;
       } else {
         return result;

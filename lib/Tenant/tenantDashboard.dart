@@ -21,11 +21,13 @@ class _TenantDashboardState extends State<TenantDashboard> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child:Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                    topBar(context),
                   welcomeMsg(context),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 10, 20.0, 10.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: notificationCards(context),
                   ),
                   servicesCard(context),
@@ -76,111 +78,100 @@ Material notificationCards(BuildContext context){
   return Material(
         child: Column(
           children: [
-            Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Card(
-                      color: Constants.buttonColor,
-                      elevation: 20,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Card(
+                  color: Constants.buttonColor,
+                  elevation: 20,
+                  child: Container(
+                    width: 150,
+                    height: 150,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.history_rounded,color: Colors.white,size: 35.0,),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(Constants.paymentHistory, style: GoogleFonts.hind(fontSize: 16, fontWeight: FontWeight.w500,color: Colors.white),),
+                        )
+                      ],
+                    ),
+
+                  )
+                ),
+                Card(
+                    color: Constants.serviceColor,
+                    elevation: 20,
+                    child: Container(
+                      width: 150,
+                      height: 150,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.account_balance,color: Colors.white,size: 35.0,),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(Constants.serviceChargeBalance, style: GoogleFonts.hind(fontSize: 12.5, fontWeight: FontWeight.w500,color: Colors.white),),
+                          ),
+                          Text("KES: 3000", style: GoogleFonts.hind(fontSize: 12, fontWeight: FontWeight.w500,color: Colors.white),)
+                        ],
+                      ),
+
+                    )
+                )
+              ],
+            ),
+
+            Row(
+              
+              children: [
+                // Paying service charge 
+                Card(
+                    color: Constants.paymentColor,
+                    elevation: 20,
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, new MaterialPageRoute(builder: (_)=>ServiceChargePayment()));
+                      },
                       child: Container(
                         width: 150,
                         height: 150,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.history_rounded,color: Colors.white,size: 35.0,),
+                            Icon(Icons.monetization_on,color: Colors.white,size: 35.0,),
                             Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Text(Constants.paymentHistory, style: GoogleFonts.hind(fontSize: 16, fontWeight: FontWeight.w500,color: Colors.white),),
+                              child: Text(Constants.payServiceCharge, style: GoogleFonts.hind(fontSize: 15, fontWeight: FontWeight.w500,color: Colors.white),),
                             )
                           ],
                         ),
 
-                      )
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Card(
-                          color: Constants.serviceColor,
-                          elevation: 20,
-                          child: Container(
-                            width: 150,
-                            height: 150,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.account_balance,color: Colors.white,size: 35.0,),
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(Constants.serviceChargeBalance, style: GoogleFonts.hind(fontSize: 12.5, fontWeight: FontWeight.w500,color: Colors.white),),
-                                ),
-                                Text("KES: 3000", style: GoogleFonts.hind(fontSize: 12, fontWeight: FontWeight.w500,color: Colors.white),)
-                              ],
-                            ),
-
-                          )
                       ),
                     )
-                  ],
                 ),
-              ),
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Card(
-                      color: Constants.paymentColor,
-                      elevation: 20,
-                      child: GestureDetector(
-                        onTap: (){
-                          Navigator.push(context, new MaterialPageRoute(builder: (_)=>ServiceChargePayment()));
-                        },
-                        child: Container(
-                          width: 150,
-                          height: 150,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.monetization_on,color: Colors.white,size: 35.0,),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Text(Constants.payServiceCharge, style: GoogleFonts.hind(fontSize: 15, fontWeight: FontWeight.w500,color: Colors.white),),
-                              )
-                            ],
+                Card(
+                    color: Constants.servicesColor,
+                    elevation: 20,
+                    child: Container(
+                      width: 150,
+                      height: 150,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.cleaning_services_outlined,color: Colors.white,size: 35.0,),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(Constants.service, style: GoogleFonts.hind(fontSize: 15, fontWeight: FontWeight.w500,color: Colors.white),),
                           ),
 
-                        ),
-                      )
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: Card(
-                        color: Constants.servicesColor,
-                        elevation: 20,
-                        child: Container(
-                          width: 150,
-                          height: 150,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.cleaning_services_outlined,color: Colors.white,size: 35.0,),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Text(Constants.service, style: GoogleFonts.hind(fontSize: 15, fontWeight: FontWeight.w500,color: Colors.white),),
-                              ),
+                        ],
+                      ),
 
-                            ],
-                          ),
-
-                        )
-                    ),
-                  )
-                ],
-              ),
+                    )
+                )
+              ],
             )
 
           ],

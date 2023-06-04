@@ -35,7 +35,7 @@ class Constants {
   //colors
   static const buttonColor = Color(0xffbc9f6d);
   static const serviceColor = Color(0xfff68070);
-  static const paymentColor = Color(0xff4cd964);  
+  static const paymentColor = Color(0xff4cd964);
   static const servicesColor = Color(0xff567df4);
   static const purple = Color(0xff6246ea);
 
@@ -50,4 +50,10 @@ class Constants {
       "$AUTHENTICATION_BASE_URL/user-register-verification/";
 
   static const String RESEND_OTP = "$AUTHENTICATION_BASE_URL/user-resend-otp/";
+
+  //PAYMENT related constants
+  static const String PAYMENT_BASE_URL =
+      "http://smartnyumba.com/apps/user/api/v1/services";
+  static const String PAY_SERVICE = "$PAYMENT_BASE_URL/pay-service/";
+  static const String MPESA_CALLBACK = "$PAYMENT_BASE_URL/mpesa-callback";
 }

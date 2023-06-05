@@ -133,65 +133,7 @@ class _OtpState extends State<Otp> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: AuthButton(
-                      text: "Verify",
-                      onClick: () {
-                        // verify the OTP field
-                        // get email from shared prefferences
-                        setState(() {
-                          box1 = ot1.text;
-                          box2 = ot2.text;
-                          box3 = ot3.text;
-                          box4 = ot4.text;
-                          Otp.addAll([box1, box2, box3, box4]);
-                        });
-                        String otp = "$box1$box2$box3$box4";
-                        List<int> digits = Otp.map(int.parse).toList();
-                        log(digits.toString(), name: "OTP NUMBER");
-                        var y = digits.join('');
-                        var code = int.parse(y);
-                        log(otp.toString(), name: "OTP NUMBER");
-
-                        log(mail.toString(), name: "mail from storage");
-                        final SendOtp = Auth().sendOtp(mail.toString(), y);
-                        log(code.toString(), name: "OTP CODE");
-                        // check
-                        SendOtp.then((value) {
-                          if (value.status.toString() == true) {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text("Success"),
-                                    content: Text("${value.message}"),
-                                  );
-                                });
-
-                            Navigator.pushNamed(context, "/login");
-                          } else {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text("${value.message}"),
-                                  );
-                                });
-                          }
-                        });
-                      },
-                      bgColor: Constants.buttonColor,
-                      textColor: Colors.white),
-                ),
-                Text(
-                  "${Constants.didntGetCode}",
-                  style: GoogleFonts.publicSans(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Constants.buttonColor),
-                ),
+               
               ],
             ),
           ),

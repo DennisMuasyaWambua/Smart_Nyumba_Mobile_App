@@ -8,19 +8,20 @@ import 'dart:convert';
 
 import '../Constants/Constants.dart';
 
-class Auth  {
+class Auth {
   // log in method
   Future<LoginResponseMessage> login(String email, password) async {
     String loginEndpoint = Constants.LOGIN_URL;
     log(loginEndpoint.toString(), name: "LOGIN URL");
-    log("${email.toString()}${password.toString()}",name: "PARAMETERS BEING  USED");
+    log("${email.toString()}${password.toString()}",
+        name: "PARAMETERS BEING  USED");
 
     try {
-      final response = await http.post(Uri.parse(loginEndpoint),
-          body: {'email': email.toString(), 'password': password.toString()});
+      var uri = Uri.parse(loginEndpoint);
+      final response = await http.post(uri, body: {'email': email, 'password': password});
       log(response.statusCode.toString(), name: "Status code");
       LoginResponseMessage loginResponseMessage =
-          LoginResponseMessage.fromJson(jsonDecode(response.body));
+          LoginResponseMessage.fromJson(json.decode(response.body));
       // print(loginResponseMessage.message);
       log(loginResponseMessage.message.toString(),
           name: "Response message from login");
@@ -37,7 +38,7 @@ class Auth  {
             message: "An error occurred", status: false);
       }
     } catch (e) {
-      log(e.toString(), name: "Exception message from login");
+      log("${Exception(e.toString())}" ,name: "Exception message from login");
       throw Exception(e.toString());
     }
   }

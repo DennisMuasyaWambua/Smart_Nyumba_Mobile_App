@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -52,8 +53,8 @@ class _LoginState extends State<Login> {
   Widget _emailField() {
     return TextFormField(
       controller: _emailController,
-      decoration:
-          const InputDecoration(icon: Icon(Icons.mail), hintText: Constants.email),
+      decoration: const InputDecoration(
+          icon: Icon(Icons.mail), hintText: Constants.email),
     );
   }
 
@@ -79,6 +80,8 @@ class _LoginState extends State<Login> {
         password = _passwordController.text;
         print(email);
         print(password);
+        log(email.toString(), name: "EMAIL PARAMETER AT LOGIN");
+        log(password.toString(), name: "PASSWORD PARAMETER AT LOGIN");
         final login = Auth().login(email, password);
 
         login.then((value) {
@@ -92,15 +95,13 @@ class _LoginState extends State<Login> {
               showDialog(
                   context: context,
                   builder: (context) {
-                    Future.delayed(const Duration(seconds: 3), () {
-                      Navigator.of(context).pop();
-                    });
+                    Navigator.of(context).pop();
+
                     return AlertDialog(
                       title: const Text("ERROR"),
                       content: Text(value.message),
                     );
                   });
-              
             });
           }
         });
@@ -117,8 +118,8 @@ class _LoginState extends State<Login> {
       child: Center(
           child: GestureDetector(
               onTap: () {
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => const Register()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (_) => const Register()));
               },
               child: Text(
                 '${Constants.joinMessage}${Constants.register}',

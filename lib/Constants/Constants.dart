@@ -43,7 +43,7 @@ class Constants {
 
   //authentication related constants
   static const String AUTHENTICATION_BASE_URL =
-      "http://smartnyumba.com/apps/user/api/v1/auth";
+      "https://smartnyumba.com/apps/user/api/v1/auth";
   static const String LOGIN_URL = "$AUTHENTICATION_BASE_URL/user-login/";
   static const String REGISTER_URL = "$AUTHENTICATION_BASE_URL/user-register/";
   static const String VERIFY_OTP =
@@ -53,7 +53,7 @@ class Constants {
 
   //PAYMENT related constants
   static const String PAYMENT_BASE_URL =
-      "http://smartnyumba.com/apps/user/api/v1/services";
+      "https://smartnyumba.com/apps/user/api/v1/services";
   static const String PAY_SERVICE = "$PAYMENT_BASE_URL/pay-service/";
   static const String MPESA_CALLBACK = "$PAYMENT_BASE_URL/mpesa-callback";
 }

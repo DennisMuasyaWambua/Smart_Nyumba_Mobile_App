@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: MyHomePage(),
     );
   }
@@ -44,12 +44,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Login(),
+      home: const Login(),
       routes: {
-        '/login': (context) => Login(),
-        '/register': (context) => Register(),
-        '/otp': (context) => Otp(),
-        '/tenantsDashboard': (context) => TenantDashboard(),
+        '/login': (context) => const Login(),
+        '/register': (context) => const Register(),
+        '/otp': (context) => const Otp(),
+        '/tenantsDashboard': (context) => const TenantDashboard(),
       },
     );
   }

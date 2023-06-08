@@ -8,15 +8,16 @@ import 'dart:convert';
 
 import '../Constants/Constants.dart';
 
-class Auth {
+class Auth  {
   // log in method
   Future<LoginResponseMessage> login(String email, password) async {
-    String loginEndpoint = "${Constants.LOGIN_URL}";
+    String loginEndpoint = Constants.LOGIN_URL;
     log(loginEndpoint.toString(), name: "LOGIN URL");
+    log("${email.toString()}${password.toString()}",name: "PARAMETERS BEING  USED");
 
     try {
       final response = await http.post(Uri.parse(loginEndpoint),
-          body: {'email': email, 'password': password});
+          body: {'email': email.toString(), 'password': password.toString()});
       log(response.statusCode.toString(), name: "Status code");
       LoginResponseMessage loginResponseMessage =
           LoginResponseMessage.fromJson(jsonDecode(response.body));
@@ -44,7 +45,7 @@ class Auth {
   // register method
   Future<RegisterResponse> register(String email, firstName, lastName, idNumber,
       blockNumber, houseNumber, mobileNumber, password) async {
-    String registerEndpoint = "${Constants.REGISTER_URL}";
+    String registerEndpoint = Constants.REGISTER_URL;
     try {
       Uri register = Uri.parse(registerEndpoint);
       final response = await http.post(register, body: {
@@ -89,14 +90,13 @@ class Auth {
       SendOtp result = SendOtp.fromJson(jsonDecode(verifyOtp.body));
 
       if (result.status = true) {
-      
         return result;
       } else {
         return result;
       }
     } catch (e) {
       log(e.toString(), name: "Exception message from OTP");
-      throw new Exception(e.toString());
+      throw Exception(e.toString());
     }
   }
 }

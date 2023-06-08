@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_nyumba/Constants/Constants.dart';
@@ -29,15 +28,15 @@ class _RegisterState extends State<Register> {
   String confirmPassword = " ";
   bool _isVisible = true;
   bool _isConfirmVisible = true;
-  var _emailController = TextEditingController();
-  var _firstNameController = TextEditingController();
-  var _lastNameController = TextEditingController();
-  var _idNumberController = TextEditingController();
-  var _blockNumberController = TextEditingController();
-  var _houseNumberController = TextEditingController();
-  var _mobileNumberController = TextEditingController();
-  var _passwordController = TextEditingController();
-  var _confirmPasswordController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _idNumberController = TextEditingController();
+  final _blockNumberController = TextEditingController();
+  final _houseNumberController = TextEditingController();
+  final _mobileNumberController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +44,7 @@ class _RegisterState extends State<Register> {
         home: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               image: DecorationImage(
                   image: AssetImage("assets/images/smart_nyumba.jpeg"),
                   fit: BoxFit.cover)),
@@ -64,13 +63,13 @@ class _RegisterState extends State<Register> {
                           color: Colors.white,
                           lightSource: LightSource.topLeft,
                           intensity: 20),
-                      child: Container(
+                      child: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.90,
                         height: MediaQuery.of(context).size.height,
                         child: Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 5.0),
                               child: Logo(
                                 height: 120,
                                 width: 120,
@@ -90,7 +89,7 @@ class _RegisterState extends State<Register> {
                               child: TextFormField(
                                 onSaved: (newValue) => email,
                                 controller: _emailController,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.mail,
                                     color: Color(0xfff4eaaf),
@@ -104,7 +103,7 @@ class _RegisterState extends State<Register> {
                               child: TextFormField(
                                 onSaved: (newValue) => FirstName,
                                 controller: _firstNameController,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.person,
                                     color: Color(0xfff4eaaf),
@@ -118,7 +117,7 @@ class _RegisterState extends State<Register> {
                               child: TextFormField(
                                 onSaved: (newValue) => LastName,
                                 controller: _lastNameController,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.person,
                                     color: Color(0xfff4eaaf),
@@ -132,7 +131,7 @@ class _RegisterState extends State<Register> {
                               child: TextFormField(
                                 onSaved: (newValue) => IdNumber,
                                 controller: _idNumberController,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.credit_card_rounded,
                                     color: Color(0xfff4eaaf),
@@ -146,7 +145,7 @@ class _RegisterState extends State<Register> {
                               child: TextFormField(
                                 onSaved: (newValue) => BlockNumber,
                                 controller: _blockNumberController,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.apartment_rounded,
                                     color: Color(0xfff4eaaf),
@@ -160,7 +159,7 @@ class _RegisterState extends State<Register> {
                               child: TextFormField(
                                 onSaved: (newValue) => HouseNumber,
                                 controller: _houseNumberController,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.house,
                                     color: Color(0xfff4eaaf),
@@ -174,7 +173,7 @@ class _RegisterState extends State<Register> {
                               child: TextFormField(
                                 onSaved: (newValue) => MobileNumber,
                                 controller: _mobileNumberController,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.phone,
                                     color: Color(0xfff4eaaf),
@@ -190,7 +189,7 @@ class _RegisterState extends State<Register> {
                                 controller: _passwordController,
                                 obscureText: _isVisible,
                                 decoration: InputDecoration(
-                                    prefixIcon: Icon(
+                                    prefixIcon: const Icon(
                                       Icons.lock,
                                       color: Color(0xfff4eaaf),
                                     ),
@@ -209,7 +208,7 @@ class _RegisterState extends State<Register> {
                                 controller: _confirmPasswordController,
                                 obscureText: _isConfirmVisible,
                                 decoration: InputDecoration(
-                                    prefixIcon: Icon(
+                                    prefixIcon: const Icon(
                                       Icons.lock,
                                       color: Color(0xfff4eaaf),
                                     ),
@@ -269,8 +268,8 @@ class _RegisterState extends State<Register> {
                                             context: context,
                                             builder: (context) {
                                               return AlertDialog(
-                                                title: Text("Success"),
-                                                content: Text("${value.message}"),
+                                                title: const Text("Success"),
+                                                content: Text(value.message),
                                               );
                                             });
                                         Navigator.pushNamed(context, "/otp");
@@ -283,8 +282,8 @@ class _RegisterState extends State<Register> {
                                                 Navigator.of(context).pop();
                                               });
                                               return AlertDialog(
-                                                title: Text("Error"),
-                                                content: Text("${value.message}"),
+                                                title: const Text("Error"),
+                                                content: Text(value.message),
                                               );
                                             });
                                       }

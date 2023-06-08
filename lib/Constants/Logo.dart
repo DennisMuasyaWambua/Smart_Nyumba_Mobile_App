@@ -9,7 +9,7 @@ class Logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Neumorphic(
-      style: NeumorphicStyle(
+      style: const NeumorphicStyle(
           shape: NeumorphicShape.concave,
           depth: 100,
           boxShape: NeumorphicBoxShape.circle(),
@@ -20,7 +20,7 @@ class Logo extends StatelessWidget {
       child: Container(
         height: height,
         width: width,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
 
             image: DecorationImage(
               image: AssetImage("assets/images/logo.png"),

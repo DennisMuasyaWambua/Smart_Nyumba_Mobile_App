@@ -22,8 +22,8 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String email = " ";
   String password = " ";
-  var _emailController = TextEditingController();
-  var _passwordController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _passwordVisible = true;
   final _formKey = GlobalKey<FormState>();
   @override
@@ -33,7 +33,7 @@ class _LoginState extends State<Login> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage("assets/images/smart_nyumba.jpeg"),
                 fit: BoxFit.cover),
@@ -53,7 +53,7 @@ class _LoginState extends State<Login> {
     return TextFormField(
       controller: _emailController,
       decoration:
-          InputDecoration(icon: Icon(Icons.mail), hintText: Constants.email),
+          const InputDecoration(icon: Icon(Icons.mail), hintText: Constants.email),
     );
   }
 
@@ -62,12 +62,12 @@ class _LoginState extends State<Login> {
       obscureText: _passwordVisible,
       controller: _passwordController,
       decoration: InputDecoration(
-          icon: Icon(Icons.security),
+          icon: const Icon(Icons.security),
           suffixIcon: InkWell(
               onTap: _tooglePasswordVisibility,
               child: _passwordVisible
-                  ? Icon(Icons.visibility)
-                  : Icon(Icons.visibility_off)),
+                  ? const Icon(Icons.visibility)
+                  : const Icon(Icons.visibility_off)),
           hintText: Constants.password),
     );
   }
@@ -86,18 +86,18 @@ class _LoginState extends State<Login> {
 
           if (value.accessToken != null) {
             Navigator.push(context,
-                new MaterialPageRoute(builder: (_) => TenantDashboard()));
+                MaterialPageRoute(builder: (_) => const TenantDashboard()));
           } else {
             Timer(const Duration(seconds: 3), () {
               showDialog(
                   context: context,
                   builder: (context) {
-                    Future.delayed(new Duration(seconds: 3), () {
+                    Future.delayed(const Duration(seconds: 3), () {
                       Navigator.of(context).pop();
                     });
                     return AlertDialog(
-                      title: Text("ERROR"),
-                      content: Text("${value.message}"),
+                      title: const Text("ERROR"),
+                      content: Text(value.message),
                     );
                   });
               
@@ -113,15 +113,15 @@ class _LoginState extends State<Login> {
 
   Widget _registerPage() {
     return Padding(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: Center(
           child: GestureDetector(
               onTap: () {
                 Navigator.pushReplacement(
-                    context, new MaterialPageRoute(builder: (_) => Register()));
+                    context, MaterialPageRoute(builder: (_) => const Register()));
               },
               child: Text(
-                Constants.joinMessage + '' + Constants.register,
+                '${Constants.joinMessage}${Constants.register}',
                 style: GoogleFonts.publicSans(
                     color: Constants.buttonColor, fontSize: 13),
               ))),
@@ -140,7 +140,7 @@ class _LoginState extends State<Login> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Logo(
+                const Logo(
                   height: 90,
                   width: 90,
                 ),

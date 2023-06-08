@@ -17,7 +17,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
     return Scaffold(
 
         body: MaterialApp(
-          home: Container(
+          home: SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child:Column(
@@ -44,7 +44,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
 //top Bar widget
 Material topBar(BuildContext context){
   return Material(
-    child: Container(
+    child: SizedBox(
         height:100,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -67,7 +67,7 @@ Material welcomeMsg(BuildContext context){
   return Material(
     child:Container(
       alignment: Alignment.centerLeft,
-      padding: EdgeInsets.fromLTRB(10.0, 3.0, 0, 5.0),
+      padding: const EdgeInsets.fromLTRB(10.0, 3.0, 0, 5.0),
       child: Text(Constants.welcomeMsg,style: GoogleFonts.hind(fontSize:30,fontWeight: FontWeight.bold,),),
     ),
   );
@@ -84,13 +84,13 @@ Material notificationCards(BuildContext context){
                 Card(
                   color: Constants.buttonColor,
                   elevation: 20,
-                  child: Container(
+                  child: SizedBox(
                     width: 150,
                     height: 150,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.history_rounded,color: Colors.white,size: 35.0,),
+                        const Icon(Icons.history_rounded,color: Colors.white,size: 35.0,),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Text(Constants.paymentHistory, style: GoogleFonts.hind(fontSize: 16, fontWeight: FontWeight.w500,color: Colors.white),),
@@ -103,13 +103,13 @@ Material notificationCards(BuildContext context){
                 Card(
                     color: Constants.serviceColor,
                     elevation: 20,
-                    child: Container(
+                    child: SizedBox(
                       width: 150,
                       height: 150,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.account_balance,color: Colors.white,size: 35.0,),
+                          const Icon(Icons.account_balance,color: Colors.white,size: 35.0,),
                           Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Text(Constants.serviceChargeBalance, style: GoogleFonts.hind(fontSize: 12.5, fontWeight: FontWeight.w500,color: Colors.white),),
@@ -132,15 +132,15 @@ Material notificationCards(BuildContext context){
                     elevation: 20,
                     child: GestureDetector(
                       onTap: (){
-                        Navigator.push(context, new MaterialPageRoute(builder: (_)=>ServiceChargePayment()));
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>const ServiceChargePayment()));
                       },
-                      child: Container(
+                      child: SizedBox(
                         width: 150,
                         height: 150,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.monetization_on,color: Colors.white,size: 35.0,),
+                            const Icon(Icons.monetization_on,color: Colors.white,size: 35.0,),
                             Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Text(Constants.payServiceCharge, style: GoogleFonts.hind(fontSize: 15, fontWeight: FontWeight.w500,color: Colors.white),),
@@ -154,13 +154,13 @@ Material notificationCards(BuildContext context){
                 Card(
                     color: Constants.servicesColor,
                     elevation: 20,
-                    child: Container(
+                    child: SizedBox(
                       width: 150,
                       height: 150,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.cleaning_services_outlined,color: Colors.white,size: 35.0,),
+                          const Icon(Icons.cleaning_services_outlined,color: Colors.white,size: 35.0,),
                           Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Text(Constants.service, style: GoogleFonts.hind(fontSize: 15, fontWeight: FontWeight.w500,color: Colors.white),),
@@ -186,7 +186,7 @@ Material servicesCard(BuildContext context){
             elevation: 20,
             child:Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width*0.6,
                 height: MediaQuery.of(context).size.height*0.2,
                 child: SingleChildScrollView(
@@ -194,7 +194,7 @@ Material servicesCard(BuildContext context){
                       children: [
                           Text(Constants.service,style: GoogleFonts.hind(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.black),),
                           Text(Constants.noService,style: GoogleFonts.hind(fontWeight: FontWeight.w200, fontSize: 13, color: Colors.black),),
-                          Container(decoration:BoxDecoration(shape: BoxShape.circle,),padding:EdgeInsets.only(top: 70.0),alignment:Alignment.bottomCenter,child: Card(elevation:20.0,child: Icon(Icons.add, size: 35.0,)))
+                          Container(decoration:const BoxDecoration(shape: BoxShape.circle,),padding:const EdgeInsets.only(top: 70.0),alignment:Alignment.bottomCenter,child: const Card(elevation:20.0,child: Icon(Icons.add, size: 35.0,)))
 
                       ],
                     ),
@@ -220,19 +220,19 @@ Material bottomNavigationBar(BuildContext context){
                   onPressed: (){
                     //Navigation to different screen
                   },
-                  icon: Icon(Icons.home,color: Colors.white,size: 25.0,)
+                  icon: const Icon(Icons.home,color: Colors.white,size: 25.0,)
               ),
               IconButton(
                   onPressed: (){
                     //Navigation to different screen
                   },
-                  icon: Icon(Icons.add,color: Colors.white,size: 25.0,)
+                  icon: const Icon(Icons.add,color: Colors.white,size: 25.0,)
               ),
               IconButton(
                   onPressed: (){
                     //Navigation to different screen
                   },
-                  icon: Icon(Icons.person,color: Colors.white,size: 25.0,)
+                  icon: const Icon(Icons.person,color: Colors.white,size: 25.0,)
               ),
           ],
         ),

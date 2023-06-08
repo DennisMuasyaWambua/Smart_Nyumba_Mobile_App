@@ -39,7 +39,7 @@ class _OtpState extends State<Otp> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -48,9 +48,9 @@ class _OtpState extends State<Otp> {
                   child: IconButton(
                       onPressed: () {
                         Navigator.push(context,
-                            new MaterialPageRoute(builder: (_) => Login()));
+                            MaterialPageRoute(builder: (_) => const Login()));
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_back,
                         color: Constants.buttonColor,
                       )),
@@ -59,7 +59,7 @@ class _OtpState extends State<Otp> {
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
                     child: Text(
-                      "${Constants.OtpVerification}",
+                      Constants.OtpVerification,
                       style: GoogleFonts.publicSans(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
@@ -70,7 +70,7 @@ class _OtpState extends State<Otp> {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.4,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage("assets/images/home.png"))),
                 ),
@@ -103,7 +103,7 @@ class _OtpState extends State<Otp> {
                                         ),
                                         children: [
                                           Center(
-                                            child: Text("${value.message}"),
+                                            child: Text(value.message),
                                           )
                                         ],
                                       ));
@@ -120,7 +120,7 @@ class _OtpState extends State<Otp> {
                                         ),
                                         children: [
                                           Center(
-                                            child: Text("${value.message}"),
+                                            child: Text(value.message),
                                           )
                                         ],
                                       ));

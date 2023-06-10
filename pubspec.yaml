@@ -46,6 +46,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   shared_preferences: ^2.1.1
   pinput: ^2.2.31
+  quickalert: ^1.0.1
 
 dev_dependencies:
   flutter_test:

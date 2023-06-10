@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:smart_nyumba/Authentication/register/register.dart';
 
 import 'package:smart_nyumba/Constants/Logo.dart';
@@ -76,6 +77,11 @@ class _LoginState extends State<Login> {
   Widget _buttonSubmitField() {
     return AuthButton(
       onClick: () {
+        QuickAlert.show(
+            context: context,
+            type: QuickAlertType.loading,
+           );
+
         email = _emailController.text;
         password = _passwordController.text;
         print(email);
@@ -91,6 +97,7 @@ class _LoginState extends State<Login> {
             Navigator.push(context,
                 MaterialPageRoute(builder: (_) => const TenantDashboard()));
           } else {
+            // QuickAlert.show(context: context, type: QuickAlertType.error, text: value.message);
             Timer(const Duration(seconds: 3), () {
               showDialog(
                   context: context,

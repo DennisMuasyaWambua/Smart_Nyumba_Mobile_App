@@ -7,6 +7,7 @@ import 'package:quickalert/quickalert.dart';
 import 'package:smart_nyumba/Authentication/register/register.dart';
 
 import 'package:smart_nyumba/Constants/Logo.dart';
+import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 
 import 'package:smart_nyumba/Widgets/AuthButton.dart';
 
@@ -78,22 +79,24 @@ class _LoginState extends State<Login> {
     return AuthButton(
       onClick: () {
         QuickAlert.show(
-            context: context,
-            type: QuickAlertType.loading,
-           );
+          context: context,
+          type: QuickAlertType.loading,
+        );
 
         email = _emailController.text;
         password = _passwordController.text;
-        print(email);
-        print(password);
+
         log(email.toString(), name: "EMAIL PARAMETER AT LOGIN");
         log(password.toString(), name: "PASSWORD PARAMETER AT LOGIN");
         final login = Auth().login(email, password);
 
         login.then((value) {
-          print(value.message);
+          log(value.message.toString(), name: "LOGIN MESSAGE");
 
           if (value.accessToken != null) {
+            // Saving the users credentials using shared prefrences
+            SharedPrefrenceBuilder.setUserEmail(email);
+            // Navigating to the tenants dashboard
             Navigator.push(context,
                 MaterialPageRoute(builder: (_) => const TenantDashboard()));
           } else {

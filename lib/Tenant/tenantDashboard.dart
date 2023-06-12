@@ -1,10 +1,8 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_nyumba/Providers/payment_provider.dart';
-import 'package:smart_nyumba/Tenant/serviceChargePaymentScreen.dart';
 
 import '../Constants/Constants.dart';
 

@@ -4,6 +4,7 @@ import 'package:smart_nyumba/Models/login_response_message.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_nyumba/Models/register_response_message.dart';
 import 'package:smart_nyumba/Models/send_otp.dart';
+import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'dart:convert';
 
 import '../Constants/Constants.dart';
@@ -18,14 +19,18 @@ class Auth {
 
     try {
       var uri = Uri.parse(loginEndpoint);
-      final response = await http.post(uri, body: {'email': email, 'password': password});
+      final response =
+          await http.post(uri, body: {'email': email, 'password': password});
       log(response.statusCode.toString(), name: "Status code");
       LoginResponseMessage loginResponseMessage =
           LoginResponseMessage.fromJson(json.decode(response.body));
       // print(loginResponseMessage.message);
       log(loginResponseMessage.message.toString(),
           name: "Response message from login");
+      // Saving the token from logging in
+      SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken.toString());
       if (loginResponseMessage.accessToken != null) {
+        SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken.toString());
         log(loginResponseMessage.status.toString(), name: "Status");
         log(loginResponseMessage.message.toString(), name: "Success message");
 
@@ -38,7 +43,7 @@ class Auth {
             message: "An error occurred", status: false);
       }
     } catch (e) {
-      log("${Exception(e.toString())}" ,name: "Exception message from login");
+      log("${Exception(e.toString())}", name: "Exception message from login");
       throw Exception(e.toString());
     }
   }

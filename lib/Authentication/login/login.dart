@@ -96,6 +96,9 @@ class _LoginState extends State<Login> {
           if (value.accessToken != null) {
             // Saving the users credentials using shared prefrences
             SharedPrefrenceBuilder.setUserEmail(email);
+            
+
+            log(SharedPrefrenceBuilder().getUserEmail.toString(), name: "EMAIL ADDRESS GOTTEN FROM LOGIN MESSAGE");
             // Navigating to the tenants dashboard
             Navigator.push(context,
                 MaterialPageRoute(builder: (_) => const TenantDashboard()));

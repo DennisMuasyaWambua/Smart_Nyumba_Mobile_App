@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_nyumba/Providers/payment_provider.dart';
 import 'package:smart_nyumba/Tenant/serviceChargePaymentScreen.dart';
 
 import '../Constants/Constants.dart';
@@ -157,12 +161,22 @@ Material notificationCards(BuildContext context) {
                 color: Constants.paymentColor,
                 elevation: 20,
                 child: GestureDetector(
-                  onTap: () {
-                    // final pay = Payments.payServiceCharge();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const ServiceChargePayment()));
+                  onTap: () async {
+                    // final pay = await Payments()
+                    //     .payServiceCharge('0720523299', '250', 'waste');
+
+                    Provider.of<Payments>(context, listen: false)
+                        .payServiceCharge('0720523299', '250.00', 'waste');
+
+                    // pay.then((value) {
+                    //   log(value.status.toString(),name:"PAYMENT STATUS");
+                    //   log(value.message.toString(),name:"PAYMENT MESSAGE");
+
+                    // });
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (_) => const ServiceChargePayment()));
                   },
                   child: SizedBox(
                     width: 150,

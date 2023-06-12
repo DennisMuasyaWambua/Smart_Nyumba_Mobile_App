@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 
 import 'Authentication/login/login.dart';
 import 'Authentication/otp.dart';
 import 'Authentication/register/register.dart';
+import 'Providers/payment_provider.dart';
 import 'Tenant/tenantDashboard.dart';
 
 Future main() async {
@@ -43,7 +45,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(
+      providers: [
+       ChangeNotifierProvider(
+        create: (context)=>Payments()
+        )
+    ], 
+    child:  MaterialApp(
       home: const Login(),
       routes: {
         '/login': (context) => const Login(),
@@ -51,6 +59,6 @@ class _MyHomePageState extends State<MyHomePage> {
         '/otp': (context) => const Otp(),
         '/tenantsDashboard': (context) => const TenantDashboard(),
       },
-    );
+    ),);
   }
 }

@@ -15,6 +15,8 @@ class Payments with ChangeNotifier {
 
   int get serviceChargeAmount => _serviceChargeAmount;
 
+  String? token = SharedPrefrenceBuilder().getUserToken;
+
   //payment of serviceCharge
   Future<PayServiceCharge> payServiceCharge(
       String mobile_number, amount, service_name) async {
@@ -25,7 +27,9 @@ class Payments with ChangeNotifier {
     log(userEmail.toString(), name: "USER_EMAIL FROM SHARED_PREFERENCES");
     try {
       Uri servicecharge = Uri.parse(baseurl + serviceChargeEndpoint);
-      var response = await http.post(servicecharge, body: {
+      var response = await http.post(servicecharge, headers: {
+        'Authorization': 'Bearer $token',
+      }, body: {
         'email': userEmail,
         'mobile_number': mobile_number,
         'amount': amount,
@@ -42,6 +46,7 @@ class Payments with ChangeNotifier {
           name: "PAYMENT WAS INITIATED AND THIS IS THE STATUS BACK");
       log(service.message.toString(),
           name: "PAYMENT WAS INITIATED AND THIS IS THE RESPONSE BACK");
+      notifyListeners();
       return service;
     } catch (e) {
       throw Exception(e.toString());

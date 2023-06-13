@@ -11,7 +11,7 @@ class Payments with ChangeNotifier {
   // all payments are handled here
 
   final String baseurl = "https://smartnyumba.com/apps/user/api/v1/";
-  int _serviceChargeAmount = 0;
+  final int _serviceChargeAmount = 0;
 
   int get serviceChargeAmount => _serviceChargeAmount;
 
@@ -19,7 +19,7 @@ class Payments with ChangeNotifier {
 
   //payment of serviceCharge
   Future<PayServiceCharge> payServiceCharge(
-      String mobile_number, amount, service_name) async {
+      String mobileNumber, amount, serviceName) async {
     String serviceChargeEndpoint = "services/pay-service/";
     // getting the users email address
     String userEmail = SharedPrefrenceBuilder().getUserEmail!;
@@ -31,9 +31,9 @@ class Payments with ChangeNotifier {
         'Authorization': 'Bearer $token',
       }, body: {
         'email': userEmail,
-        'mobile_number': mobile_number,
+        'mobile_number': mobileNumber,
         'amount': amount,
-        'service_name': service_name,
+        'service_name': serviceName,
         'pay_via': 'mpesa'
       });
 

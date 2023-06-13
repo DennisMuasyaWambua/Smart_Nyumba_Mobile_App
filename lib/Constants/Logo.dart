@@ -14,7 +14,6 @@ class Logo extends StatelessWidget {
           depth: 100,
           boxShape: NeumorphicBoxShape.circle(),
           lightSource: LightSource.topLeft,
-          color: Color(0xff86750cbd),
           intensity: 30
       ),
       child: Container(
@@ -23,7 +22,7 @@ class Logo extends StatelessWidget {
         decoration: const BoxDecoration(
 
             image: DecorationImage(
-              image: AssetImage("assets/images/logo.png"),
+              image: AssetImage("assets/smartnyumba.png"),
 
             )
 

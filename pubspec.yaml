@@ -47,6 +47,7 @@ dependencies:
   shared_preferences: ^2.1.1
   pinput: ^2.2.31
   quickalert: ^1.0.1
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +59,11 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+
+flutter_icons:
+  image_path: "assets/smartnyumba.png"
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -78,6 +84,8 @@ flutter:
     - assets/images/logo.png
     - assets/images/mansion.jpg
     - assets/images/home.png
+    - assets/smartnyumba.png
+    - assets/images/smartnyumba.svg
     - .env
 
 

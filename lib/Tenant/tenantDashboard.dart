@@ -31,7 +31,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: notificationCards(context),
               ),
-              servicesCard(context),
+              // servicesCard(context),
             ],
           ),
         ),
@@ -201,33 +201,7 @@ Material notificationCards(BuildContext context) {
                     ),
                   ),
                 )),
-            Card(
-                color: Constants.servicesColor,
-                elevation: 20,
-                child: SizedBox(
-                  width: 150,
-                  height: 150,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.cleaning_services_outlined,
-                        color: Colors.white,
-                        size: 35.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          Constants.service,
-                          style: GoogleFonts.hind(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                ))
+           
           ],
         )
       ],
@@ -236,52 +210,52 @@ Material notificationCards(BuildContext context) {
 }
 
 //services Card
-Material servicesCard(BuildContext context) {
-  return Material(
-    child: Card(
-      elevation: 20,
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.6,
-          height: MediaQuery.of(context).size.height * 0.2,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Text(
-                  Constants.service,
-                  style: GoogleFonts.hind(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.black),
-                ),
-                Text(
-                  Constants.noService,
-                  style: GoogleFonts.hind(
-                      fontWeight: FontWeight.w200,
-                      fontSize: 13,
-                      color: Colors.black),
-                ),
-                Container(
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                    ),
-                    padding: const EdgeInsets.only(top: 70.0),
-                    alignment: Alignment.bottomCenter,
-                    child: const Card(
-                        elevation: 20.0,
-                        child: Icon(
-                          Icons.add,
-                          size: 35.0,
-                        )))
-              ],
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
-}
+// Material servicesCard(BuildContext context) {
+//   return Material(
+//     child: Card(
+//       elevation: 20,
+//       child: Padding(
+//         padding: const EdgeInsets.all(10.0),
+//         child: SizedBox(
+//           width: MediaQuery.of(context).size.width * 0.6,
+//           height: MediaQuery.of(context).size.height * 0.2,
+//           child: SingleChildScrollView(
+//             child: Column(
+//               children: [
+//                 Text(
+//                   Constants.service,
+//                   style: GoogleFonts.hind(
+//                       fontWeight: FontWeight.bold,
+//                       fontSize: 20,
+//                       color: Colors.black),
+//                 ),
+//                 Text(
+//                   Constants.noService,
+//                   style: GoogleFonts.hind(
+//                       fontWeight: FontWeight.w200,
+//                       fontSize: 13,
+//                       color: Colors.black),
+//                 ),
+//                 Container(
+//                     decoration: const BoxDecoration(
+//                       shape: BoxShape.circle,
+//                     ),
+//                     padding: const EdgeInsets.only(top: 70.0),
+//                     alignment: Alignment.bottomCenter,
+//                     child: const Card(
+//                         elevation: 20.0,
+//                         child: Icon(
+//                           Icons.add,
+//                           size: 35.0,
+//                         )))
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     ),
+//   );
+// }
 
 //Bottom navigation Appbar
 Material bottomNavigationBar(BuildContext context) {

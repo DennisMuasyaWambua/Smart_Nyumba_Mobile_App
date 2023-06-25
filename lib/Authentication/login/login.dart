@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:quickalert/quickalert.dart';
 import 'package:smart_nyumba/Authentication/register/register.dart';
 
 import 'package:smart_nyumba/Constants/Logo.dart';

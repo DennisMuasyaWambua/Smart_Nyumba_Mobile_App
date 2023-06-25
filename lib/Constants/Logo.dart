@@ -20,9 +20,9 @@ class Logo extends StatelessWidget {
         height: height,
         width: width,
         decoration: const BoxDecoration(
-
+            color: Colors.black,
             image: DecorationImage(
-              image: AssetImage("assets/smartnyumba.png"),
+              image: AssetImage("assets/images/smartnyumba.png"),
 
             )
 

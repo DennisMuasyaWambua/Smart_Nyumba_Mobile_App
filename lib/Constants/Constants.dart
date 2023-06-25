@@ -22,11 +22,12 @@ class Constants {
   //Util constants
   static const String dashboard = "Dashboard";
   static const String payment = "Make Payment";
-  static const String welcomeMsg = "Welcome Tenant";
-  static const String paymentHistory = "Payment History";
+  static const String welcomeMsg = "Welcome";
+  static const String paymentHistory = "Payment Statement";
   static const String serviceChargeBalance = "Service Charge Balance";
   static const String payServiceCharge = "Pay Service Charge";
-  static const String service = "Services";
+  static const String service = "Request for Repairs";
+  static const String marketPlace = "Marketplace";
   static const String noService = "You are not subscribed to any service";
   static const String serviceCharge = "Service Charge";
   static const String OtpVerification = "OTP VERIFICATION";
@@ -42,6 +43,7 @@ class Constants {
   // URL constants
 
   //authentication related constants
+  static const String BASE_API_URL = "https://smartnyumba.com/apps/user/api/v1";
   static const String AUTHENTICATION_BASE_URL =
       "https://smartnyumba.com/apps/user/api/v1/auth";
   static const String LOGIN_URL = "$AUTHENTICATION_BASE_URL/user-login/";
@@ -56,4 +58,8 @@ class Constants {
       "https://smartnyumba.com/apps/user/api/v1/services";
   static const String PAY_SERVICE = "$PAYMENT_BASE_URL/pay-service/";
   static const String MPESA_CALLBACK = "$PAYMENT_BASE_URL/mpesa-callback";
+  static const String ALL_TRANSITIONS = "$PAYMENT_BASE_URL/all-transactions/";
+
+  // Account related constants
+  static const String TENANTS_PROFILE = "$BASE_API_URL/auth/user-profile/";
 }

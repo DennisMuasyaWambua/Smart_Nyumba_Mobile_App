@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
+import 'package:smart_nyumba/Providers/tenants_profile_provider.dart';
 
 import 'Authentication/login/login.dart';
 import 'Authentication/otp.dart';
@@ -49,10 +50,14 @@ class _MyHomePageState extends State<MyHomePage> {
       providers: [
        ChangeNotifierProvider(
         create: (context)=>Payments()
+        ),
+        ChangeNotifierProvider(
+          create: (context)=>TenantsProfile()
         )
     ], 
     child:  MaterialApp(
       home: const Login(),
+      
       routes: {
         '/login': (context) => const Login(),
         '/register': (context) => const Register(),

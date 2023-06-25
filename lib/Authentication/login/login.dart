@@ -78,10 +78,7 @@ class _LoginState extends State<Login> {
   Widget _buttonSubmitField() {
     return AuthButton(
       onClick: () {
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.loading,
-        );
+       
 
         email = _emailController.text;
         password = _passwordController.text;
@@ -96,11 +93,13 @@ class _LoginState extends State<Login> {
           if (value.accessToken != null) {
             // Saving the users credentials using shared prefrences
             SharedPrefrenceBuilder.setUserEmail(email);
+            SharedPrefrenceBuilder.setUserToken(value.accessToken.toString());
             
 
             log(SharedPrefrenceBuilder().getUserEmail.toString(), name: "EMAIL ADDRESS GOTTEN FROM LOGIN MESSAGE");
+             log(SharedPrefrenceBuilder().getUserToken.toString(), name: "USER TOKEN GOTTEN FROM LOGIN MESSAGE");
             // Navigating to the tenants dashboard
-            Navigator.push(context,
+            Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (_) => const TenantDashboard()));
           } else {
             // QuickAlert.show(context: context, type: QuickAlertType.error, text: value.message);

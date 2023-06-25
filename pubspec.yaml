@@ -80,11 +80,11 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/images/smartnyumba.png
     - assets/images/smart_nyumba.jpeg
     - assets/images/logo.png
     - assets/images/mansion.jpg
     - assets/images/home.png
-    - assets/smartnyumba.png
     - assets/images/smartnyumba.svg
     - .env
 

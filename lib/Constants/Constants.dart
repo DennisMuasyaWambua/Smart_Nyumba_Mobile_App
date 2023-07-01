@@ -59,6 +59,8 @@ class Constants {
   static const String PAY_SERVICE = "$PAYMENT_BASE_URL/pay-service/";
   static const String MPESA_CALLBACK = "$PAYMENT_BASE_URL/mpesa-callback";
   static const String ALL_TRANSITIONS = "$PAYMENT_BASE_URL/all-transactions/";
+  static const String CHECK_PAYMENT_COMPLETION =
+      "$PAYMENT_BASE_URL/check-subscription-status";
 
   // Account related constants
   static const String TENANTS_PROFILE = "$BASE_API_URL/auth/user-profile/";

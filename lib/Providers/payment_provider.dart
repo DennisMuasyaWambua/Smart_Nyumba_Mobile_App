@@ -5,12 +5,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:smart_nyumba/Constants/Constants.dart';
-import 'package:smart_nyumba/Models/all_transactions.dart';
+import 'package:smart_nyumba/Models/check-payment-status.dart';
 import 'package:smart_nyumba/Models/pay_service_charge.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
-import 'package:smart_nyumba/Providers/tenants_profile_provider.dart';
 
 class Payments with ChangeNotifier {
   // all payments are handled here
@@ -20,7 +19,7 @@ class Payments with ChangeNotifier {
 
   int get serviceChargeAmount => _serviceChargeAmount;
   var userId;
-
+  int paymentStatus = 0;
   String? token = SharedPrefrenceBuilder().getUserToken;
 
   //payment of serviceCharge
@@ -48,46 +47,9 @@ class Payments with ChangeNotifier {
       PayServiceCharge service =
           PayServiceCharge.fromJson(json.decode(response.body));
       // getting users ID
-      var appUser = TenantsProfile().getUserProfile(token!);
+    
 
-      appUser.then((value) async {
-        userId = value.user!.id;
-        log(userId.toString(), name: "US ID");
-         // wait ten seconds for the transaction to complete
-          Future.delayed(const Duration(seconds: 30));
-
-        if (service.status == true) {
-          // checking if the transaction was successful
-          var check =
-              await http.get(Uri.parse(Constants.ALL_TRANSITIONS), headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-         
-
-          AllTransactions transactions =
-              AllTransactions.fromJson(json.decode(check.body));
-
-          List<Transaction> customerTransaction =
-              transactions.transactions!.toList();
-          log(customerTransaction.toString(), name: "CUSTOMER TRANSACTIONS");
-          for (int i = 0; i < customerTransaction.length; i++) {
-            var usr = customerTransaction[i].user;
-            var status = customerTransaction[i].status;
-            if (userId == usr && status == 1) {
-              log(customerTransaction[i].checkoutRequestId.toString(),
-                  name: "TRANSACTION COMPLETED");
-            } else {
-              log("TRANSACTION FAILED", name: "TRANSACTION FAILED");
-            }
-          }
-
-          // var confirm = customerTransaction.user;
-          // var status = customerTransaction.status;
-          // log(confirm.toString(), name: "CUSTOMER ID");
-          // log(status.toString(), name: "STATUS ID");
-        }
-      });
+      
 
       log(service.status.toString(),
           name: "PAYMENT WAS INITIATED AND THIS IS THE STATUS BACK");
@@ -95,6 +57,36 @@ class Payments with ChangeNotifier {
           name: "PAYMENT WAS INITIATED AND THIS IS THE RESPONSE BACK");
       notifyListeners();
       return service;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<int?> checkPaymentStatus() async {
+    try {
+      String userEmail = SharedPrefrenceBuilder().getUserEmail!;
+      var check = await http
+          .post(Uri.parse(Constants.CHECK_PAYMENT_COMPLETION), headers: {
+        'Authorization': 'Bearer $token',
+      }, body: {
+        'email': userEmail
+      });
+
+      CheckPaymentStatus PaymentStatus =
+          CheckPaymentStatus.fromJson(json.decode(check.body));
+      paymentStatus = PaymentStatus.data!.status!;
+
+      log(PaymentStatus.status.toString(),
+          name:
+              "PAYMENT_STATUS");
+              log(PaymentStatus.message.toString(),
+          name:
+              "PAYMENT_MESSAGE");
+      log(PaymentStatus.data.toString(),
+          name:
+              "****************ALL TRANSACTIONS THAT ARE AVAILABLE***************");
+      notifyListeners();
+      return paymentStatus;
     } catch (e) {
       throw Exception(e.toString());
     }

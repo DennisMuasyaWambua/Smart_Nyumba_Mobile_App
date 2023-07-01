@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:smart_nyumba/Providers/payment_provider.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/Providers/tenants_profile_provider.dart';
@@ -108,13 +110,37 @@ class _TenantDashboardState extends State<TenantDashboard> {
                       log(value.toJson().toString(), name: "PAYMENT RESULT");
                     });
                   });
+                  Timer.periodic(const Duration(seconds: 3), (timer) {
+                    var check = Provider.of<Payments>(context, listen: false)
+                        .checkPaymentStatus();
+
+                    check.then((value) {
+                      if (value == 1) {
+                        log("$value payment was successful",
+                            name: "PAYMENT SUCCESS");
+                      } else {
+                         log("$value payment was successful",
+                            name: "PAYMENT FAILED");
+                      }
+                      log(value.toString(),
+                          name: "FROM CHECKING THE PAYMENT RESULT");
+                    });
+                  });
                 },
                 child: _payServiceCharge())
           ],
         ),
         Row(
           children: [
-            _requestForRepairs(),
+            GestureDetector(
+                onTap: () {
+                  QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.custom,
+                      barrierDismissible: true,
+                      confirmBtnText: "Send");
+                },
+                child: _requestForRepairs()),
             _marketPlace(),
           ],
         ),
@@ -143,7 +169,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 50),
             child: Column(children: [
-              Icon(
+              const Icon(
                 Icons.history,
                 color: Colors.white,
                 size: 50,

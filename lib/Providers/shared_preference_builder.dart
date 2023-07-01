@@ -4,6 +4,7 @@ class SharedPrefrenceBuilder {
   static SharedPreferences? _preferences;
   static const useremail = 'email';
   static const Token = 'token';
+  static const  id = 'user_id';
 
   static Future init() async {
     _preferences = await SharedPreferences.getInstance();
@@ -13,11 +14,19 @@ class SharedPrefrenceBuilder {
     await _preferences!.setString(useremail, email);
   }
 
+  static Future setUserID(int UID) async {
+    await _preferences!.setInt(id, UID );
+  }
+
   static Future setUserToken(String token) async {
     await _preferences!.setString(Token, token);
   }
 
-  String? get getUserToken  {
+  int? get getuserID {
+    return _preferences!.getInt(id);
+  }
+
+  String? get getUserToken {
     return _preferences!.getString(Token);
   }
 

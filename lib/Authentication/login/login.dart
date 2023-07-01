@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_nyumba/Authentication/register/register.dart';
 
 import 'package:smart_nyumba/Constants/Logo.dart';
+import 'package:smart_nyumba/Models/user_profile.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 
 import 'package:smart_nyumba/Widgets/AuthButton.dart';
@@ -13,6 +15,7 @@ import 'package:smart_nyumba/Widgets/AuthButton.dart';
 import '../../Constants/Constants.dart';
 import '../../Providers/auth_provider.dart';
 import '../../Tenant/tenantDashboard.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -77,8 +80,6 @@ class _LoginState extends State<Login> {
   Widget _buttonSubmitField() {
     return AuthButton(
       onClick: () {
-       
-
         email = _emailController.text;
         password = _passwordController.text;
 
@@ -86,17 +87,25 @@ class _LoginState extends State<Login> {
         log(password.toString(), name: "PASSWORD PARAMETER AT LOGIN");
         final login = Auth().login(email, password);
 
-        login.then((value) {
+        login.then((value) async {
           log(value.message.toString(), name: "LOGIN MESSAGE");
 
           if (value.accessToken != null) {
             // Saving the users credentials using shared prefrences
             SharedPrefrenceBuilder.setUserEmail(email);
             SharedPrefrenceBuilder.setUserToken(value.accessToken.toString());
-            
+            // Set the User id to the user to save the usersprofile
+            var user = await http.get(Uri.parse(Constants.TENANTS_PROFILE),
+                headers: {'Authorization': 'Bearer ${value.accessToken}'});
 
-            log(SharedPrefrenceBuilder().getUserEmail.toString(), name: "EMAIL ADDRESS GOTTEN FROM LOGIN MESSAGE");
-             log(SharedPrefrenceBuilder().getUserToken.toString(), name: "USER TOKEN GOTTEN FROM LOGIN MESSAGE");
+            UserProfile usr = UserProfile.fromJson(json.decode(user.body));
+            var id = usr.profile!.user!.id;
+            SharedPrefrenceBuilder.setUserID(id!);
+
+            log(SharedPrefrenceBuilder().getUserEmail.toString(),
+                name: "EMAIL ADDRESS GOTTEN FROM LOGIN MESSAGE");
+            log(SharedPrefrenceBuilder().getUserToken.toString(),
+                name: "USER TOKEN GOTTEN FROM LOGIN MESSAGE");
             // Navigating to the tenants dashboard
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (_) => const TenantDashboard()));

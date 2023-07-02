@@ -22,7 +22,7 @@ class TenantDashboard extends StatefulWidget {
 
 class _TenantDashboardState extends State<TenantDashboard> {
   //getting the Tenats profile from the backend
-
+  int hasUserPaid = 0;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -110,21 +110,28 @@ class _TenantDashboardState extends State<TenantDashboard> {
                       log(value.toJson().toString(), name: "PAYMENT RESULT");
                     });
                   });
-                  Timer.periodic(const Duration(seconds: 3), (timer) {
-                    var check = Provider.of<Payments>(context, listen: false)
-                        .checkPaymentStatus();
 
-                    check.then((value) {
-                      if (value == 1) {
-                        log("$value payment was successful",
-                            name: "PAYMENT SUCCESS");
-                      } else {
-                         log("$value payment was successful",
-                            name: "PAYMENT FAILED");
-                      }
-                      log(value.toString(),
-                          name: "FROM CHECKING THE PAYMENT RESULT");
-                    });
+                  Timer.periodic(const Duration(seconds: 3), (timer) {
+                    if (hasUserPaid == 0) {
+                      var check = Provider.of<Payments>(context, listen: false)
+                          .checkPaymentStatus();
+                      check.then((value) {
+                        if (value == 1) {
+                          hasUserPaid = value!;
+                          log("$value payment was successful",
+                              name: "PAYMENT SUCCESS");
+                        } else {
+                          log("$value payment was successful",
+                              name: "PAYMENT FAILED");
+                        }
+                        log(value.toString(),
+                            name: "FROM CHECKING THE PAYMENT RESULT");
+                      });
+                    } else {
+                      QuickAlert.show(
+                          context: context, type: QuickAlertType.success,);
+                          timer.cancel();
+                    }
                   });
                 },
                 child: _payServiceCharge())

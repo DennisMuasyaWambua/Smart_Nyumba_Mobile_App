@@ -47,9 +47,6 @@ class Payments with ChangeNotifier {
       PayServiceCharge service =
           PayServiceCharge.fromJson(json.decode(response.body));
       // getting users ID
-    
-
-      
 
       log(service.status.toString(),
           name: "PAYMENT WAS INITIATED AND THIS IS THE STATUS BACK");
@@ -71,24 +68,21 @@ class Payments with ChangeNotifier {
       }, body: {
         'email': userEmail
       });
+      log(check.body.toString(), name: "THIS IS THE CHECK PAYMENT RESPONSE");
 
       CheckPaymentStatus PaymentStatus =
-          CheckPaymentStatus.fromJson(json.decode(check.body));
+          CheckPaymentStatus.fromJson(jsonDecode(check.body));
       paymentStatus = PaymentStatus.data!.status!;
 
-      log(PaymentStatus.status.toString(),
-          name:
-              "PAYMENT_STATUS");
-              log(PaymentStatus.message.toString(),
-          name:
-              "PAYMENT_MESSAGE");
+      log(PaymentStatus.status.toString(), name: "PAYMENT_STATUS");
+      log(PaymentStatus.message.toString(), name: "PAYMENT_MESSAGE");
       log(PaymentStatus.data.toString(),
           name:
               "****************ALL TRANSACTIONS THAT ARE AVAILABLE***************");
       notifyListeners();
       return paymentStatus;
     } catch (e) {
-      throw Exception(e.toString());
+      log(e.toString(), name: "CHECK PAYMENT ERROR");
     }
   }
 }

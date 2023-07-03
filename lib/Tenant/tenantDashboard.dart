@@ -6,6 +6,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:smart_nyumba/Models/all_transactions.dart';
 import 'package:smart_nyumba/Providers/payment_provider.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/Providers/tenants_profile_provider.dart';
@@ -86,7 +87,22 @@ class _TenantDashboardState extends State<TenantDashboard> {
       children: [
         Row(
           children: [
-            _paymentHistory(),
+            GestureDetector(
+                onTap: () {
+                  // payment status
+                  var history = Provider.of<Payments>(context, listen: false)
+                      .getAllTransactions();
+
+                  history.then((value) {
+                   
+                    for (int i = 0; i < value!.length; i++) {
+                         log(value[i].toJson().toString(),
+                        name: "HISTORIC TRANSACTIONS");
+                        // get information from here on all transactions and form the system
+                    }
+                  });
+                },
+                child: _paymentHistory()),
             GestureDetector(
                 onTap: () {
                   var token = SharedPrefrenceBuilder().getUserToken.toString();
@@ -129,8 +145,10 @@ class _TenantDashboardState extends State<TenantDashboard> {
                       });
                     } else {
                       QuickAlert.show(
-                          context: context, type: QuickAlertType.success,);
-                          timer.cancel();
+                        context: context,
+                        type: QuickAlertType.success,
+                      );
+                      timer.cancel();
                     }
                   });
                 },

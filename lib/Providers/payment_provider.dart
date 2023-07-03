@@ -5,6 +5,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:smart_nyumba/Constants/Constants.dart';
+import 'package:smart_nyumba/Models/all_transactions.dart';
 import 'package:smart_nyumba/Models/check-payment-status.dart';
 import 'package:smart_nyumba/Models/pay_service_charge.dart';
 // ignore: depend_on_referenced_packages
@@ -83,6 +84,26 @@ class Payments with ChangeNotifier {
       return paymentStatus;
     } catch (e) {
       log(e.toString(), name: "CHECK PAYMENT ERROR");
+      throw e.toString();
+    }
+  }
+
+  Future<List<Transaction>?> getAllTransactions() async {
+    try {
+      var allTransactions =
+          await http.get(Uri.parse(Constants.ALL_TRANSACTIONS), headers: {
+        'Authorization': 'Bearer $token',
+      });
+      log(allTransactions.body.toString(), name: "ALL TRANSACTIONS");
+      AllTransactions all =
+          AllTransactions.fromJson(jsonDecode(allTransactions.body));
+      log(all.transactions.toString(), name: "TRANSACTIONS AVAILABLE");
+      List<Transaction>? transactions = all.transactions;
+      
+      notifyListeners();
+      return transactions;
+    } catch (e) {
+      throw e.toString();
     }
   }
 }

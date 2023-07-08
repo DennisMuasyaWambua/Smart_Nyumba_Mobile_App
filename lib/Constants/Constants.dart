@@ -21,6 +21,7 @@ class Constants {
 
   //Util constants
   static const String dashboard = "Dashboard";
+  static const String serviceChargePayments = "All service chage payments";
   static const String payment = "Make Payment";
   static const String welcomeMsg = "Welcome";
   static const String paymentHistory = "Payment Statement";

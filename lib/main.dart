@@ -4,6 +4,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/Providers/tenants_profile_provider.dart';
+import 'package:smart_nyumba/Tenant/all_transactions_data.dart';
 
 import 'Authentication/login/login.dart';
 import 'Authentication/otp.dart';
@@ -63,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
         '/register': (context) => const Register(),
         '/otp': (context) => const Otp(),
         '/tenantsDashboard': (context) => const TenantDashboard(),
+        '/allServiceChargeTransactions':(context)=>const AllTransactionsData(),
       },
     ),);
   }

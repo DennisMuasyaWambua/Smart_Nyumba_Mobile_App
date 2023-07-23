@@ -1,6 +1,6 @@
 # smart_nyumba
 
-A new Flutter project.
+A simple rent and service fee collection application to help landlords automate and digitize their rent collection efforts
 
 ## Getting Started
 

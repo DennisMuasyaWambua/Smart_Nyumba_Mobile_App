@@ -14,7 +14,7 @@ class _ServiceChargePaymentState extends State<ServiceChargePayment> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: MaterialApp(
-            home: Container(
+            home: SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: Column(
@@ -33,13 +33,13 @@ class _ServiceChargePaymentState extends State<ServiceChargePayment> {
 //Top Navigation bar
 Material topNav(BuildContext context){
   return Material(
-      child: Container(
+      child: SizedBox(
         height: 100,
         child: Row(
           children: [
             IconButton(
                 onPressed: (){},
-                icon: Icon(Icons.arrow_back_ios_new,size: 20.0,)),
+                icon: const Icon(Icons.arrow_back_ios_new,size: 20.0,)),
             Text(Constants.payment,style:GoogleFonts.hind(fontSize: 16.0, fontWeight: FontWeight.w400),)
           ],
         ),
@@ -63,7 +63,7 @@ Material paymentCard(BuildContext context){
               Container(
                 width: 30,
                 height: double.infinity,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   image:DecorationImage(
                     image:AssetImage("assets/images/mansion.jpg"),
                   ),

@@ -47,7 +47,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
               Container(
                   margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: Text(
-                    Constants.serviceChargePayments,
+                    Constants.serviceChargePayments ,
                     style: GoogleFonts.urbanist(
                         fontSize: 20,
                         color: Colors.white,

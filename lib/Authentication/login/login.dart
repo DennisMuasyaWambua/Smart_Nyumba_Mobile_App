@@ -33,47 +33,72 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/images/smart_nyumba.jpeg"),
-                fit: BoxFit.cover),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _loginForm(),
-            ],
-          ),
+    return Scaffold(
+        body: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _loginForm(),
+          ],
         ),
       ),
-    );
+    ));
   }
 
   Widget _emailField() {
-    return TextFormField(
-      controller: _emailController,
-      decoration: const InputDecoration(
-          icon: Icon(Icons.mail), hintText: Constants.email),
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.06,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius:
+            BorderRadius.circular(MediaQuery.of(context).size.height * 0.02),
+        boxShadow: const [
+          BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))
+        ],
+      ),
+      child: TextFormField(
+          controller: _emailController,
+          keyboardType: TextInputType.emailAddress,
+          style: const TextStyle(
+            color: Colors.black87,
+          ),
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.only(left: 25),
+            border: InputBorder.none,
+          )),
     );
   }
 
   Widget _passwordField() {
-    return TextFormField(
-      obscureText: _passwordVisible,
-      controller: _passwordController,
-      decoration: InputDecoration(
-          icon: const Icon(Icons.security),
-          suffixIcon: InkWell(
-              onTap: _tooglePasswordVisibility,
-              child: _passwordVisible
-                  ? const Icon(Icons.visibility)
-                  : const Icon(Icons.visibility_off)),
-          hintText: Constants.password),
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.06,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius:
+            BorderRadius.circular(MediaQuery.of(context).size.height * 0.02),
+        boxShadow: const [
+          BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))
+        ],
+      ),
+      child: TextFormField(
+          obscureText: _passwordVisible,
+          controller: _passwordController,
+          keyboardType: TextInputType.emailAddress,
+          style: const TextStyle(
+            color: Colors.black87,
+          ),
+          decoration: InputDecoration(
+            alignLabelWithHint: true,
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.all(15),
+            suffixIcon: InkWell(
+                onTap: _tooglePasswordVisibility,
+                child: _passwordVisible
+                    ? const Icon(Icons.visibility)
+                    : const Icon(Icons.visibility_off)),
+          )),
     );
   }
 
@@ -85,6 +110,9 @@ class _LoginState extends State<Login> {
 
         log(email.toString(), name: "EMAIL PARAMETER AT LOGIN");
         log(password.toString(), name: "PASSWORD PARAMETER AT LOGIN");
+
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (_) => const TenantDashboard()));
         final login = Auth().login(email, password);
 
         login.then((value) async {
@@ -126,9 +154,8 @@ class _LoginState extends State<Login> {
           }
         });
       },
-      bgColor: Constants.buttonColor,
       text: Constants.login,
-      textColor: Colors.white,
+      textColor: [Color(0xFFD4AF37), Color(0xFFFFD700)],
     );
   }
 
@@ -152,25 +179,89 @@ class _LoginState extends State<Login> {
   Widget _loginForm() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40.0),
-      child: Card(
-        elevation: 50,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Logo(
-                  height: 90,
-                  width: 90,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 140, 10, 5),
+                child: Text(
+                  "Smart Nyumba",
+                  style: TextStyle(
+                      decoration: TextDecoration.none,
+                      fontFamily: 'HindJalandhar',
+                      fontWeight: FontWeight.w300,
+                      fontSize: 35,
+                      color: Color(0xff22215B)),
                 ),
-                _emailField(),
-                _passwordField(),
-                _buttonSubmitField(),
-                _registerPage()
-              ],
-            ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                child: Text(
+                  "Sign in",
+                  style: TextStyle(
+                      decoration: TextDecoration.none,
+                      fontFamily: 'HindJalandhar',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 74,
+                      color: Color(0xff22215B)),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: Text("YOUR EMAIL",
+                    style: TextStyle(
+                        decoration: TextDecoration.none,
+                        color: Color(0xFF888888),
+                        fontSize: 13,
+                        fontFamily: 'karala',
+                        fontWeight: FontWeight.w300,
+                        letterSpacing: 1.40)),
+              ),
+              _emailField(),
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 5, top: 40),
+                  child: Text("PASSWORD",
+                      style: TextStyle(
+                          decoration: TextDecoration.none,
+                          color: Color(0xFF888888),
+                          fontSize: 13,
+                          fontFamily: 'karala',
+                          fontWeight: FontWeight.w300,
+                          letterSpacing: 1.40))),
+              _passwordField(),
+              SizedBox(
+                height: 40,
+              ),
+              _buttonSubmitField(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (_) => const Register()));
+                },
+                child: const SizedBox(
+                  width: 300,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Text(
+                      'Don’t have an account? Register',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        decoration: TextDecoration.none,
+                        color: Color(0xFF121515),
+                        fontSize: 16,
+                        fontFamily: 'Hind',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
         ),
       ),

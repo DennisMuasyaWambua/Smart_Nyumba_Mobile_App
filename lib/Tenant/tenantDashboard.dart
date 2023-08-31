@@ -28,7 +28,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        drawer: TenantsDrawer(),
+        drawer: const TenantsDrawer(),
         appBar: AppBar(
           backgroundColor: Colors.black,
           title: Center(

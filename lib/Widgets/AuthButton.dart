@@ -1,26 +1,51 @@
 import 'package:flutter/material.dart';
 
 class AuthButton extends StatelessWidget {
-  const AuthButton({Key? key, required this.text,required this.onClick,required this.bgColor,required this.textColor}) : super(key: key);
-  final text, onClick,bgColor, textColor;
+  const AuthButton(
+      {Key? key,
+      required this.text,
+      required this.onClick,
+      required this.textColor})
+      : super(key: key);
+  final text, onClick;
+  final List<Color> textColor;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.symmetric(vertical: 25),
-        width: MediaQuery.of(context).size.width*0.5,
-        child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                        elevation: 5.0, backgroundColor: bgColor,
-                        padding:const EdgeInsets.all(15.0),
-                        shape: RoundedRectangleBorder(
-                            borderRadius:BorderRadius.circular(15.0)
-                        ),
-                ),
-                onPressed:onClick,
-                child: Text(text,style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold,color: textColor),),
-
+    return GestureDetector(
+      onTap: onClick,
+      child: Container(
+        width: 301.40,
+        height: 49.98,
+        padding: const EdgeInsets.only(top: 2, bottom: 2.98),
+        clipBehavior: Clip.antiAlias,
+        decoration: ShapeDecoration(
+          gradient: LinearGradient(
+            begin: Alignment(-0.97, 0.24),
+            end: Alignment(0.97, -0.24),
+            colors: textColor,
+          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
         ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              '$text',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                decoration: TextDecoration.none,
+                color: Colors.white,
+                fontSize: 27,
+                fontFamily: 'Hind',
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

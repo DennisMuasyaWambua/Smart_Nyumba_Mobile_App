@@ -86,6 +86,7 @@ flutter:
     - assets/images/mansion.jpg
     - assets/images/home.png
     - assets/images/smartnyumba.svg
+    - assets/images/smartnyumbablack.png
     - .env
 
 

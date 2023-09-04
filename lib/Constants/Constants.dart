@@ -44,7 +44,8 @@ class Constants {
   // URL constants
 
   //authentication related constants
-  static const String BASE_API_URL = "https://4533-105-160-114-196.ngrok-free.app/apps/user/api/v1";
+  static const String BASE_API_URL =
+      "https://4533-105-160-114-196.ngrok-free.app/apps/user/api/v1";
   static const String AUTHENTICATION_BASE_URL =
       "https://4533-105-160-114-196.ngrok-free.app/apps/user/api/v1/auth";
   static const String LOGIN_URL = "$AUTHENTICATION_BASE_URL/user-login/";
@@ -65,4 +66,7 @@ class Constants {
 
   // Account related constants
   static const String TENANTS_PROFILE = "$BASE_API_URL/auth/user-profile/";
+
+  // image url constants
+  static const String SMART_NYUMBA_BLACK = "assets/images/smartnyumbablack.png";
 }

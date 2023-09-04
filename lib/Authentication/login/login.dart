@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_nyumba/Authentication/register/register.dart';
 
-import 'package:smart_nyumba/Constants/Logo.dart';
 import 'package:smart_nyumba/Models/user_profile.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 
@@ -253,7 +252,7 @@ class _LoginState extends State<Login> {
                       style: TextStyle(
                         decoration: TextDecoration.none,
                         color: Color(0xFF121515),
-                        fontSize: 16,
+                        fontSize: 13,
                         fontFamily: 'Hind',
                         fontWeight: FontWeight.w700,
                       ),

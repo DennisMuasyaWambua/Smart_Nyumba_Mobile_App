@@ -9,7 +9,6 @@ import 'package:quickalert/quickalert.dart';
 import 'package:smart_nyumba/Providers/payment_provider.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/Providers/tenants_profile_provider.dart';
-import 'package:smart_nyumba/Tenant/tenats_drawer.dart';
 
 import '../Constants/Constants.dart';
 

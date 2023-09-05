@@ -28,35 +28,19 @@ class _TenantDashboardState extends State<TenantDashboard> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        drawer: const TenantsDrawer(),
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: Center(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                "assets/images/smartnyumba.png",
-                width: 70,
-                height: 40,
-                fit: BoxFit.cover,
-              ),
-              Container(
-                  margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  child: Text(
-                    Constants.dashboard,
-                    style: GoogleFonts.urbanist(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900),
-                  )),
-            ],
-          )),
-          centerTitle: true,
-        ),
         body: SingleChildScrollView(
           child: Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: Text(
+                          Constants.dashboard,
+                          style: GoogleFonts.hind(
+                  fontSize: 17,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700),
+                        ),
+              ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -71,7 +55,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 40),
+                padding: const EdgeInsets.only(top: 40,left: 30),
                 child: _gridView(),
               ),
             ],
@@ -184,28 +168,30 @@ class _TenantDashboardState extends State<TenantDashboard> {
             lightSource: LightSource.topLeft,
             intensity: 30),
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.25,
-          width: MediaQuery.of(context).size.width * 0.45,
+          height: 160,
+          width: 135,
           decoration: const BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment(-0.97, 0.24),
                   end: Alignment(0.97, -0.24),
-                  colors: [Color(0xFFFFD700), Color(0xFFD4AF37)])),
+                  colors: [Color(0xFFD4AF37), Color(0xFFFFD700)])),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 50),
             child: Column(children: [
               const Icon(
                 Icons.history,
                 color: Colors.white,
-                size: 50,
+                size: 30,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   Constants.paymentHistory,
-                  style: GoogleFonts.urbanist(
+                  style: GoogleFonts.hind(
+                      height: 1.33,
                       fontSize: 15,
-                      fontWeight: FontWeight.w600,
+                      letterSpacing: -0.24,
+                      fontWeight: FontWeight.w700,
                       color: Colors.white),
                 ),
               )
@@ -227,28 +213,30 @@ class _TenantDashboardState extends State<TenantDashboard> {
             lightSource: LightSource.topLeft,
             intensity: 30),
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.25,
-          width: MediaQuery.of(context).size.width * 0.45,
+          height:160,
+          width: 135,
           decoration: const BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment(-0.97, 0.24),
                   end: Alignment(0.97, -0.24),
-                  colors: [Color(0xFF5AFF15), Color(0xFF00B712)])),
+                  colors: [Color(0xFFD4AF37), Color(0xFFFFD700)])),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 50),
             child: Column(children: [
               Icon(
                 Icons.monetization_on,
                 color: Colors.white,
-                size: 50,
+                size: 30,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   Constants.payServiceCharge,
-                  style: GoogleFonts.urbanist(
+                  style: GoogleFonts.hind(
+                      letterSpacing:-0.24,
+                      height: 1.33,
                       fontSize: 15,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
                       color: Colors.white),
                 ),
               )
@@ -270,29 +258,32 @@ class _TenantDashboardState extends State<TenantDashboard> {
             lightSource: LightSource.topLeft,
             intensity: 30),
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.25,
-          width: MediaQuery.of(context).size.width * 0.45,
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment(-0.97, 0.24),
-                  end: Alignment(0.97, -0.24),
-                  colors: [Color(0xFF09C6F9), Color(0xFF045DE9)])),
+          height: 160,
+          width: 135,
+          decoration: ShapeDecoration(color:Colors.white,shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),shadows: [ BoxShadow(
+            color: Color(0x19A3A3A3),
+            blurRadius: 8,
+            offset: Offset(0, 4),
+            spreadRadius: 0,
+            ) ]),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 50),
             child: Column(children: [
               Icon(
                 Icons.plumbing_rounded,
-                color: Colors.white,
-                size: 50,
+                color: Colors.black,
+                size: 30,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   Constants.service,
-                  style: GoogleFonts.urbanist(
+                  style: GoogleFonts.hind(
+                      height: 1.33,
+                      letterSpacing: -0.24,
                       fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white),
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black),
                 ),
               )
             ]),
@@ -313,29 +304,32 @@ class _TenantDashboardState extends State<TenantDashboard> {
             lightSource: LightSource.topLeft,
             intensity: 30),
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.25,
-          width: MediaQuery.of(context).size.width * 0.45,
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment(-0.97, 0.24),
-                  end: Alignment(0.97, -0.24),
-                  colors: [Color(0xFF77EED8), Color(0xFF9EABE4)])),
+          height: 160,
+          width: 135,
+          decoration: ShapeDecoration(color:Colors.white,shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),shadows: [ BoxShadow(
+          color: Color(0x19A3A3A3),
+          blurRadius: 8,
+          offset: Offset(0, 4),
+          spreadRadius: 0,
+          ) ]),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 50),
             child: Column(children: [
               Icon(
                 Icons.store,
-                color: Colors.white,
-                size: 50,
+                color: Colors.black,
+                size: 30,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   Constants.marketPlace,
-                  style: GoogleFonts.urbanist(
+                  style: GoogleFonts.hind(
+                      letterSpacing: -0.24,
+                      height: 1.33,
                       fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white),
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black),
                 ),
               )
             ]),

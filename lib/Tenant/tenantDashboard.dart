@@ -27,18 +27,19 @@ class _TenantDashboardState extends State<TenantDashboard> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        bottomNavigationBar: _bottomNavigationBar(),
         body: SingleChildScrollView(
           child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.all(40.0),
                 child: Text(
-                          Constants.dashboard,
-                          style: GoogleFonts.hind(
-                  fontSize: 17,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w700),
-                        ),
+                  Constants.dashboard,
+                  style: GoogleFonts.hind(
+                      fontSize: 17,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700),
+                ),
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -54,7 +55,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 40,left: 30),
+                padding: const EdgeInsets.only(top: 40, left: 30),
                 child: _gridView(),
               ),
             ],
@@ -212,7 +213,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
             lightSource: LightSource.topLeft,
             intensity: 30),
         child: Container(
-          height:160,
+          height: 160,
           width: 135,
           decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -232,7 +233,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
                 child: Text(
                   Constants.payServiceCharge,
                   style: GoogleFonts.hind(
-                      letterSpacing:-0.24,
+                      letterSpacing: -0.24,
                       height: 1.33,
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
@@ -259,12 +260,18 @@ class _TenantDashboardState extends State<TenantDashboard> {
         child: Container(
           height: 160,
           width: 135,
-          decoration: ShapeDecoration(color:Colors.white,shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),shadows: [ BoxShadow(
-            color: Color(0x19A3A3A3),
-            blurRadius: 8,
-            offset: Offset(0, 4),
-            spreadRadius: 0,
-            ) ]),
+          decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              shadows: [
+                BoxShadow(
+                  color: Color(0x19A3A3A3),
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                  spreadRadius: 0,
+                )
+              ]),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 50),
             child: Column(children: [
@@ -305,12 +312,18 @@ class _TenantDashboardState extends State<TenantDashboard> {
         child: Container(
           height: 160,
           width: 135,
-          decoration: ShapeDecoration(color:Colors.white,shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),shadows: [ BoxShadow(
-          color: Color(0x19A3A3A3),
-          blurRadius: 8,
-          offset: Offset(0, 4),
-          spreadRadius: 0,
-          ) ]),
+          decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              shadows: [
+                BoxShadow(
+                  color: Color(0x19A3A3A3),
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                  spreadRadius: 0,
+                )
+              ]),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 50),
             child: Column(children: [
@@ -336,5 +349,17 @@ class _TenantDashboardState extends State<TenantDashboard> {
         ),
       ),
     );
+  }
+
+  Widget _bottomNavigationBar() {
+    return BottomNavigationBar(
+      selectedItemColor: Color(0xFFD4AF37),
+      items: const[
+        BottomNavigationBarItem(icon: Icon(Icons.home),label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.add),label: 'Add'),
+        BottomNavigationBarItem(icon: Icon(Icons.person),label: 'Profile'),
+
+
+    ]);
   }
 }

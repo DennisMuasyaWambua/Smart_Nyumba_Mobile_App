@@ -45,9 +45,9 @@ class Constants {
 
   //authentication related constants
   static const String BASE_API_URL =
-      "https://4533-105-160-114-196.ngrok-free.app/apps/user/api/v1";
+      "https://3d8d-41-80-112-190.ngrok-free.app/apps/user/api/v1";
   static const String AUTHENTICATION_BASE_URL =
-      "https://4533-105-160-114-196.ngrok-free.app/apps/user/api/v1/auth";
+      "https://3d8d-41-80-112-190.ngrok-free.app/apps/user/api/v1/auth";
   static const String LOGIN_URL = "$AUTHENTICATION_BASE_URL/user-login/";
   static const String REGISTER_URL = "$AUTHENTICATION_BASE_URL/user-register/";
   static const String VERIFY_OTP =

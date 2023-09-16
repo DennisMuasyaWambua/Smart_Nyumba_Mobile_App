@@ -21,8 +21,8 @@ class AuthButton extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         decoration: ShapeDecoration(
           gradient: LinearGradient(
-            begin: Alignment(-0.97, 0.24),
-            end: Alignment(0.97, -0.24),
+            begin: const Alignment(-0.97, 0.24),
+            end: const Alignment(0.97, -0.24),
             colors: textColor,
           ),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
@@ -35,7 +35,7 @@ class AuthButton extends StatelessWidget {
             Text(
               '$text',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 decoration: TextDecoration.none,
                 color: Colors.white,
                 fontSize: 27,

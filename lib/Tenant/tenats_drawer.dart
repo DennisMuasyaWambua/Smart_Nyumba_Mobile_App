@@ -13,10 +13,10 @@ class _TenantsDrawerState extends State<TenantsDrawer> {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
-        children: [
-          const UserAccountsDrawerHeader(
-            accountName: const Text("accountName"),
-             accountEmail: const Text("accountEmail"))
+        children: const [
+          UserAccountsDrawerHeader(
+            accountName: Text("accountName"),
+             accountEmail: Text("accountEmail"))
         ],
       ),
     );

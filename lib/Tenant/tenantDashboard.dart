@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -223,7 +222,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 50),
             child: Column(children: [
-              Icon(
+              const Icon(
                 Icons.monetization_on,
                 color: Colors.white,
                 size: 30,
@@ -264,7 +263,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
               color: Colors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
-              shadows: [
+              shadows: const [
                 BoxShadow(
                   color: Color(0x19A3A3A3),
                   blurRadius: 8,
@@ -275,7 +274,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 50),
             child: Column(children: [
-              Icon(
+              const Icon(
                 Icons.plumbing_rounded,
                 color: Colors.black,
                 size: 30,
@@ -316,7 +315,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
               color: Colors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
-              shadows: [
+              shadows: const [
                 BoxShadow(
                   color: Color(0x19A3A3A3),
                   blurRadius: 8,
@@ -327,7 +326,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 50),
             child: Column(children: [
-              Icon(
+              const Icon(
                 Icons.store,
                 color: Colors.black,
                 size: 30,
@@ -353,7 +352,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
 
   Widget _bottomNavigationBar() {
     return BottomNavigationBar(
-      selectedItemColor: Color(0xFFD4AF37),
+      selectedItemColor: const Color(0xFFD4AF37),
       items: const[
         BottomNavigationBarItem(icon: Icon(Icons.home),label: 'Home'),
         BottomNavigationBarItem(icon: Icon(Icons.add),label: 'Add'),

@@ -91,7 +91,7 @@ class _LoginState extends State<Login> {
           decoration: InputDecoration(
             alignLabelWithHint: true,
             border: InputBorder.none,
-            contentPadding: EdgeInsets.all(15),
+            contentPadding: const EdgeInsets.all(15),
             suffixIcon: InkWell(
                 onTap: _tooglePasswordVisibility,
                 child: _passwordVisible
@@ -104,17 +104,23 @@ class _LoginState extends State<Login> {
   Widget _buttonSubmitField() {
     return AuthButton(
       onClick: () {
-        email = _emailController.text;
-        password = _passwordController.text;
+        setState(() {
+          email = _emailController.text;
+          password = _passwordController.text;
+        });
+        
+
+        print("$email $password");
 
         log(email.toString(), name: "EMAIL PARAMETER AT LOGIN");
         log(password.toString(), name: "PASSWORD PARAMETER AT LOGIN");
 
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (_) => const TenantDashboard()));
+        // Navigator.pushReplacement(context,
+        //     MaterialPageRoute(builder: (_) => const TenantDashboard()));
         final login = Auth().login(email, password);
 
         login.then((value) async {
+          print(value.toString());
           log(value.message.toString(), name: "LOGIN MESSAGE");
 
           if (value.accessToken != null) {
@@ -154,7 +160,7 @@ class _LoginState extends State<Login> {
         });
       },
       text: Constants.login,
-      textColor: [Color(0xFFD4AF37), Color(0xFFFFD700)],
+      textColor: const [Color(0xFFD4AF37), Color(0xFFFFD700)],
     );
   }
 
@@ -186,7 +192,7 @@ class _LoginState extends State<Login> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.fromLTRB(0, 140, 10, 5),
                 child: Text(
                   "Smart Nyumba",
@@ -198,7 +204,7 @@ class _LoginState extends State<Login> {
                       color: Color(0xff22215B)),
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                 child: Text(
                   "Sign in",
@@ -210,8 +216,8 @@ class _LoginState extends State<Login> {
                       color: Color(0xff22215B)),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 5),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 5),
                 child: Text("YOUR EMAIL",
                     style: TextStyle(
                         decoration: TextDecoration.none,
@@ -222,8 +228,8 @@ class _LoginState extends State<Login> {
                         letterSpacing: 1.40)),
               ),
               _emailField(),
-              Padding(
-                  padding: const EdgeInsets.only(bottom: 5, top: 40),
+              const Padding(
+                  padding: EdgeInsets.only(bottom: 5, top: 40),
                   child: Text("PASSWORD",
                       style: TextStyle(
                           decoration: TextDecoration.none,
@@ -233,14 +239,14 @@ class _LoginState extends State<Login> {
                           fontWeight: FontWeight.w300,
                           letterSpacing: 1.40))),
               _passwordField(),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               _buttonSubmitField(),
               GestureDetector(
                 onTap: () {
                   Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (_) => const Register()));
+                      MaterialPageRoute(builder: (_) => const Register()));
                 },
                 child: const SizedBox(
                   width: 300,

@@ -16,11 +16,15 @@ class Auth {
     log(loginEndpoint.toString(), name: "LOGIN URL");
     log("${email.toString()}${password.toString()}",
         name: "PARAMETERS BEING  USED");
+    print(loginEndpoint);
 
     try {
       var uri = Uri.parse(loginEndpoint);
       final response =
           await http.post(uri, body: {'email': email, 'password': password});
+      log(uri.toString(), name: "LOGIN URL");
+      print(response.body);
+      log(response.body.toString(), name: " RESPONSE");
       log(response.statusCode.toString(), name: "Status code");
       LoginResponseMessage loginResponseMessage =
           LoginResponseMessage.fromJson(json.decode(response.body));
@@ -28,9 +32,11 @@ class Auth {
       log(loginResponseMessage.message.toString(),
           name: "Response message from login");
       // Saving the token from logging in
-      SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken.toString());
+      SharedPrefrenceBuilder.setUserToken(
+          loginResponseMessage.accessToken.toString());
       if (loginResponseMessage.accessToken != null) {
-        SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken.toString());
+        SharedPrefrenceBuilder.setUserToken(
+            loginResponseMessage.accessToken.toString());
         log(loginResponseMessage.status.toString(), name: "Status");
         log(loginResponseMessage.message.toString(), name: "Success message");
 

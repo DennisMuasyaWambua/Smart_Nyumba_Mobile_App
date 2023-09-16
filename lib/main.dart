@@ -58,6 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ], 
     child:  MaterialApp(
       home: const Login(),
+      debugShowCheckedModeBanner: false,
       
       routes: {
         '/login': (context) => const Login(),

@@ -1,9 +1,7 @@
 # smart_nyumba
 
 A simple rent and service fee collection application to help landlords automate and digitize their rent collection efforts
-
-![signin page](https://github.com/DennisMuasyaWambua/Smart_Nyumba_Mobile_App/assets/51715638/e86d258a-0f50-4219-a019-5ee638103079
-
+![signin page](https://github.com/DennisMuasyaWambua/Smart_Nyumba_Mobile_App/assets/51715638/3050a823-d3a2-4bc6-8089-35c5d4a64e7a)
 
 ## Getting Started
 

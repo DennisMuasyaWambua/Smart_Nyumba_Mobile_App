@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_nyumba/Admin/admin_dashboard.dart';
+import 'package:smart_nyumba/Admin/create_role.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/Providers/tenants_profile_provider.dart';
 import 'package:smart_nyumba/Tenant/all_transactions_data.dart';
@@ -65,7 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
         '/register': (context) => const Register(),
         '/otp': (context) => const Otp(),
         '/tenantsDashboard': (context) => const TenantDashboard(),
+        '/adminDashboard':(context)=>const AdminDashboard(),
         '/allServiceChargeTransactions':(context)=>const AllTransactionsData(),
+        '/createNewRole':(context)=>const CreateRole(),
       },
     ),);
   }

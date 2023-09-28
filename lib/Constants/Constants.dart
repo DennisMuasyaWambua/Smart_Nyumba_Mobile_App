@@ -21,11 +21,13 @@ class Constants {
 
   //Util constants
   static const String dashboard = "Dashboard";
+  static const String addNewRole = "Add new role";
+  static const String addNewRoleDescription = "Create a new role and assign an elected tenant";
   static const String serviceChargePayments = "All service chage payments";
   static const String payment = "Make Payment";
   static const String welcomeMsg = "User name";
   static const String paymentHistory = "Payment Statement";
-  static const String serviceChargeBalance = "Service Charge Balance";
+  static const String serviceChargeBalance = "Service Charge";
   static const String payServiceCharge = "Pay Service Charge";
   static const String service = "Request for Repairs";
   static const String marketPlace = "Marketplace";
@@ -33,6 +35,8 @@ class Constants {
   static const String serviceCharge = "Service Charge";
   static const String OtpVerification = "OTP VERIFICATION";
   static const String didntGetCode = "Didn't get code? Resend Code";
+  static const String createRole = "Create role";
+
 
   //colors
   static const buttonColor = Color(0xffbc9f6d);
@@ -40,14 +44,15 @@ class Constants {
   static const paymentColor = Color(0xff4cd964);
   static const servicesColor = Color(0xff567df4);
   static const purple = Color(0xff6246ea);
+  static const themePurple = Color(0xff22215B);
 
   // URL constants
 
   //authentication related constants
   static const String BASE_API_URL =
-      "https://3d8d-41-80-112-190.ngrok-free.app/apps/user/api/v1";
+      "https://3efb-41-79-10-74.ngrok-free.app/apps/user/api/v1";
   static const String AUTHENTICATION_BASE_URL =
-      "https://3d8d-41-80-112-190.ngrok-free.app/apps/user/api/v1/auth";
+      "https://3efb-41-79-10-74.ngrok-free.app/apps/user/api/v1/auth";
   static const String LOGIN_URL = "$AUTHENTICATION_BASE_URL/user-login/";
   static const String REGISTER_URL = "$AUTHENTICATION_BASE_URL/user-register/";
   static const String VERIFY_OTP =

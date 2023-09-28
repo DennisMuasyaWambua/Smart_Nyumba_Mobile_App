@@ -220,7 +220,7 @@ class _RegisterState extends State<Register> {
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      title: const Text("Success"),
+
                                       content: Text(value.message),
                                     );
                                   });

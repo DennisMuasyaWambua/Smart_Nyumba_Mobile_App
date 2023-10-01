@@ -31,17 +31,16 @@ class _CreateRoleState extends State<CreateRole> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(top:35.0,left: 20.0),
+              padding: EdgeInsets.only(top:40.0,left: 20.0),
               child: Row(
                 children: [
                   Icon(Icons.arrow_back,color: Colors.black,),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 100),
-                    child: Text(Constants.addNewRole, style: GoogleFonts.hind(color: Colors.black,fontWeight: FontWeight.w700, fontSize: 17),),
-                  )
+
                 ],
               ),
             ),
+
+            SizedBox(width:276,child: Text(Constants.addNewRole, style: GoogleFonts.hind(color: Colors.black,fontWeight: FontWeight.w700, fontSize: 17),)),
             Padding(
               padding: EdgeInsets.only(top:5.0,left: 20.0),
               child: Row(
@@ -54,28 +53,31 @@ class _CreateRoleState extends State<CreateRole> {
                 ],
               ),
             ),
-            Container(
-              width: 310,
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
-              clipBehavior: Clip.antiAlias,
-              decoration: ShapeDecoration(
-                color: Color(0xFFF2F3F3),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
-              ),
-              child:
-                  TextFormField(
-                      controller: roleNameController,
-                      keyboardType: TextInputType.text,
-                      style: const TextStyle(
-                        color: Colors.black87,
-                      ),
-                      decoration: const InputDecoration(
-                        hintText: "Role Name",
-                        contentPadding: EdgeInsets.only(left: 25,bottom: 10),
-                        border: InputBorder.none,
-                      )),
+            Padding(
+              padding: const EdgeInsets.only(top:25.0),
+              child: Container(
+                width: 310,
+                height: 50,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+                clipBehavior: Clip.antiAlias,
+                decoration: ShapeDecoration(
+                  color: Color(0xFFF2F3F3),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
+                ),
+                child:
+                    TextFormField(
+                        controller: roleNameController,
+                        keyboardType: TextInputType.text,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                        ),
+                        decoration: const InputDecoration(
+                          hintText: "Role Name",
+                          contentPadding: EdgeInsets.only(left: 25,bottom: 10),
+                          border: InputBorder.none,
+                        )),
 
+              ),
             )
           ],
         ),

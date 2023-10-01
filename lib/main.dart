@@ -11,6 +11,7 @@ import 'package:smart_nyumba/Tenant/all_transactions_data.dart';
 import 'Authentication/login/login.dart';
 import 'Authentication/otp.dart';
 import 'Authentication/register/register.dart';
+import 'Providers/auth_provider.dart';
 import 'Providers/payment_provider.dart';
 import 'Tenant/tenantDashboard.dart';
 
@@ -56,7 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         ChangeNotifierProvider(
           create: (context)=>TenantsProfile()
-        )
+        ),
+        ChangeNotifierProvider(create:(context)=>Auth()),
     ], 
     child:  MaterialApp(
       home: const Login(),

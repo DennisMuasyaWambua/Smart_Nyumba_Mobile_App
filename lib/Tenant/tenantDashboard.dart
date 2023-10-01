@@ -1,15 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:smart_nyumba/Models/user_profile.dart';
 import 'package:smart_nyumba/Providers/payment_provider.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/Providers/tenants_profile_provider.dart';
 
 import '../Constants/Constants.dart';
+import '../Providers/auth_provider.dart';
 
 class TenantDashboard extends StatefulWidget {
   const TenantDashboard({Key? key}) : super(key: key);
@@ -21,8 +24,22 @@ class TenantDashboard extends StatefulWidget {
 class _TenantDashboardState extends State<TenantDashboard> {
   //getting the Tenats profile from the backend
   int hasUserPaid = 0;
+  var lastName;
+
   @override
   Widget build(BuildContext context) {
+    // log(Auth().getProfile(context).toString(),name: "THIS IS THE USERS  PROFILE");
+   final profile =  Auth().getProfile(Provider.of<Auth>(context,listen: false).token);
+   profile.then((value)async{
+     log(value.profile!.user!.toJson().toString(),name: "FETCHING PROFILE");
+     lastName = value.profile!.user!.lastName.toString();
+     Provider.of<Auth>(context,listen: false).setLastName(value.profile!.user!.lastName.toString());
+     // User? user = value.profile!.user;
+     // Provider.of<Auth>(context,listen: false).setUsersData(user!);
+
+   });
+
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -45,7 +62,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    Constants.welcomeMsg,
+                    Constants.welcomeMsg+'$lastName',
                     style: GoogleFonts.urbanist(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -65,6 +82,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
   }
 
   Widget _gridView() {
+    // log(context.read<Auth>().token.toString(),name:"THIS IS THE TOKEN");
     return Column(
       children: [
         Row(

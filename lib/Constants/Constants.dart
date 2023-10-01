@@ -50,15 +50,15 @@ class Constants {
 
   //authentication related constants
   static const String BASE_API_URL =
-      "https://3efb-41-79-10-74.ngrok-free.app/apps/user/api/v1";
+      "https://d77d-105-162-36-170.ngrok-free.app/apps/user/api/v1";
   static const String AUTHENTICATION_BASE_URL =
-      "https://3efb-41-79-10-74.ngrok-free.app/apps/user/api/v1/auth";
+      "https://d77d-105-162-36-170.ngrok-free.app/apps/user/api/v1/auth";
   static const String LOGIN_URL = "$AUTHENTICATION_BASE_URL/user-login/";
   static const String REGISTER_URL = "$AUTHENTICATION_BASE_URL/user-register/";
   static const String VERIFY_OTP =
       "$AUTHENTICATION_BASE_URL/user-register-verification/";
-
   static const String RESEND_OTP = "$AUTHENTICATION_BASE_URL/user-resend-otp/";
+  static const String USER_PROFILE = "$AUTHENTICATION_BASE_URL/user-profile/";
 
   //PAYMENT related constants
   static const String PAYMENT_BASE_URL =

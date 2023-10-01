@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_nyumba/Authentication/register/register.dart';
 
 import 'package:smart_nyumba/Models/user_profile.dart';
@@ -109,7 +110,7 @@ class _LoginState extends State<Login> {
           password = _passwordController.text;
         });
         // Navigate to the Admin's dashboard
-        Navigator.pushNamed(context, '/adminDashboard');
+        // Navigator.pushNamed(context, '/adminDashboard');
         print("$email $password");
 
         log(email.toString(), name: "EMAIL PARAMETER AT LOGIN");
@@ -117,47 +118,50 @@ class _LoginState extends State<Login> {
 
         // Navigator.pushReplacement(context,
         //     MaterialPageRoute(builder: (_) => const TenantDashboard()));
-        // final login = Auth().login(email, password);
-        //
-        // login.then((value) async {
-        //   print(value.toString());
-        //   log(value.message.toString(), name: "LOGIN MESSAGE");
-        //
-        //   if (value.accessToken != null) {
-        //     // Saving the users credentials using shared prefrences
-        //     SharedPrefrenceBuilder.setUserEmail(email);
-        //     SharedPrefrenceBuilder.setUserToken(value.accessToken.toString());
-        //     // Set the User id to the user to save the usersprofile
-        //     var user = await http.get(Uri.parse(Constants.TENANTS_PROFILE),
-        //         headers: {'Authorization': 'Bearer ${value.accessToken}'});
-        //
-        //     UserProfile usr = UserProfile.fromJson(json.decode(user.body));
-        //     var id = usr.profile!.user!.id;
-        //     SharedPrefrenceBuilder.setUserID(id!);
-        //
-        //     log(SharedPrefrenceBuilder().getUserEmail.toString(),
-        //         name: "EMAIL ADDRESS GOTTEN FROM LOGIN MESSAGE");
-        //     log(SharedPrefrenceBuilder().getUserToken.toString(),
-        //         name: "USER TOKEN GOTTEN FROM LOGIN MESSAGE");
-        //     // Navigating to the tenants dashboard
-        //     Navigator.pushReplacement(context,
-        //         MaterialPageRoute(builder: (_) => const TenantDashboard()));
-        //   } else {
-        //     // QuickAlert.show(context: context, type: QuickAlertType.error, text: value.message);
-        //     Timer(const Duration(seconds: 3), () {
-        //       showDialog(
-        //           context: context,
-        //           builder: (context) {
-        //             Navigator.of(context).pop();
-        //
-        //             return AlertDialog(
-        //               title: const Text("ERROR"),
-        //               content: Text(value.message),
-        //             );
-        //           });
-        //     });
-        //   }
-        // });
+        final login = Auth().login(email, password,context);
+
+        login.then((value) async {
+          print(value.toString());
+          log(value.message.toString(), name: "LOGIN MESSAGE");
+
+          if (value.accessToken != null) {
+            // Saving the users credentials using shared prefrences
+            SharedPrefrenceBuilder.setUserEmail(email);
+            SharedPrefrenceBuilder.setUserToken(value.accessToken.toString());
+            //saving token to provider
+            Provider.of<Auth>(context,listen:false).setToken(value.accessToken.toString());
+            log(Provider.of<Auth>(context,listen: false).token.toString(),name: "TOKEN PROVIDER");
+            // Set the User id to the user to save the usersprofile
+            var user = await http.get(Uri.parse(Constants.TENANTS_PROFILE),
+                headers: {'Authorization': 'Bearer ${value.accessToken}'});
+
+            UserProfile usr = UserProfile.fromJson(json.decode(user.body));
+            var id = usr.profile!.user!.id;
+            SharedPrefrenceBuilder.setUserID(id!);
+
+            log(SharedPrefrenceBuilder().getUserEmail.toString(),
+                name: "EMAIL ADDRESS GOTTEN FROM LOGIN MESSAGE");
+            log(SharedPrefrenceBuilder().getUserToken.toString(),
+                name: "USER TOKEN GOTTEN FROM LOGIN MESSAGE");
+            // Navigating to the tenants dashboard
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (_) => const TenantDashboard()));
+          } else {
+            // QuickAlert.show(context: context, type: QuickAlertType.error, text: value.message);
+            Timer(const Duration(seconds: 3), () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    Navigator.of(context).pop();
+
+                    return AlertDialog(
+                      title: const Text("ERROR"),
+                      content: Text(value.message),
+                    );
+                  });
+            });
+          }
+        });
       },
       text: Constants.login,
       textColor: const [Color(0xFFD4AF37), Color(0xFFFFD700)],

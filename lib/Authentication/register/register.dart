@@ -121,7 +121,7 @@ class _RegisterState extends State<Register> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         inputFields(150.0, 35.0, "House number",
-                            _houseNumberController, TextInputType.number,Icons.house),
+                            _houseNumberController, TextInputType.text,Icons.house),
                         inputFields(140.0, 35.0, "Phone",
                             _mobileNumberController, TextInputType.number,Icons.phone),
                       ],
@@ -209,7 +209,7 @@ class _RegisterState extends State<Register> {
                               BlockNumber,
                               HouseNumber,
                               MobileNumber,
-                              password);
+                              password,context);
 
                           register.then((value) {
                             log(value.message.toString(),

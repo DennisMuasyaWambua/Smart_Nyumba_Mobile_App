@@ -120,6 +120,7 @@ class _LoginState extends State<Login> {
         //     MaterialPageRoute(builder: (_) => const TenantDashboard()));
         final login = Auth().login(email, password,context);
 
+
         login.then((value) async {
           print(value.toString());
           log(value.message.toString(), name: "LOGIN MESSAGE");
@@ -131,6 +132,8 @@ class _LoginState extends State<Login> {
             //saving token to provider
             Provider.of<Auth>(context,listen:false).setToken(value.accessToken.toString());
             log(Provider.of<Auth>(context,listen: false).token.toString(),name: "TOKEN PROVIDER");
+            // Auth().getProfile(Provider.of<Auth>(context,listen: false).token.toString(), context);
+
             // Set the User id to the user to save the usersprofile
             var user = await http.get(Uri.parse(Constants.TENANTS_PROFILE),
                 headers: {'Authorization': 'Bearer ${value.accessToken}'});

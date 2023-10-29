@@ -45,7 +45,7 @@ dependencies:
   provider: ^6.0.5
   flutter_dotenv: ^5.0.2
   shared_preferences: ^2.1.1
-  pinput: ^2.2.31
+  pinput: ^3.0.1
   quickalert: ^1.0.1
   flutter_launcher_icons: ^0.13.1
 
@@ -61,7 +61,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
 
 flutter_icons:
-  image_path: "assets/images/smartnyumba.png"
+  image_path: "assets/images/smartnyumbablack.png"
   android: "launcher_icon"
   ios: true
 
@@ -87,6 +87,7 @@ flutter:
     - assets/images/home.png
     - assets/images/smartnyumba.svg
     - assets/images/smartnyumbablack.png
+    - assets/images/person.png
     - .env
 
 

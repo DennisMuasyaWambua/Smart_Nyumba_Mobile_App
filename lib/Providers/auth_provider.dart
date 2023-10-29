@@ -11,6 +11,7 @@ import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'dart:convert';
 
 import '../Constants/Constants.dart';
+import '../Widgets/alerts.dart';
 
 class Auth with ChangeNotifier {
   var firstName,lastName,email;
@@ -20,6 +21,8 @@ class Auth with ChangeNotifier {
 
   String get token => Token;
   String get lName=> lastName;
+  String get mail =>email;
+  String get fname =>firstName;
 
   void setToken(String newToken){
     Token = newToken;
@@ -29,10 +32,17 @@ class Auth with ChangeNotifier {
     lastName = LastName;
     notifyListeners();
   }
+  void setEmail(String mail){
+    email = mail;
+    notifyListeners();
+  }
   void setUsersData(String usr){
     user = usr;
     notifyListeners();
-
+  }
+  void setFirstName(String fName){
+    firstName = fName;
+    notifyListeners();
   }
   // log in method
   Future<LoginResponseMessage> login(String email, password,BuildContext context) async {
@@ -65,6 +75,7 @@ class Auth with ChangeNotifier {
         Token =  loginResponseMessage.accessToken.toString();
         Provider.of<Auth>(context,listen:false).setToken(loginResponseMessage.accessToken.toString());
         log(loginResponseMessage.status.toString(), name: "Status");
+        showDialog(context: context, builder: (BuildContext context)=>Alert().alert(loginResponseMessage.message.toString()));
         log(loginResponseMessage.message.toString(), name: "Success message");
         notifyListeners();
         return loginResponseMessage;
@@ -72,6 +83,7 @@ class Auth with ChangeNotifier {
       } else {
         log(loginResponseMessage.status.toString(), name: "Status");
         log(loginResponseMessage.message.toString(), name: "Error message");
+        showDialog(context: context, builder: (BuildContext context)=>Alert().alert(loginResponseMessage.message.toString()));
         // print(loginResponseMessage.message);
         return LoginResponseMessage(
             message: "An error occurred", status: false);
@@ -85,7 +97,7 @@ class Auth with ChangeNotifier {
 
   // register method
   Future<RegisterResponse> register(String email, firstName, lastName, idNumber,
-      blockNumber, houseNumber, mobileNumber, password) async {
+      blockNumber, houseNumber, mobileNumber, password, BuildContext context) async {
     String registerEndpoint = Constants.REGISTER_URL;
     try {
       Uri register = Uri.parse(registerEndpoint);
@@ -105,8 +117,10 @@ class Auth with ChangeNotifier {
           RegisterResponse.fromJson(jsonDecode(response.body));
 
       if (registerResponse.status = true) {
+        showDialog(context: context, builder: (BuildContext context)=>Alert().alert(registerResponse.message.toString()));
         return registerResponse;
       } else {
+        showDialog(context: context, builder: (BuildContext context)=>Alert().alert(registerResponse.message.toString()));
         return registerResponse;
       }
     } catch (e) {
@@ -143,7 +157,7 @@ class Auth with ChangeNotifier {
   }
 
   //get the users profile
-  Future<UserProfile> getProfile(String token)async{
+  Future<UserProfile> getProfile(String token,BuildContext context)async{
       try{
 
         String userProfileUrl = Constants.USER_PROFILE;
@@ -157,6 +171,11 @@ class Auth with ChangeNotifier {
         log(user.toJson().toString(),name: "USER PROFILE");
         firstName=user.profile!.user!.firstName;
         lastName = user.profile!.user!.lastName;
+        email = user.profile!.user!.email;
+        Provider.of<Auth>(context,listen:false).setEmail(email);
+        Provider.of<Auth>(context,listen: false).setFirstName(firstName);
+        Provider.of<Auth>(context, listen: false).setLastName(lastName);
+
         notifyListeners();
         return user;
       }catch(e){

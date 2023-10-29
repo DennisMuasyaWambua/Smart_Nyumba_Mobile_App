@@ -8,14 +8,13 @@ import 'package:smart_nyumba/Constants/Constants.dart';
 import 'package:smart_nyumba/Models/all_transactions.dart';
 import 'package:smart_nyumba/Models/check-payment-status.dart';
 import 'package:smart_nyumba/Models/pay_service_charge.dart';
-// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 
 class Payments with ChangeNotifier {
   // all payments are handled here
 
-  final String baseurl = "https://smartnyumba.com/apps/user/api/v1/";
+  final String baseurl = "https://er9yqpmri4.execute-api.eu-west-1.amazonaws.com/dev/apps/user/api/v1/";
   final int _serviceChargeAmount = 0;
 
   int get serviceChargeAmount => _serviceChargeAmount;
@@ -32,7 +31,7 @@ class Payments with ChangeNotifier {
 
     log(userEmail.toString(), name: "USER_EMAIL FROM SHARED_PREFERENCES");
     try {
-      Uri servicecharge = Uri.parse(baseurl + serviceChargeEndpoint);
+      Uri servicecharge = Uri.parse(Constants.PAY_SERVICE);
       var response = await http.post(servicecharge, headers: {
         'Authorization': 'Bearer $token',
       }, body: {
@@ -88,7 +87,7 @@ class Payments with ChangeNotifier {
     }
   }
 
-  Future<List<Transaction>?> getAllTransactions() async {
+  Future<List<Transaction>?>getAllTransactions() async {
     try {
       var allTransactions =
           await http.get(Uri.parse(Constants.ALL_TRANSACTIONS), headers: {

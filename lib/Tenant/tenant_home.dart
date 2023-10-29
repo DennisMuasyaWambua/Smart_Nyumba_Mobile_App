@@ -1,50 +1,85 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:quickalert/quickalert.dart';
-import 'package:smart_nyumba/Authentication/Profile/account_profile.dart';
-import 'package:smart_nyumba/Models/user_profile.dart';
-import 'package:smart_nyumba/Providers/payment_provider.dart';
-import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
-import 'package:smart_nyumba/Providers/tenants_profile_provider.dart';
-import 'package:smart_nyumba/Tenant/tenant_home.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../Constants/Constants.dart';
 import '../Providers/auth_provider.dart';
+import '../Providers/payment_provider.dart';
+import '../Providers/shared_preference_builder.dart';
+import '../Providers/tenants_profile_provider.dart';
 
-class TenantDashboard extends StatefulWidget {
-  const TenantDashboard({Key? key}) : super(key: key);
+class TenantHome extends StatefulWidget {
+  const TenantHome({super.key});
 
   @override
-  State<TenantDashboard> createState() => _TenantDashboardState();
+  State<TenantHome> createState() => _TenantHomeState();
 }
 
-class _TenantDashboardState extends State<TenantDashboard> {
-  //getting the Tenats profile from the backend
+class _TenantHomeState extends State<TenantHome> {
   int hasUserPaid = 0;
   int myIndex =0;
-  var lastName;
+  var lastName = ' ';
   var token =  SharedPrefrenceBuilder().getUserToken;
-  List<Widget> pages = [
-    TenantHome(),
-    AccountProfile()
-  ];
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    log(token.toString(),name: "THIS IS THE USERS TOKEN");
+    // final profile =  Auth().getProfile(token!,context);
+    // profile.then((value)async{
+    //   log(value.profile!.user!.toJson().toString(),name: "FETCHING PROFILE");
+    //   lastName = value.profile!.user!.firstName.toString();
+    //   Provider.of<Auth>(context,listen: false).setLastName(value.profile!.user!.lastName.toString());
+    //   log(lastName.toString(),name: "USERS LAST NAME");
+    //   // User? user = value.profile!.user;
+    //   // Provider.of<Auth>(context,listen: false).setUsersData(user!);
+    //
+    // });
+  }
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
-     body: IndexedStack(
-       children: pages,
-       index: myIndex,
-     ),
-     bottomNavigationBar: _bottomNavigationBar(),
-   );
-  }
+    return SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: Text(
+                  Constants.dashboard,
+                  style: GoogleFonts.hind(
+                      fontSize: 17,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Welcome $lastName',
+                    style: GoogleFonts.urbanist(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 40, left: 30),
+                child: _gridView(),
+              ),
+            ],
+          ),
+        );
 
+
+  }
   Widget _gridView() {
     // log(context.read<Auth>().token.toString(),name:"THIS IS THE TOKEN");
     return Column(
@@ -82,7 +117,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
                         name: "THIS IS THE USERS EMAIL");
                     var mobile = value.user!.mobileNumber.toString();
                     var serviceAmt =
-                        value.propertyBlock!.serviceCharge.toString();
+                    value.propertyBlock!.serviceCharge.toString();
                     String serviceName = "Waste";
                     var pay = Provider.of<Payments>(context, listen: false)
                         .payServiceCharge(mobile, serviceAmt, serviceName);
@@ -101,13 +136,17 @@ class _TenantDashboardState extends State<TenantDashboard> {
                           hasUserPaid = value!;
                           log("$value payment was successful",
                               name: "PAYMENT SUCCESS");
+                          timer.cancel();
                         } else {
-                          log("$value payment was successful",
+                          log("$value payment failed",
                               name: "PAYMENT FAILED");
+                          timer.cancel();
                         }
                         log(value.toString(),
                             name: "FROM CHECKING THE PAYMENT RESULT");
                       });
+                      timer.cancel();
+
                     } else {
                       QuickAlert.show(
                         context: context,
@@ -115,6 +154,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
                       );
                       timer.cancel();
                     }
+                    timer.cancel();
                   });
                 },
                 child: _payServiceCharge())
@@ -330,22 +370,5 @@ class _TenantDashboardState extends State<TenantDashboard> {
         ),
       ),
     );
-  }
-
-  Widget _bottomNavigationBar() {
-    return BottomNavigationBar(
-      onTap: (index){
-          setState(() {
-            myIndex=index;
-          });
-      },
-        currentIndex: myIndex,
-      selectedItemColor: const Color(0xFFD4AF37),
-      items: const[
-        BottomNavigationBarItem(icon: Icon(Icons.home),label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.person),label: 'Profile'),
-
-
-    ]);
   }
 }

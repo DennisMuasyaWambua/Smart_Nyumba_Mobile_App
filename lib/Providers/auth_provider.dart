@@ -14,7 +14,7 @@ import '../Constants/Constants.dart';
 import '../Widgets/alerts.dart';
 
 class Auth with ChangeNotifier {
-  var firstName,lastName,email;
+  var firstName,lastName,email,houseNumber,blockNumber;
   var user;
 
   var Token;
@@ -23,6 +23,8 @@ class Auth with ChangeNotifier {
   String get lName=> lastName;
   String get mail =>email;
   String get fname =>firstName;
+  int get blkNo =>blockNumber;
+  String get hseNo=>houseNumber;
 
   void setToken(String newToken){
     Token = newToken;
@@ -42,6 +44,14 @@ class Auth with ChangeNotifier {
   }
   void setFirstName(String fName){
     firstName = fName;
+    notifyListeners();
+  }
+  void setBlockNumber(int blockNo){
+    blockNumber = blockNo;
+    notifyListeners();
+  }
+  void setHouseNumber(String hseNo){
+    houseNumber = hseNo;
     notifyListeners();
   }
   // log in method
@@ -172,9 +182,14 @@ class Auth with ChangeNotifier {
         firstName=user.profile!.user!.firstName;
         lastName = user.profile!.user!.lastName;
         email = user.profile!.user!.email;
+        houseNumber = user.profile!.propertyBlock!.houseNumber;
+        blockNumber = user.profile!.propertyBlock!.block;
+
         Provider.of<Auth>(context,listen:false).setEmail(email);
         Provider.of<Auth>(context,listen: false).setFirstName(firstName);
         Provider.of<Auth>(context, listen: false).setLastName(lastName);
+        Provider.of<Auth>(context,listen: false).setHouseNumber(houseNumber);
+        Provider.of<Auth>(context,listen: false).setBlockNumber(blockNumber);
 
         notifyListeners();
         return user;

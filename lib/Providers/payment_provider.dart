@@ -2,10 +2,12 @@
 
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:smart_nyumba/Constants/Constants.dart';
 import 'package:smart_nyumba/Models/all_transactions.dart';
+import 'package:smart_nyumba/Models/amount.dart';
 import 'package:smart_nyumba/Models/check-payment-status.dart';
 import 'package:smart_nyumba/Models/pay_service_charge.dart';
 import 'package:http/http.dart' as http;
@@ -24,20 +26,25 @@ class Payments with ChangeNotifier {
 
   //payment of serviceCharge
   Future<PayServiceCharge> payServiceCharge(
-      String mobileNumber, amount, serviceName) async {
+      String mobileNumber,String amount, String serviceName) async {
     String serviceChargeEndpoint = "services/pay-service/";
     // getting the users email address
     String userEmail = SharedPrefrenceBuilder().getUserEmail!;
 
     log(userEmail.toString(), name: "USER_EMAIL FROM SHARED_PREFERENCES");
-    try {
+
       Uri servicecharge = Uri.parse(Constants.PAY_SERVICE);
+      Uri serviceAmt = Uri.parse(Constants.SERVICE_FEE_AMOUNT);
+      var serviceamt = await http.get(serviceAmt,headers:{'Authorization': 'Bearer $token'});
+      log(serviceamt.body.toString(),name: "SERVICE AMOUNT");
+      Amount amt = Amount.fromJson(json.decode(serviceamt.body));
+    log(amt.amount.toString(),name: "SERVICE AMOUNT");
       var response = await http.post(servicecharge, headers: {
         'Authorization': 'Bearer $token',
       }, body: {
         'email': userEmail,
         'mobile_number': mobileNumber,
-        'amount': amount,
+        'amount':amt.amount.toString(),
         'service_name': serviceName,
         'pay_via': 'mpesa'
       });
@@ -54,9 +61,7 @@ class Payments with ChangeNotifier {
           name: "PAYMENT WAS INITIATED AND THIS IS THE RESPONSE BACK");
       notifyListeners();
       return service;
-    } catch (e) {
-      throw Exception(e.toString());
-    }
+
   }
 
   Future<int?> checkPaymentStatus() async {

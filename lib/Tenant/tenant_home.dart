@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -31,16 +32,19 @@ class _TenantHomeState extends State<TenantHome> {
     // TODO: implement initState
     super.initState();
     log(token.toString(),name: "THIS IS THE USERS TOKEN");
-    // final profile =  Auth().getProfile(token!,context);
-    // profile.then((value)async{
-    //   log(value.profile!.user!.toJson().toString(),name: "FETCHING PROFILE");
-    //   lastName = value.profile!.user!.firstName.toString();
-    //   Provider.of<Auth>(context,listen: false).setLastName(value.profile!.user!.lastName.toString());
-    //   log(lastName.toString(),name: "USERS LAST NAME");
-    //   // User? user = value.profile!.user;
-    //   // Provider.of<Auth>(context,listen: false).setUsersData(user!);
-    //
-    // });
+    final profile =  Auth().getProfile(token!,context);
+    profile.then((value)async{
+      setState(() {
+        log(value.profile!.user!.toJson().toString(),name: "FETCHING PROFILE");
+        lastName = value.profile!.user!.firstName.toString();
+        Provider.of<Auth>(context,listen: false).setLastName(value.profile!.user!.lastName.toString());
+        log(lastName.toString(),name: "USERS LAST NAME");
+      });
+
+      // User? user = value.profile!.user;
+      // Provider.of<Auth>(context,listen: false).setUsersData(user!);
+
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -89,17 +93,17 @@ class _TenantHomeState extends State<TenantHome> {
             GestureDetector(
                 onTap: () {
                   // payment status
-                  // var history = Provider.of<Payments>(context, listen: false)
-                  //     .getAllTransactions();
+                  var history = Provider.of<Payments>(context, listen: false)
+                      .getAllTransactions();
 
-                  // history.then((value) {
+                  history.then((value) {
 
-                  //   for (int i = 0; i < value!.length; i++) {
-                  //        log(value[i].toJson().toString(),
-                  //       name: "HISTORIC TRANSACTIONS");
-                  //       // get information from here on all transactions and form the system
-                  //   }
-                  // });
+                    for (int i = 0; i < value!.length; i++) {
+                         log(value[i].toJson().toString(),
+                        name: "HISTORIC TRANSACTIONS");
+                        // get information from here on all transactions and form the system
+                    }
+                  });
                   Navigator.pushNamed(context, '/allServiceChargeTransactions');
                 },
                 child: _paymentHistory()),
@@ -118,9 +122,11 @@ class _TenantHomeState extends State<TenantHome> {
                     var mobile = value.user!.mobileNumber.toString();
                     var serviceAmt =
                     value.propertyBlock!.serviceCharge.toString();
+                    String amt = '1.0';
                     String serviceName = "Waste";
                     var pay = Provider.of<Payments>(context, listen: false)
-                        .payServiceCharge(mobile, serviceAmt, serviceName);
+                        .payServiceCharge(mobile,amt, serviceName);
+
 
                     pay.then((value) {
                       log(value.toJson().toString(), name: "PAYMENT RESULT");

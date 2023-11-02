@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,6 +35,12 @@ class _TenantDashboardState extends State<TenantDashboard> {
     AccountProfile()
   ];
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // Auth().getProfile(Provider.of<Auth>(context,listen: false).token, context);
+  }
   @override
   Widget build(BuildContext context) {
    return Scaffold(
@@ -85,7 +92,8 @@ class _TenantDashboardState extends State<TenantDashboard> {
                         value.propertyBlock!.serviceCharge.toString();
                     String serviceName = "Waste";
                     var pay = Provider.of<Payments>(context, listen: false)
-                        .payServiceCharge(mobile, serviceAmt, serviceName);
+                        .payServiceCharge(mobile, serviceAmt
+                        , serviceName);
 
                     pay.then((value) {
                       log(value.toJson().toString(), name: "PAYMENT RESULT");

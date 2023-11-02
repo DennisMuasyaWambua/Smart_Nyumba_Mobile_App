@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_nyumba/Models/user_profile.dart';
 
@@ -13,8 +14,11 @@ class AccountProfile extends StatefulWidget {
 }
 
 class _ProfileState extends State<AccountProfile> {
-
-
+  String email=' ';
+  String name = ' ';
+  int blockNumber =0;
+  String houseNumber = ' ';
+  String phoneNumber = ' ';
   Stream<UserProfile> userprofile() async*{
     yield UserProfile();
 
@@ -23,15 +27,30 @@ class _ProfileState extends State<AccountProfile> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    final account =  Auth().getProfile(Provider.of<Auth>(context,listen: false).token, context);
+    account.then((value)async{
+      setState(() {
+        email = value.profile!.user!.email!;
+        name = value.profile!.user!.firstName!;
+        blockNumber = value.profile!.propertyBlock!.block!;
+        houseNumber = value.profile!.propertyBlock!.houseNumber!;
+        phoneNumber = value.profile!.user!.mobileNumber!;
+      });
+
+    });
 
   }
   @override
   Widget build(BuildContext context) {
-    var email=' ';
-    var name = ' ';
-    Auth().getProfile(Provider.of<Auth>(context,listen: false).token, context);
-    email = Provider.of<Auth>(context).email;
-    name =  Provider.of<Auth>(context).firstName;
+
+
+    // setState(() {
+    //   email = Provider.of<Auth>(context,listen: false).email;
+    //   name =  Provider.of<Auth>(context,listen: false).firstName;
+    //   blockNumber = Provider.of<Auth>(context,listen: false).blkNo;
+    //   houseNumber = Provider.of<Auth>(context,listen: false).hseNo;
+    // });
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -80,7 +99,24 @@ class _ProfileState extends State<AccountProfile> {
                   ),
                   ListTile(
                     leading: Container(width: 50,height: 50,child: Card(elevation: 10,child: Icon(Icons.person,color: Colors.black,),),),
-                    title: ExpansionTile(title: Text("Personal Details"),),
+                    title: ExpansionTile(title: Text("Personal Details",style: GoogleFonts.hind(fontSize:16, fontWeight: FontWeight.w500,letterSpacing:0.32,height: 0.06, ),),
+                            children: [
+                              Align(alignment: Alignment.centerLeft,child: Text("Name: $name",style: GoogleFonts.hind(fontSize: 13, fontWeight: FontWeight.w400,color: Colors.grey),)),
+                              Align(alignment: Alignment.centerLeft,child: Text("Email: $email",style: GoogleFonts.hind(fontSize: 13, fontWeight: FontWeight.w400,color: Colors.grey),)),
+                              Align(alignment: Alignment.centerLeft,child: Text("Block number: $blockNumber",style: GoogleFonts.hind(fontSize: 13, fontWeight: FontWeight.w400,color: Colors.grey),)),
+                              Align(alignment:Alignment.centerLeft,child: Text("House number: $houseNumber",style: GoogleFonts.hind(fontSize: 13, fontWeight: FontWeight.w400,color: Colors.grey),))
+                            ],
+                            textColor: Colors.black,collapsedTextColor: Colors.black,),
+                  ),
+                  ListTile(
+                    leading: Container(width: 50,height: 50,child: Card(elevation: 10,child: Icon(Icons.credit_card_rounded,color: Colors.black,),),),
+                    title: ExpansionTile(title: Text("Payment Details",style: GoogleFonts.hind(fontSize:16, fontWeight: FontWeight.w500,letterSpacing:0.32,height: 0.06, ),),
+                      children: [
+                        Align(alignment: Alignment.centerLeft,child: Text("Payment Method: MPESA",style: GoogleFonts.hind(fontSize: 13, fontWeight: FontWeight.w400,color: Colors.grey),)),
+                        Align(alignment: Alignment.centerLeft,child: Text("Mobile No: $phoneNumber",style: GoogleFonts.hind(fontSize: 13, fontWeight: FontWeight.w400,color: Colors.grey),)),
+
+                      ],
+                      textColor: Colors.black,collapsedTextColor: Colors.black,),
                   )
                 ],
               ),

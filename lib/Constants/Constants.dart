@@ -61,13 +61,12 @@ class Constants {
   static const String USER_PROFILE = "$AUTHENTICATION_BASE_URL/user-profile/";
 
   //PAYMENT related constants
-  static const String PAYMENT_BASE_URL =
-      "https://y34b2e7j9d.execute-api.us-west-1.amazonaws.com/dev/apps/admin/api/v1/tenant-services";
+  static const String PAYMENT_BASE_URL = "https://y34b2e7j9d.execute-api.us-west-1.amazonaws.com/dev/apps/admin/api/v1/tenant-services";
   static const String PAY_SERVICE = "$PAYMENT_BASE_URL/pay-service/";
   static const String MPESA_CALLBACK = "$PAYMENT_BASE_URL/mpesa-callback";
   static const String ALL_TRANSACTIONS = "$PAYMENT_BASE_URL/all-transactions/";
-  static const String CHECK_PAYMENT_COMPLETION =
-      "$PAYMENT_BASE_URL/check-subscription-status/";
+  static const String CHECK_PAYMENT_COMPLETION = "$PAYMENT_BASE_URL/check-subscription-status/";
+  static const String SERVICE_FEE_AMOUNT = "$PAYMENT_BASE_URL/service-fee-amount/";
 
   // Account related constants
   static const String TENANTS_PROFILE = "$BASE_API_URL/auth/user-profile/";

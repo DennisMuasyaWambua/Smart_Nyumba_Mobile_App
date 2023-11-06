@@ -33,23 +33,26 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _loginForm(),
-          ],
+      home: Scaffold(
+          body: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _loginForm(),
+            ],
+          ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 
   Widget _emailField() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.06,
+      height: MediaQuery.of(context).size.height * 0.05,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius:
@@ -73,7 +76,7 @@ class _LoginState extends State<Login> {
 
   Widget _passwordField() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.06,
+      height: MediaQuery.of(context).size.height * 0.05,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius:

@@ -48,6 +48,7 @@ dependencies:
   pinput: ^3.0.1
   quickalert: ^1.0.1
   flutter_launcher_icons: ^0.13.1
+  data_table_2: ^2.5.8
 
 dev_dependencies:
   flutter_test:

@@ -50,6 +50,7 @@ class _TenantHomeState extends State<TenantHome> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
           child: Column(
+
             children: [
               Padding(
                 padding: const EdgeInsets.all(40.0),
@@ -61,19 +62,19 @@ class _TenantHomeState extends State<TenantHome> {
                       fontWeight: FontWeight.w700),
                 ),
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Welcome $lastName',
-                    style: GoogleFonts.urbanist(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Welcome $lastName',
+                      style: GoogleFonts.urbanist(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black),
+                    ),
                   ),
                 ),
-              ),
               Padding(
                 padding: const EdgeInsets.only(top: 40, left: 30),
                 child: _gridView(),
@@ -87,9 +88,69 @@ class _TenantHomeState extends State<TenantHome> {
   Widget _gridView() {
     // log(context.read<Auth>().token.toString(),name:"THIS IS THE TOKEN");
     return Column(
+
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
       children: [
         Row(
           children: [
+
+            GestureDetector(
+                onTap: () {
+                  var token = SharedPrefrenceBuilder().getUserToken.toString();
+
+                  log(token.toString(),
+                      name: "TOKEN BEING SHARED WITH PROVIDER STATE MANAGER");
+                  var user = Provider.of<TenantsProfile>(context, listen: false)
+                      .getUserProfile(token);
+
+                  user.then((value) {
+                    log(value.email.toString(),
+                        name: "THIS IS THE USERS EMAIL");
+                    var mobile = value.user!.mobileNumber.toString();
+
+                    String amt = '1';
+                    String serviceName = "Waste";
+                    var pay = Provider.of<Payments>(context, listen: false)
+                        .payServiceCharge(mobile,amt, serviceName);
+
+
+                    pay.then((value) {
+                      log(value.toString(), name: "PAYMENT RESULT");
+                    });
+                  });
+
+                  // Timer.periodic(const Duration(seconds: 3), (timer) {
+                  //   if (hasUserPaid == 0) {
+                  //     var check = Provider.of<Payments>(context, listen: false)
+                  //         .checkPaymentStatus();
+                  //     check.then((value) {
+                  //       if (value == 1) {
+                  //         hasUserPaid = value!;
+                  //         log("$value payment was successful",
+                  //             name: "PAYMENT SUCCESS");
+                  //         timer.cancel();
+                  //       } else {
+                  //         log("$value payment failed",
+                  //             name: "PAYMENT FAILED");
+                  //         timer.cancel();
+                  //       }
+                  //       log(value.toString(),
+                  //           name: "FROM CHECKING THE PAYMENT RESULT");
+                  //     });
+                  //     timer.cancel();
+                  //
+                  //   } else {
+                  //     QuickAlert.show(
+                  //       context: context,
+                  //       type: QuickAlertType.success,
+                  //     );
+                  //     timer.cancel();
+                  //   }
+                  //   timer.cancel();
+                  // });
+                },
+                child: _payServiceCharge()),
             GestureDetector(
                 onTap: () {
                   // payment status
@@ -106,75 +167,15 @@ class _TenantHomeState extends State<TenantHome> {
                   });
                   Navigator.pushNamed(context, '/allServiceChargeTransactions');
                 },
-                child: _paymentHistory()),
-            GestureDetector(
-                onTap: () {
-                  var token = SharedPrefrenceBuilder().getUserToken.toString();
+                child: _paymentHistory())
 
-                  log(token.toString(),
-                      name: "TOKEN BEING SHARED WITH PROVIDER STATE MANAGER");
-                  var user = Provider.of<TenantsProfile>(context, listen: false)
-                      .getUserProfile(token);
-
-                  user.then((value) {
-                    log(value.email.toString(),
-                        name: "THIS IS THE USERS EMAIL");
-                    var mobile = value.user!.mobileNumber.toString();
-                    var serviceAmt =
-                    value.propertyBlock!.serviceCharge.toString();
-                    String amt = '1.0';
-                    String serviceName = "Waste";
-                    var pay = Provider.of<Payments>(context, listen: false)
-                        .payServiceCharge(mobile,amt, serviceName);
-
-
-                    pay.then((value) {
-                      log(value.toJson().toString(), name: "PAYMENT RESULT");
-                    });
-                  });
-
-                  Timer.periodic(const Duration(seconds: 3), (timer) {
-                    if (hasUserPaid == 0) {
-                      var check = Provider.of<Payments>(context, listen: false)
-                          .checkPaymentStatus();
-                      check.then((value) {
-                        if (value == 1) {
-                          hasUserPaid = value!;
-                          log("$value payment was successful",
-                              name: "PAYMENT SUCCESS");
-                          timer.cancel();
-                        } else {
-                          log("$value payment failed",
-                              name: "PAYMENT FAILED");
-                          timer.cancel();
-                        }
-                        log(value.toString(),
-                            name: "FROM CHECKING THE PAYMENT RESULT");
-                      });
-                      timer.cancel();
-
-                    } else {
-                      QuickAlert.show(
-                        context: context,
-                        type: QuickAlertType.success,
-                      );
-                      timer.cancel();
-                    }
-                    timer.cancel();
-                  });
-                },
-                child: _payServiceCharge())
           ],
         ),
         Row(
           children: [
             GestureDetector(
                 onTap: () {
-                  QuickAlert.show(
-                      context: context,
-                      type: QuickAlertType.custom,
-                      barrierDismissible: true,
-                      confirmBtnText: "Send");
+
                 },
                 child: _requestForRepairs()),
             _marketPlace(),
@@ -195,8 +196,8 @@ class _TenantHomeState extends State<TenantHome> {
             lightSource: LightSource.topLeft,
             intensity: 30),
         child: Container(
-          height: 160,
-          width: 135,
+          height: MediaQuery.of(context).size.height*0.22,
+          width: MediaQuery.of(context).size.width*0.40,
           decoration: const BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment(-0.97, 0.24),
@@ -211,7 +212,7 @@ class _TenantHomeState extends State<TenantHome> {
                 size: 30,
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 8.0,left: 5.0,right: 5.0),
                 child: Text(
                   Constants.paymentHistory,
                   style: GoogleFonts.hind(
@@ -231,7 +232,7 @@ class _TenantHomeState extends State<TenantHome> {
 
   Widget _payServiceCharge() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(left: 0.5,right: 5.0),
       child: Neumorphic(
         style: NeumorphicStyle(
             shape: NeumorphicShape.concave,
@@ -240,8 +241,8 @@ class _TenantHomeState extends State<TenantHome> {
             lightSource: LightSource.topLeft,
             intensity: 30),
         child: Container(
-          height: 160,
-          width: 135,
+          height: MediaQuery.of(context).size.height*0.22,
+          width: MediaQuery.of(context).size.width*0.40,
           decoration: const BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment(-0.97, 0.24),
@@ -256,15 +257,18 @@ class _TenantHomeState extends State<TenantHome> {
                 size: 30,
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  Constants.payServiceCharge,
-                  style: GoogleFonts.hind(
-                      letterSpacing: -0.24,
-                      height: 1.33,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white),
+                padding: const EdgeInsets.only(top: 8.0,left: 5.0,right: 5.0),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    Constants.payServiceCharge,
+                    style: GoogleFonts.hind(
+                        letterSpacing: -0.24,
+                        height: 1.33,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white),
+                  ),
                 ),
               )
             ]),
@@ -276,7 +280,7 @@ class _TenantHomeState extends State<TenantHome> {
 
   Widget _requestForRepairs() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(left: 0.5,right: 5.0),
       child: Neumorphic(
         style: NeumorphicStyle(
             shape: NeumorphicShape.concave,
@@ -285,8 +289,8 @@ class _TenantHomeState extends State<TenantHome> {
             lightSource: LightSource.topLeft,
             intensity: 30),
         child: Container(
-          height: 160,
-          width: 135,
+          height: MediaQuery.of(context).size.height*0.22,
+          width: MediaQuery.of(context).size.width*0.40,
           decoration: ShapeDecoration(
               color: Colors.white,
               shape: RoundedRectangleBorder(
@@ -308,7 +312,7 @@ class _TenantHomeState extends State<TenantHome> {
                 size: 30,
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 8.0,left: 5.0,right: 5.0),
                 child: Text(
                   Constants.service,
                   style: GoogleFonts.hind(
@@ -337,8 +341,8 @@ class _TenantHomeState extends State<TenantHome> {
             lightSource: LightSource.topLeft,
             intensity: 30),
         child: Container(
-          height: 160,
-          width: 135,
+          height: MediaQuery.of(context).size.height*0.22,
+          width: MediaQuery.of(context).size.width*0.40,
           decoration: ShapeDecoration(
               color: Colors.white,
               shape: RoundedRectangleBorder(
@@ -360,7 +364,7 @@ class _TenantHomeState extends State<TenantHome> {
                 size: 30,
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 8.0,left: 5.0,right: 5.0),
                 child: Text(
                   Constants.marketPlace,
                   style: GoogleFonts.hind(

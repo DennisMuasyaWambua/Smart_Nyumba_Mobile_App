@@ -25,8 +25,7 @@ class Payments with ChangeNotifier {
   String? token = SharedPrefrenceBuilder().getUserToken;
 
   //payment of serviceCharge
-  Future<PayServiceCharge> payServiceCharge(
-      String mobileNumber,String amount, String serviceName) async {
+  Future<PayServiceCharge> payServiceCharge(String mobileNumber,String amount, String serviceName) async {
     String serviceChargeEndpoint = "services/pay-service/";
     // getting the users email address
     String userEmail = SharedPrefrenceBuilder().getUserEmail!;
@@ -35,18 +34,17 @@ class Payments with ChangeNotifier {
 
       Uri servicecharge = Uri.parse(Constants.PAY_SERVICE);
       Uri serviceAmt = Uri.parse(Constants.SERVICE_FEE_AMOUNT);
-      var serviceamt = await http.get(serviceAmt,headers:{'Authorization': 'Bearer $token'});
-      log(serviceamt.body.toString(),name: "SERVICE AMOUNT");
-      Amount amt = Amount.fromJson(json.decode(serviceamt.body));
-    log(amt.amount.toString(),name: "SERVICE AMOUNT");
+      // var serviceamt = await http.get(serviceAmt,headers:{'Authorization': 'Bearer $token'});
+      // log(serviceamt.body.toString(),name: "SERVICE AMOUNT");
+      // Amount amt = Amount.fromJson(json.decode(serviceamt.body));
+      // log(amount.toString(),name: "SERVICE AMOUNT");
       var response = await http.post(servicecharge, headers: {
         'Authorization': 'Bearer $token',
       }, body: {
         'email': userEmail,
         'mobile_number': mobileNumber,
-        'amount':amt.amount.toString(),
         'service_name': serviceName,
-        'pay_via': 'mpesa'
+        'pay_via': "mpesa"
       });
 
       log(response.body.toString(), name: "SERVICE CHARGE PAYMENT MESSAGE");

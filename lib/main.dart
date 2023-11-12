@@ -7,6 +7,7 @@ import 'package:smart_nyumba/Admin/create_role.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/Providers/tenants_profile_provider.dart';
 import 'package:smart_nyumba/Tenant/all_transactions_data.dart';
+import 'package:smart_nyumba/Tenant/tenant_receipt.dart';
 
 import 'Authentication/login/login.dart';
 import 'Authentication/otp.dart';
@@ -72,6 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
         '/adminDashboard':(context)=>const AdminDashboard(),
         '/allServiceChargeTransactions':(context)=>const AllTransactionsData(),
         '/createNewRole':(context)=>const CreateRole(),
+        '/receipt':(context)=>const Receipt()
       },
     ),);
   }

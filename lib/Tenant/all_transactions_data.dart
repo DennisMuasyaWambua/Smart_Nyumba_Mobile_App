@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_nyumba/Models/all_transactions.dart';
 import 'package:smart_nyumba/Providers/payment_provider.dart';
+import 'package:smart_nyumba/Tenant/tenant_receipt.dart';
 
 import '../Constants/Constants.dart';
 
@@ -117,8 +118,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
 
                     // DATA TABLE
                     Container(
-                      width: MediaQuery.of(context).size.width*0.90,
-                      height: MediaQuery.of(context).size.height*0.40,
+                      width: MediaQuery.of(context).size.width*0.98,
+                      height: MediaQuery.of(context).size.height*0.45,
                       decoration: ShapeDecoration(
                       shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -137,36 +138,45 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                                     ,fontWeight: FontWeight.w600,height: 0.06,letterSpacing: 0.35),),
                               ),
                             ),
-                            // Container(
-                            //
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.all(16.0),
-                            //     child: DataTable2(
-                            //         columnSpacing: 12,
-                            //         horizontalMargin: 12,
-                            //         minWidth: 600,
-                            //         sortAscending: isAscending,
-                            //         sortColumnIndex: sortColumnIndex,
-                            //         columns: const [
-                            //           DataColumn2(label: Text("Date paid")),
-                            //           DataColumn(label: Text("Service")),
-                            //           DataColumn(label: Text("Amount")),
-                            //           DataColumn(label: Text("Payment mode")),
-                            //         ],
-                            //         rows: List<DataRow>.generate(
-                            //             paymentTransactions!.length,
-                            //                 (index) => DataRow(cells: <DataCell>[
-                            //               DataCell(Text(
-                            //                   "${paymentTransactions[index].datePaid}")),
-                            //               DataCell(Text(
-                            //                   "${paymentTransactions[index].serviceName}")),
-                            //               DataCell(Text(
-                            //                   "${paymentTransactions[index].amount}")),
-                            //               DataCell(Text(
-                            //                   "${paymentTransactions[index].paymentMode}"))
-                            //             ]))),
-                            //   ),
-                            // )
+                            Flexible(
+                              child: DataTable2(
+                                  columnSpacing: 12,
+                                  horizontalMargin: 12,
+                                  minWidth: 600,
+                                  sortAscending: isAscending,
+                                  sortColumnIndex: sortColumnIndex,
+                                  columns: const [
+                                    DataColumn2(label: Text("Date paid")),
+                                    DataColumn(label: Text("Service")),
+                                    DataColumn(label: Text("Amount")),
+                                    DataColumn(label: Text("Payment mode")),
+                                  ],
+                                  rows: List<DataRow>.generate(5, (index) => DataRow(
+                                      cells:<DataCell>[
+                                    DataCell(Text("1st October 2022"),onTap: (){
+                                      Navigator.push(context, new MaterialPageRoute(builder: (_)=>Receipt()));
+                                    }),
+                                    DataCell(Text("service charge")),
+                                    DataCell(Text("KSh 3,000")),
+                                    DataCell(Text("mpesa"))
+                                  ],
+
+                                  )
+                                      ),
+                                  // rows: List<DataRow>.generate(
+                                  //     paymentTransactions!.length,
+                                  //         (index) => DataRow(cells: <DataCell>[
+                                  //       DataCell(Text(
+                                  //           "${paymentTransactions[index].datePaid}")),
+                                  //       DataCell(Text(
+                                  //           "${paymentTransactions[index].serviceName}")),
+                                  //       DataCell(Text(
+                                  //           "${paymentTransactions[index].amount}")),
+                                  //       DataCell(Text(
+                                  //           "${paymentTransactions[index].paymentMode}"))
+                                  //     ]))
+                              ),
+                            )
                           ],
                         ),
 

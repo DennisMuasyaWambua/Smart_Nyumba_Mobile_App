@@ -1,11 +1,18 @@
 // import 'dart:developer';
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_nyumba/Models/all_transactions.dart';
 import 'package:smart_nyumba/Providers/payment_provider.dart';
 import 'package:smart_nyumba/Tenant/tenant_receipt.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 import '../Constants/Constants.dart';
 
@@ -19,6 +26,8 @@ class AllTransactionsData extends StatefulWidget {
 class _AllTransactionsDataState extends State<AllTransactionsData> {
   int? sortColumnIndex;
   bool isAscending = false;
+  final pdf = pw.Document();
+  late File? file;
 
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {}
@@ -27,6 +36,45 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
       isAscending = ascending;
     });
   }
+
+  writePdf(){
+    // pdf.addPage(
+    //     pw.Page(
+    //         pageFormat: PdfPageFormat.a4,
+    //         build: (pw.Context context){
+    //           return pw.Center(
+    //               child: pw.Text("Hello ")
+    //           );
+    //         }
+    //     )
+    // );
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat:PdfPageFormat.a4,
+        margin:const pw.EdgeInsets.all(32),
+        build:(pw.Context context){
+          return <pw.Widget>[
+            pw.Header(level: 0,child: pw.Text("Fiscal Receipt")),
+            pw.Paragraph(text: "Payment of service charge"),
+          ];
+        }
+      )
+    );
+  }
+  Future savePdf()async{
+    Directory documentDirectory = await getApplicationDocumentsDirectory();
+    String documentPath = documentDirectory.path;
+
+    File _file = File("$documentPath/sample.pdf");
+    log(documentPath.toString(),name: "DOCUMENT PATH");
+
+    _file.writeAsBytes(await pdf.save());
+
+    setState(() {
+      file = _file;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -140,41 +188,37 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                             ),
                             Flexible(
                               child: DataTable2(
-                                  columnSpacing: 12,
-                                  horizontalMargin: 12,
-                                  minWidth: 600,
+                                  columnSpacing: 0,
+                                  horizontalMargin: 10,
+                                  minWidth: 0,
                                   sortAscending: isAscending,
                                   sortColumnIndex: sortColumnIndex,
-                                  columns: const [
-                                    DataColumn2(label: Text("Date paid")),
-                                    DataColumn(label: Text("Service")),
-                                    DataColumn(label: Text("Amount")),
-                                    DataColumn(label: Text("Payment mode")),
-                                  ],
-                                  rows: List<DataRow>.generate(5, (index) => DataRow(
-                                      cells:<DataCell>[
-                                    DataCell(Text("1st October 2022"),onTap: (){
-                                      Navigator.push(context, new MaterialPageRoute(builder: (_)=>Receipt()));
-                                    }),
-                                    DataCell(Text("service charge")),
-                                    DataCell(Text("KSh 3,000")),
-                                    DataCell(Text("mpesa"))
+                                  columns:  [
+                                    DataColumn2(label: Text("Date paid",style: GoogleFonts.inter(color: Color(0xFF77767E),fontSize: 12.0,fontWeight: FontWeight.w400,height: 0.11),)),
+                                    DataColumn(label: Text("Amount", style:  GoogleFonts.inter(color: Color(0xFF77767E),fontSize: 12.0,fontWeight: FontWeight.w400,height: 0.11),)),
+                                    DataColumn(label: Text("Payment mode", style:  GoogleFonts.inter(color: Color(0xFF77767E),fontSize: 12.0,fontWeight: FontWeight.w400,height: 0.11),)),
                                   ],
 
-                                  )
-                                      ),
-                                  // rows: List<DataRow>.generate(
-                                  //     paymentTransactions!.length,
-                                  //         (index) => DataRow(cells: <DataCell>[
-                                  //       DataCell(Text(
-                                  //           "${paymentTransactions[index].datePaid}")),
-                                  //       DataCell(Text(
-                                  //           "${paymentTransactions[index].serviceName}")),
-                                  //       DataCell(Text(
-                                  //           "${paymentTransactions[index].amount}")),
-                                  //       DataCell(Text(
-                                  //           "${paymentTransactions[index].paymentMode}"))
-                                  //     ]))
+                                  rows: List<DataRow>.generate(
+                                      paymentTransactions!.length,
+                                          (index) => DataRow(cells: <DataCell>[
+                                        DataCell(Text(
+                                            "${paymentTransactions[index].datePaid}")),
+                                        DataCell(Text(
+                                            "KES ${paymentTransactions[index].amount}")),
+                                        DataCell(Text(
+                                            "${paymentTransactions[index].paymentMode}"))
+                                      ],
+                                            onSelectChanged: (bool? selected){
+                                            if(selected != null && selected){
+                                                writePdf();
+                                                savePdf();
+                                                // Navigator.push(context, new MaterialPageRoute(builder: (_)=>Receipt()));
+                                              showDialog(context: context, builder: (_)=>AlertDialog(
+                                                content: PdfView(path: file!.path,),
+                                              ));
+                                            }
+                                          }))
                               ),
                             )
                           ],

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +16,9 @@ class Receipt extends StatefulWidget {
 
 class _ReceiptState extends State<Receipt> {
   final pdf = pw.Document();
+  late File? file;
+  // write pdf function
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

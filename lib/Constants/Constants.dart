@@ -73,5 +73,6 @@ class Constants {
 
   // image url constants
   static const String SMART_NYUMBA_BLACK = "assets/images/smartnyumbablack.png";
+
   static const String PERSON = "assets/images/person.png";
 }

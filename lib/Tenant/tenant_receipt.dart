@@ -1,10 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:google_fonts/google_fonts.dart';
+
+
+import '../Constants/Constants.dart';
+import '../Models/invoice.dart';
 
 
 class Receipt extends StatefulWidget {
@@ -15,13 +17,23 @@ class Receipt extends StatefulWidget {
 }
 
 class _ReceiptState extends State<Receipt> {
-  final pdf = pw.Document();
-  late File? file;
+  // creating the
+
   // write pdf function
+
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: SingleChildScrollView(
                 child: Column(
@@ -32,7 +44,7 @@ class _ReceiptState extends State<Receipt> {
                         children: [
                           GestureDetector(
                             onTap:(){
-                                Navigator.pushNamed(context,'/tenantsDashboard');
+                                Navigator.pushNamed(context,'/allServiceChargeTransactions');
                             },
                             child: Icon(
                               Icons.arrow_back,
@@ -48,18 +60,6 @@ class _ReceiptState extends State<Receipt> {
                                 fontWeight: FontWeight.w700),
                           ),
                           
-                          // pdf.addPage(pw.Page(
-                          //   pageFormat: PdfPageFormat.a4,
-                          //   build: (pw.Context context){
-                          //     return pw.Center(
-                          //         child: pw.Column(
-                          //           children: [
-                          //
-                          //           ]
-                          //         )
-                          //     );
-                          //   }
-                          // ))
 
                         ],
                       ),
@@ -71,4 +71,4 @@ class _ReceiptState extends State<Receipt> {
       ),
     );
   }
-}
+

@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_nyumba/ApiHelpers/pdf_invoice_api.dart';
 import 'package:smart_nyumba/Models/all_transactions.dart';
+import 'package:smart_nyumba/Models/invoice.dart';
 import 'package:smart_nyumba/Providers/payment_provider.dart';
 import 'package:smart_nyumba/Tenant/tenant_receipt.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,6 +17,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../Constants/Constants.dart';
+import '../Providers/auth_provider.dart';
 
 class AllTransactionsData extends StatefulWidget {
   const AllTransactionsData({super.key});
@@ -26,8 +29,18 @@ class AllTransactionsData extends StatefulWidget {
 class _AllTransactionsDataState extends State<AllTransactionsData> {
   int? sortColumnIndex;
   bool isAscending = false;
+  String name =  '';
   final pdf = pw.Document();
-  late File? file;
+  var _file;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final account =  Auth().getProfile(Provider.of<Auth>(context,listen: false).token, context);
+    account.then((value) {
+      name = value.profile!.user!.firstName!;
+    });
+  }
 
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {}
@@ -38,41 +51,47 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
   }
 
   writePdf(){
-    // pdf.addPage(
-    //     pw.Page(
-    //         pageFormat: PdfPageFormat.a4,
-    //         build: (pw.Context context){
-    //           return pw.Center(
-    //               child: pw.Text("Hello ")
-    //           );
-    //         }
-    //     )
-    // );
     pdf.addPage(
       pw.MultiPage(
         pageFormat:PdfPageFormat.a4,
-        margin:const pw.EdgeInsets.all(32),
+        margin:const pw.EdgeInsets.all(15),
         build:(pw.Context context){
           return <pw.Widget>[
-            pw.Header(level: 0,child: pw.Text("Fiscal Receipt")),
-            pw.Paragraph(text: "Payment of service charge"),
+              pw.Center(
+                child: pw.Column(
+                  children: [
+                    pw.Header(level: 0, text: "Fiscal Receipt"),
+                    pw.Row(
+                      children: [
+                        pw.Text("Date"),
+                        pw.SizedBox(width: 200),
+                        pw.Text("Akilla 2 estate"),
+                      ]
+                    ),
+
+                  ]
+
+                )
+              )
+
           ];
         }
       )
     );
   }
-  Future savePdf()async{
-    Directory documentDirectory = await getApplicationDocumentsDirectory();
-    String documentPath = documentDirectory.path;
+  savePdf(int index)async{
+    final documentDirectory = await getExternalStorageDirectory();
+    String documentPath = "${documentDirectory!.parent.parent.parent.parent.parent.parent.path}/self/primary/documents";
+    log(documentPath,name:"THIS IS THE DOCUMENT PATH");
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+    final file = File("$documentPath/$index-receipt-$timestamp.pdf");
+    log(documentPath+'/$index-receipt-$timestamp.pdf'.toString(),name: "DOCUMENT PATH");
 
-    File _file = File("$documentPath/sample.pdf");
-    log(documentPath.toString(),name: "DOCUMENT PATH");
-
-    _file.writeAsBytes(await pdf.save());
-
+    file.writeAsBytesSync(await pdf.save());
     setState(() {
-      file = _file;
+      _file = file;
     });
+
   }
 
 
@@ -81,8 +100,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: FutureBuilder(
-          future: Provider.of<Payments>(context, listen: false)
+        body:StreamBuilder(
+          stream: Provider.of<Payments>(context, listen: false)
               .getAllTransactions(),
           builder: (context, snapshot) {
            
@@ -104,9 +123,14 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                          onTap:(){
 
                          },
-                         child: Icon(
-                           Icons.arrow_back,
-                           color: Colors.black,
+                         child: GestureDetector(
+                           onTap: (){
+                             Navigator.pushNamed(context,'/tenantsDashboard');
+                           },
+                           child: Icon(
+                             Icons.arrow_back,
+                             color: Colors.black,
+                           ),
                          ),
                        ),
                        SizedBox(width: MediaQuery.of(context).size.width*0.25,),
@@ -209,14 +233,12 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                                         DataCell(Text(
                                             "${paymentTransactions[index].paymentMode}"))
                                       ],
-                                            onSelectChanged: (bool? selected){
+                                            onSelectChanged: (bool? selected)async{
                                             if(selected != null && selected){
-                                                writePdf();
-                                                savePdf();
-                                                // Navigator.push(context, new MaterialPageRoute(builder: (_)=>Receipt()));
-                                              showDialog(context: context, builder: (_)=>AlertDialog(
-                                                content: PdfView(path: file!.path,),
-                                              ));
+                                            //    Generate pdf upon selection
+                                              final receipt = Invoice(name: name, estateName: 'Akilla 2', amount: paymentTransactions[index].amount, datepaid: paymentTransactions[index].datePaid, purpose: "Service Charge");
+                                              final pdfFile = await PdfApi.pdfGeneration(receipt);
+                                              PdfApi.openFile(pdfFile);
                                             }
                                           }))
                               ),

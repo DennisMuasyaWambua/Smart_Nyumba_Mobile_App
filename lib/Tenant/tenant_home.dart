@@ -154,17 +154,17 @@ class _TenantHomeState extends State<TenantHome> {
             GestureDetector(
                 onTap: () {
                   // payment status
-                  var history = Provider.of<Payments>(context, listen: false)
-                      .getAllTransactions();
-
-                  history.then((value) {
-
-                    for (int i = 0; i < value!.length; i++) {
-                         log(value[i].toJson().toString(),
-                        name: "HISTORIC TRANSACTIONS");
-                        // get information from here on all transactions and form the system
-                    }
-                  });
+                  // var history = Provider.of<Payments>(context, listen: false)
+                  //     .getAllTransactions();
+                  //
+                  // history.then((value) {
+                  //
+                  //   for (int i = 0; i < value!.length; i++) {
+                  //        log(value[i].toJson().toString(),
+                  //       name: "HISTORIC TRANSACTIONS");
+                  //       // get information from here on all transactions and form the system
+                  //   }
+                  // });
                   Navigator.pushNamed(context, '/allServiceChargeTransactions');
                 },
                 child: _paymentHistory())

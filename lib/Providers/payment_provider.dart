@@ -90,7 +90,7 @@ class Payments with ChangeNotifier {
     }
   }
 
-  Future<List<Transaction>?>getAllTransactions() async {
+  Stream<List<Transaction>?>getAllTransactions() async* {
     try {
       var allTransactions =
           await http.get(Uri.parse(Constants.ALL_TRANSACTIONS), headers: {
@@ -103,7 +103,7 @@ class Payments with ChangeNotifier {
       List<Transaction>? transactions = all.transactions;
       
       notifyListeners();
-      return transactions;
+      yield transactions;
     } catch (e) {
       throw e.toString();
     }

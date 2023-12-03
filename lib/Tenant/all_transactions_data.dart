@@ -30,6 +30,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
   int? sortColumnIndex;
   bool isAscending = false;
   String name =  '';
+  late Invoice receipt;
   final pdf = pw.Document();
   var _file;
   @override
@@ -38,7 +39,10 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
     super.initState();
     final account =  Auth().getProfile(Provider.of<Auth>(context,listen: false).token, context);
     account.then((value) {
-      name = value.profile!.user!.firstName!;
+      setState(() {
+        name = value.profile!.user!.firstName!;
+      });
+
     });
   }
 
@@ -236,9 +240,17 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                                             onSelectChanged: (bool? selected)async{
                                             if(selected != null && selected){
                                             //    Generate pdf upon selection
-                                              final receipt = Invoice(name: name, estateName: 'Akilla 2', amount: paymentTransactions[index].amount, datepaid: paymentTransactions[index].datePaid, purpose: "Service Charge");
+                                              setState(() {
+                                                 receipt = Invoice(name: name, estateName: 'Akilla 2', amount: paymentTransactions[index].amount.toString(), datepaid: paymentTransactions[index].datePaid.toString(), purpose: "Service Charge");
+                                              });
+                                              log(receipt.name.toString(),name: "RECEIPT OBJECT");
+
                                               final pdfFile = await PdfApi.pdfGeneration(receipt);
-                                              PdfApi.openFile(pdfFile);
+                                              log(pdfFile.toString(),name: "PDF FILE PATH");
+                                              showDialog(context: context, builder: (_)=>AlertDialog(
+                                                content: PdfView(path: pdfFile.path,),
+                                              ));
+
                                             }
                                           }))
                               ),

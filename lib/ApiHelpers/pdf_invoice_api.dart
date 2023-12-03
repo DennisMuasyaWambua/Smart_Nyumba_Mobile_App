@@ -5,13 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import '../Models/invoice.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart';
 
-class PdfApi {
+class PdfApi with ChangeNotifier{
+ var _file;
+ String get filePath=>_file;
+ void setFile(String file){
+    _file = file;
+    notifyListeners();
+ }
   static Future pdfGeneration(Invoice invoice) {
     final pdf = pw.Document();
 
@@ -49,19 +57,21 @@ class PdfApi {
   static Future<File> saveDocument({
     required String name,
     required Document pdf,
+
   }) async {
     final bytes = await pdf.save();
-    var status = await Permission.storage.status;
-    if (status.isDenied) {
-      await Permission.storage.request();
-    }
 
-    final dir = await getApplicationDocumentsDirectory();
+
+    Directory dir = await getApplicationDocumentsDirectory();
     debugPrint("${dir.path}");
     log("${dir.parent.parent.parent.parent.parent.parent.path}storage/self/primary/Download", name: "PATH");
-    final file = File("/storage/self/primary/Download/$name");
+    File file = File("${dir.path}/$name");
 
-    await file.writeAsBytes(bytes);
+
+
+    await file.writeAsBytes(await pdf.save());
+
+
 
     return file;
   }

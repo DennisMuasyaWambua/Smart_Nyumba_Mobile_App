@@ -116,12 +116,12 @@ class _TenantHomeState extends State<TenantHome> {
 
 
                     pay.then((value) {
-                      log(value.toString(), name: "PAYMENT RESULT");
+                      log(value.toJson().toString(), name: "PAYMENT RESULT");
                     });
                   });
 
                   Timer.periodic(const Duration(seconds: 3), (timer) {
-                    if (hasUserPaid == 1) {
+                    if (hasUserPaid == 0) {
                       var check = Provider.of<Payments>(context, listen: false)
                           .checkPaymentStatus();
                       check.then((value) {
@@ -143,7 +143,7 @@ class _TenantHomeState extends State<TenantHome> {
                     } else {
                       QuickAlert.show(
                         context: context,
-                        type: QuickAlertType.success,
+                        type: QuickAlertType.error,
                       );
                       timer.cancel();
                     }

@@ -11,6 +11,7 @@ import 'package:smart_nyumba/ApiHelpers/pdf_invoice_api.dart';
 import 'package:smart_nyumba/Models/all_transactions.dart';
 import 'package:smart_nyumba/Models/invoice.dart';
 import 'package:smart_nyumba/Providers/payment_provider.dart';
+import 'package:smart_nyumba/Tenant/tenant_home.dart';
 import 'package:smart_nyumba/Tenant/tenant_receipt.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -42,6 +43,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
       setState(() {
         name = value.profile!.user!.firstName!;
       });
+      log(name.toString(),name: "USERS NAME");
 
     });
   }
@@ -129,7 +131,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                          },
                          child: GestureDetector(
                            onTap: (){
-                             Navigator.pushNamed(context,'/tenantsDashboard');
+                             Navigator.pushNamed(context, '/tenantsDashboard');
+                             // Navigator.pushReplacement(context, new MaterialPageRoute(builder: (_)=>TenantHome()));
                            },
                            child: Icon(
                              Icons.arrow_back,
@@ -245,7 +248,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                                               });
                                               log(receipt.name.toString(),name: "RECEIPT OBJECT");
 
-                                              final pdfFile = await PdfApi.pdfGeneration(receipt);
+                                              final pdfFile = await PdfApi.pdfGeneration('Akilla 2',paymentTransactions[index].datePaid.toString(),name,paymentTransactions[index].amount.toString(),"Service Charge");
                                               log(pdfFile.toString(),name: "PDF FILE PATH");
                                               showDialog(context: context, builder: (_)=>AlertDialog(
                                                 content: PdfView(path: pdfFile.path,),

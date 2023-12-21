@@ -94,6 +94,7 @@ flutter:
     - assets/images/smartnyumba.svg
     - assets/images/smartnyumbablack.png
     - assets/images/person.png
+    - assets/images/account_icon.png
     - .env
 
 

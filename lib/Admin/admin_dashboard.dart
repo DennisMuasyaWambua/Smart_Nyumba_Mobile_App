@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_nyumba/Admin/companies.dart';
+import 'package:smart_nyumba/Admin/estate_tenants.dart';
 
 import '../Constants/Constants.dart';
 
@@ -17,7 +19,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
         selectedItemColor: const Color(0xFFD4AF37),
         items: const[
           BottomNavigationBarItem(icon: Icon(Icons.home),label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.add),label: 'Add'),
           BottomNavigationBarItem(icon: Icon(Icons.person),label: 'Profile'),
 
 
@@ -119,39 +120,105 @@ class _AdminDashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      bottomNavigationBar: _bottomNavigationBar(),
+
       body: SingleChildScrollView(
-        child: Column(
-          children: [
+          child: Column(
+            children: [
               Padding(
-                padding: EdgeInsets.only(top:35.0,left: 20.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.arrow_back,color: Colors.black,),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 100),
-                      child: Text(Constants.dashboard, style: GoogleFonts.hind(color: Colors.black,fontWeight: FontWeight.w700, fontSize: 17),),
+                padding: const EdgeInsets.only(top:50.0),
+                child: Center(
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage(
+                      "assets/images/account_icon.png"
+                    ),
+                    radius: 30,
+                  ),
+                ),
+              ),
+              SizedBox(height: 40,),
+              Text("Chairman",textAlign: TextAlign.center,style: GoogleFonts.hind(fontSize: 24,fontWeight: FontWeight.w700,height: 0.04,letterSpacing: 0.31,color: Color(0xFF1A1E25),),),
+              SizedBox(height: 30,),
+              Text("smartnyumba@gmail.com",textAlign: TextAlign.center,style: GoogleFonts.hind(fontSize: 16,fontWeight: FontWeight.w400,height: 0.06,letterSpacing: 0.32,color: Color(0xFF7D7F88),),),
+              SizedBox(height: MediaQuery.of(context).size.height*0.15,),
+
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const Companies()));
+                },
+                child: Container(
+                  width: 300,
+                  height: 50,
+                  decoration: ShapeDecoration(
+                    color: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(width: 1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    shadows: [
+                      BoxShadow(
+                        color: Color(0x3F000000),
+                        blurRadius: 4,
+                        offset: Offset(0, 4),
+                        spreadRadius: 0,
+                      )
+                    ],
+                  ),
+                  child: Center(child: Text("Companies",style: GoogleFonts.hind(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w500,height: 0.05,letterSpacing: 0.29),)),
+                ),
+              ),
+              SizedBox(height: 30,),
+
+              Container(
+                width: 300,
+                height: 50,
+                decoration: ShapeDecoration(
+                  color: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(width: 1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  shadows: [
+                    BoxShadow(
+                      color: Color(0x3F000000),
+                      blurRadius: 4,
+                      offset: Offset(0, 4),
+                      spreadRadius: 0,
                     )
                   ],
                 ),
+                child: Center(child: Text("Payments",style: GoogleFonts.hind(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w500,height: 0.05,letterSpacing: 0.29),)),
               ),
-              Padding(
-                padding:  const EdgeInsets.only(right: 150,left: 5),
-                child: Text("Welcome admin",style: GoogleFonts.hind(color: Constants.themePurple, fontSize: 28,fontWeight: FontWeight.w700, height: 3,),),
+              SizedBox(height: 30,),
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const EstateTenants()));
+                },
+                child: Container(
+                  width: 300,
+                  height: 50,
+                  decoration: ShapeDecoration(
+                    color: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(width: 1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    shadows: [
+                      BoxShadow(
+                        color: Color(0x3F000000),
+                        blurRadius: 4,
+                        offset: Offset(0, 4),
+                        spreadRadius: 0,
+                      )
+                    ],
+                  ),
+                  child: Center(child: Text("Tenants",style: GoogleFonts.hind(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w500,height: 0.05,letterSpacing: 0.29),)),
+                ),
               ),
-            Padding(
-              padding: const EdgeInsets.only(left:20.0),
-              child: Row(
-                children: [
-                  _addPerson(),
-                  _checkCumulativeServiceChargeBalance()
-                ],
-              ),
-            )
-
-
-          ],
-        ),
+              SizedBox(height: 30,),
+            ],
+          ),
       ),
     );
   }

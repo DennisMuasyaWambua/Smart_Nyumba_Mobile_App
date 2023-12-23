@@ -4,6 +4,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_nyumba/Admin/admin_dashboard.dart';
 import 'package:smart_nyumba/Authentication/register/register.dart';
 
 import 'package:smart_nyumba/Models/user_profile.dart';
@@ -32,23 +34,26 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _loginForm(),
-          ],
+      home: Scaffold(
+          body: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _loginForm(),
+            ],
+          ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 
   Widget _emailField() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.06,
+      height: MediaQuery.of(context).size.height * 0.05,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius:
@@ -72,7 +77,7 @@ class _LoginState extends State<Login> {
 
   Widget _passwordField() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.06,
+      height: MediaQuery.of(context).size.height * 0.05,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius:
@@ -91,7 +96,7 @@ class _LoginState extends State<Login> {
           decoration: InputDecoration(
             alignLabelWithHint: true,
             border: InputBorder.none,
-            contentPadding: EdgeInsets.all(15),
+            contentPadding: const EdgeInsets.all(15),
             suffixIcon: InkWell(
                 onTap: _tooglePasswordVisibility,
                 child: _passwordVisible
@@ -104,23 +109,37 @@ class _LoginState extends State<Login> {
   Widget _buttonSubmitField() {
     return AuthButton(
       onClick: () {
-        email = _emailController.text;
-        password = _passwordController.text;
+        setState(() {
+          email = _emailController.text;
+          password = _passwordController.text;
+        });
+        // Navigate to the Admin's dashboard
+        // Navigator.pushNamed(context, '/adminDashboard');
+        print("$email $password");
 
         log(email.toString(), name: "EMAIL PARAMETER AT LOGIN");
         log(password.toString(), name: "PASSWORD PARAMETER AT LOGIN");
 
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (_) => const TenantDashboard()));
-        final login = Auth().login(email, password);
+        // Navigator.pushReplacement(context,
+        //     MaterialPageRoute(builder: (_) => const TenantDashboard()));
+        final login = Auth().login(email, password,context);
+
 
         login.then((value) async {
+          print(value.toString());
           log(value.message.toString(), name: "LOGIN MESSAGE");
+          // Navigator.pushReplacement(context,
+          //         MaterialPageRoute(builder: (_) => const AdminDashboard()));
 
           if (value.accessToken != null) {
             // Saving the users credentials using shared prefrences
             SharedPrefrenceBuilder.setUserEmail(email);
             SharedPrefrenceBuilder.setUserToken(value.accessToken.toString());
+            //saving token to provider
+            Provider.of<Auth>(context,listen:false).setToken(value.accessToken.toString());
+            log(Provider.of<Auth>(context,listen: false).token.toString(),name: "TOKEN PROVIDER");
+            // Auth().getProfile(Provider.of<Auth>(context,listen: false).token.toString(), context);
+
             // Set the User id to the user to save the usersprofile
             var user = await http.get(Uri.parse(Constants.TENANTS_PROFILE),
                 headers: {'Authorization': 'Bearer ${value.accessToken}'});
@@ -154,7 +173,7 @@ class _LoginState extends State<Login> {
         });
       },
       text: Constants.login,
-      textColor: [Color(0xFFD4AF37), Color(0xFFFFD700)],
+      textColor: const [Color(0xFFD4AF37), Color(0xFFFFD700)],
     );
   }
 
@@ -186,7 +205,7 @@ class _LoginState extends State<Login> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.fromLTRB(0, 140, 10, 5),
                 child: Text(
                   "Smart Nyumba",
@@ -198,7 +217,7 @@ class _LoginState extends State<Login> {
                       color: Color(0xff22215B)),
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                 child: Text(
                   "Sign in",
@@ -210,8 +229,8 @@ class _LoginState extends State<Login> {
                       color: Color(0xff22215B)),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 5),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 5),
                 child: Text("YOUR EMAIL",
                     style: TextStyle(
                         decoration: TextDecoration.none,
@@ -222,8 +241,8 @@ class _LoginState extends State<Login> {
                         letterSpacing: 1.40)),
               ),
               _emailField(),
-              Padding(
-                  padding: const EdgeInsets.only(bottom: 5, top: 40),
+              const Padding(
+                  padding: EdgeInsets.only(bottom: 5, top: 40),
                   child: Text("PASSWORD",
                       style: TextStyle(
                           decoration: TextDecoration.none,
@@ -233,14 +252,14 @@ class _LoginState extends State<Login> {
                           fontWeight: FontWeight.w300,
                           letterSpacing: 1.40))),
               _passwordField(),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               _buttonSubmitField(),
               GestureDetector(
                 onTap: () {
                   Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (_) => const Register()));
+                      MaterialPageRoute(builder: (_) => const Register()));
                 },
                 child: const SizedBox(
                   width: 300,

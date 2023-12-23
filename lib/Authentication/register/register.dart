@@ -44,7 +44,7 @@ class _RegisterState extends State<Register> {
     return Scaffold(
       body: MaterialApp(
         home: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           scrollDirection: Axis.vertical,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(30.0, 5.0, 10, 5),
@@ -56,14 +56,14 @@ class _RegisterState extends State<Register> {
                  
                   Padding(
                     padding: const EdgeInsets.only(bottom: 0,top: 8.0),
-                    child: Container(
+                    child: SizedBox(
                       width: 200,
                       height: 200,
                       child: Image.asset(Constants.SMART_NYUMBA_BLACK),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top:0),
+                  const Padding(
+                    padding: EdgeInsets.only(top:0),
                     child: Text(
                       "Sign up",
                       style: TextStyle(
@@ -74,7 +74,7 @@ class _RegisterState extends State<Register> {
                           color: Color(0xff22215B)),
                     ),
                   ),
-                  Text(
+                  const Text(
                     "Hassle free property management",
                     style: TextStyle(
                         decoration: TextDecoration.none,
@@ -94,7 +94,7 @@ class _RegisterState extends State<Register> {
                           width: 25,
                         ),
                         inputFields(120.0, 35.0, "Last Name",
-                            _firstNameController, TextInputType.text,Icons.person),
+                            _lastNameController, TextInputType.text,Icons.person),
                       ],
                     ),
                   ),
@@ -121,7 +121,7 @@ class _RegisterState extends State<Register> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         inputFields(150.0, 35.0, "House number",
-                            _houseNumberController, TextInputType.number,Icons.house),
+                            _houseNumberController, TextInputType.text,Icons.house),
                         inputFields(140.0, 35.0, "Phone",
                             _mobileNumberController, TextInputType.number,Icons.phone),
                       ],
@@ -209,22 +209,21 @@ class _RegisterState extends State<Register> {
                               BlockNumber,
                               HouseNumber,
                               MobileNumber,
-                              password);
+                              password,context);
 
                           register.then((value) {
                             log(value.message.toString(),
                                 name: " register response message");
-                            if (value.message !=
-                                "User with this email already registered.") {
+                            if (value.status = true) {
                               showDialog(
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      title: const Text("Success"),
+
                                       content: Text(value.message),
                                     );
                                   });
-                              Navigator.pushNamed(context, "/otp");
+                               Navigator.pushNamed(context, "/otp");
                             } else {
                               showDialog(
                                   context: context,
@@ -240,14 +239,16 @@ class _RegisterState extends State<Register> {
                                   });
                             }
                           });
-                          Navigator.pushNamed(context, '/otp');
+                          // Navigator.pushNamed(context, '/otp');
                         },
-                        textColor: [Color(0xFF222831), Color(0xFF222831)]),
+                        textColor: const [Color(0xFF222831), Color(0xFF222831)]),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 15.0),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
                       child: Text(
                         Constants.login,
                         style: GoogleFonts.publicSans(decoration:TextDecoration.none,
@@ -283,9 +284,9 @@ class _RegisterState extends State<Register> {
             color: Colors.black87,
           ),
           decoration: InputDecoration(
-            prefixIcon: Icon(y,color: Color(0xff22215B),),
+            prefixIcon: Icon(y,color: const Color(0xff22215B),),
             hintText: hint,
-            contentPadding: EdgeInsets.only(left: 25, bottom: 12),
+            contentPadding: const EdgeInsets.only(left: 25, bottom: 12),
             border: InputBorder.none,
           )),
     );
@@ -313,7 +314,7 @@ class _RegisterState extends State<Register> {
             hintText: "Password",
             alignLabelWithHint: true,
             border: InputBorder.none,
-            contentPadding: EdgeInsets.all(15),
+            contentPadding: const EdgeInsets.all(15),
             prefixIcon: const Icon(Icons.security,color: Color(0xff22215B),),
             suffixIcon: InkWell(
                 onTap: _tooglePasswordView,
@@ -346,7 +347,7 @@ class _RegisterState extends State<Register> {
             hintText: 'Confirm Password',
             alignLabelWithHint: true,
             border: InputBorder.none,
-            contentPadding: EdgeInsets.all(15),
+            contentPadding: const EdgeInsets.all(15),
             prefixIcon:  const Icon(Icons.security,color: Color(0xff22215B),),
             suffixIcon: InkWell(
                 onTap: _toogleConfirmPasswordView,

@@ -16,16 +16,16 @@ class AuthButton extends StatelessWidget {
       onTap: onClick,
       child: Container(
         width: 301.40,
-        height: 49.98,
+        height: 40.98,
         padding: const EdgeInsets.only(top: 2, bottom: 2.98),
         clipBehavior: Clip.antiAlias,
         decoration: ShapeDecoration(
           gradient: LinearGradient(
-            begin: Alignment(-0.97, 0.24),
-            end: Alignment(0.97, -0.24),
+            begin: const Alignment(-0.97, 0.24),
+            end: const Alignment(0.97, -0.24),
             colors: textColor,
           ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -35,10 +35,10 @@ class AuthButton extends StatelessWidget {
             Text(
               '$text',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 decoration: TextDecoration.none,
                 color: Colors.white,
-                fontSize: 27,
+                fontSize: 20,
                 fontFamily: 'Hind',
                 fontWeight: FontWeight.w500,
               ),

@@ -2,20 +2,21 @@
 
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:smart_nyumba/Constants/Constants.dart';
 import 'package:smart_nyumba/Models/all_transactions.dart';
+import 'package:smart_nyumba/Models/amount.dart';
 import 'package:smart_nyumba/Models/check-payment-status.dart';
 import 'package:smart_nyumba/Models/pay_service_charge.dart';
-// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 
 class Payments with ChangeNotifier {
   // all payments are handled here
 
-  final String baseurl = "https://smartnyumba.com/apps/user/api/v1/";
+  final String baseurl = "https://er9yqpmri4.execute-api.eu-west-1.amazonaws.com/dev/apps/user/api/v1/";
   final int _serviceChargeAmount = 0;
 
   int get serviceChargeAmount => _serviceChargeAmount;
@@ -24,23 +25,26 @@ class Payments with ChangeNotifier {
   String? token = SharedPrefrenceBuilder().getUserToken;
 
   //payment of serviceCharge
-  Future<PayServiceCharge> payServiceCharge(
-      String mobileNumber, amount, serviceName) async {
+  Future<PayServiceCharge> payServiceCharge(String mobileNumber,String amount, String serviceName) async {
     String serviceChargeEndpoint = "services/pay-service/";
     // getting the users email address
     String userEmail = SharedPrefrenceBuilder().getUserEmail!;
 
     log(userEmail.toString(), name: "USER_EMAIL FROM SHARED_PREFERENCES");
-    try {
-      Uri servicecharge = Uri.parse(baseurl + serviceChargeEndpoint);
+
+      Uri servicecharge = Uri.parse(Constants.PAY_SERVICE);
+      Uri serviceAmt = Uri.parse(Constants.SERVICE_FEE_AMOUNT);
+      // var serviceamt = await http.get(serviceAmt,headers:{'Authorization': 'Bearer $token'});
+      // log(serviceamt.body.toString(),name: "SERVICE AMOUNT");
+      // Amount amt = Amount.fromJson(json.decode(serviceamt.body));
+      // log(amount.toString(),name: "SERVICE AMOUNT");
       var response = await http.post(servicecharge, headers: {
         'Authorization': 'Bearer $token',
       }, body: {
         'email': userEmail,
         'mobile_number': mobileNumber,
-        'amount': amount,
         'service_name': serviceName,
-        'pay_via': 'mpesa'
+        'pay_via': "mpesa"
       });
 
       log(response.body.toString(), name: "SERVICE CHARGE PAYMENT MESSAGE");
@@ -55,9 +59,7 @@ class Payments with ChangeNotifier {
           name: "PAYMENT WAS INITIATED AND THIS IS THE RESPONSE BACK");
       notifyListeners();
       return service;
-    } catch (e) {
-      throw Exception(e.toString());
-    }
+
   }
 
   Future<int?> checkPaymentStatus() async {
@@ -88,7 +90,7 @@ class Payments with ChangeNotifier {
     }
   }
 
-  Future<List<Transaction>?> getAllTransactions() async {
+  Stream<List<Transaction>?>getAllTransactions() async* {
     try {
       var allTransactions =
           await http.get(Uri.parse(Constants.ALL_TRANSACTIONS), headers: {
@@ -101,7 +103,7 @@ class Payments with ChangeNotifier {
       List<Transaction>? transactions = all.transactions;
       
       notifyListeners();
-      return transactions;
+      yield transactions;
     } catch (e) {
       throw e.toString();
     }

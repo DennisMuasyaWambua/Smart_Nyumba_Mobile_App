@@ -214,8 +214,7 @@ class _RegisterState extends State<Register> {
                           register.then((value) {
                             log(value.message.toString(),
                                 name: " register response message");
-                            if (value.message !=
-                                "User with this email already registered.") {
+                            if (value.status = true) {
                               showDialog(
                                   context: context,
                                   builder: (context) {
@@ -224,7 +223,7 @@ class _RegisterState extends State<Register> {
                                       content: Text(value.message),
                                     );
                                   });
-                              Navigator.pushNamed(context, "/otp");
+                               Navigator.pushNamed(context, "/otp");
                             } else {
                               showDialog(
                                   context: context,
@@ -240,14 +239,16 @@ class _RegisterState extends State<Register> {
                                   });
                             }
                           });
-                          Navigator.pushNamed(context, '/otp');
+                          // Navigator.pushNamed(context, '/otp');
                         },
                         textColor: const [Color(0xFF222831), Color(0xFF222831)]),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 15.0),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
                       child: Text(
                         Constants.login,
                         style: GoogleFonts.publicSans(decoration:TextDecoration.none,

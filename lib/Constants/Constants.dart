@@ -50,9 +50,9 @@ class Constants {
 
   //authentication related constants
   static const String BASE_API_URL =
-      "https://y34b2e7j9d.execute-api.us-west-1.amazonaws.com/dev/apps/admin/api/v1";
+      "https://smartnyumba-production.up.railway.app/apps/admin/api/v1";
   static const String AUTHENTICATION_BASE_URL =
-      "https://y34b2e7j9d.execute-api.us-west-1.amazonaws.com/dev/apps/admin/api/v1/auth";
+      "https://smartnyumba-production.up.railway.app/apps/admin/api/v1/auth";
   static const String LOGIN_URL = "$AUTHENTICATION_BASE_URL/user-login/";
   static const String REGISTER_URL = "$AUTHENTICATION_BASE_URL/user-register/";
   static const String VERIFY_OTP =
@@ -61,7 +61,7 @@ class Constants {
   static const String USER_PROFILE = "$AUTHENTICATION_BASE_URL/user-profile/";
 
   //PAYMENT related constants
-  static const String PAYMENT_BASE_URL = "https://y34b2e7j9d.execute-api.us-west-1.amazonaws.com/dev/apps/admin/api/v1/tenant-services";
+  static const String PAYMENT_BASE_URL = "https://smartnyumba-production.up.railway.app/apps/admin/api/v1/tenant-services";
   static const String PAY_SERVICE = "$PAYMENT_BASE_URL/pay-service/";
   static const String MPESA_CALLBACK = "$PAYMENT_BASE_URL/mpesa-callback";
   static const String ALL_TRANSACTIONS = "$PAYMENT_BASE_URL/all-transactions/";

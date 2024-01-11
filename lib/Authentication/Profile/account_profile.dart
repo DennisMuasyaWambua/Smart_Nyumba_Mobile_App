@@ -19,6 +19,7 @@ class _ProfileState extends State<AccountProfile> {
   int blockNumber =0;
   String houseNumber = ' ';
   String phoneNumber = ' ';
+  bool token_present = false;
   Stream<UserProfile> userprofile() async*{
     yield UserProfile();
 
@@ -27,17 +28,32 @@ class _ProfileState extends State<AccountProfile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    final account =  Auth().getProfile(Provider.of<Auth>(context,listen: false).token, context);
-    account.then((value)async{
-      setState(() {
-        email = value.profile!.user!.email!;
-        name = value.profile!.user!.firstName!;
-        blockNumber = value.profile!.propertyBlock!.block!;
-        houseNumber = value.profile!.propertyBlock!.houseNumber!;
-        phoneNumber = value.profile!.user!.mobileNumber!;
-      });
 
-    });
+
+    //
+    // if(Provider.of<Auth>(context,listen: false).token.isEmpty){
+    //   setState(() {
+    //     token_present = false;
+    //   });
+    // }else{
+    //   setState(() {
+    //     token_present = true;
+    //   });
+    // }
+    // final account =  Auth().getProfile(Provider.of<Auth>(context,listen: false).token, context);
+    //
+    // account.then((value)async{
+    //
+    //   setState(() {
+    //     email = value.profile!.user!.email!;
+    //     name = value.profile!.user!.firstName!;
+    //     blockNumber = value.profile!.propertyBlock!.block!;
+    //     houseNumber = value.profile!.propertyBlock!.houseNumber!;
+    //     phoneNumber = value.profile!.user!.mobileNumber!;
+    //   });
+    //
+    //
+    // });
 
   }
   @override

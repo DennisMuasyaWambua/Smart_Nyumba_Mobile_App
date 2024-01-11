@@ -128,48 +128,48 @@ class _LoginState extends State<Login> {
         login.then((value) async {
           print(value.toString());
           log(value.message.toString(), name: "LOGIN MESSAGE");
-          // Navigator.pushReplacement(context,
-          //         MaterialPageRoute(builder: (_) => const AdminDashboard()));
+          Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (_) => const TenantDashboard()));
 
-          if (value.accessToken != null) {
-            // Saving the users credentials using shared prefrences
-            SharedPrefrenceBuilder.setUserEmail(email);
-            SharedPrefrenceBuilder.setUserToken(value.accessToken.toString());
-            //saving token to provider
-            Provider.of<Auth>(context,listen:false).setToken(value.accessToken.toString());
-            log(Provider.of<Auth>(context,listen: false).token.toString(),name: "TOKEN PROVIDER");
-            // Auth().getProfile(Provider.of<Auth>(context,listen: false).token.toString(), context);
-
-            // Set the User id to the user to save the usersprofile
-            var user = await http.get(Uri.parse(Constants.TENANTS_PROFILE),
-                headers: {'Authorization': 'Bearer ${value.accessToken}'});
-
-            UserProfile usr = UserProfile.fromJson(json.decode(user.body));
-            var id = usr.profile!.user!.id;
-            SharedPrefrenceBuilder.setUserID(id!);
-
-            log(SharedPrefrenceBuilder().getUserEmail.toString(),
-                name: "EMAIL ADDRESS GOTTEN FROM LOGIN MESSAGE");
-            log(SharedPrefrenceBuilder().getUserToken.toString(),
-                name: "USER TOKEN GOTTEN FROM LOGIN MESSAGE");
-            // Navigating to the tenants dashboard
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (_) => const TenantDashboard()));
-          } else {
-            // QuickAlert.show(context: context, type: QuickAlertType.error, text: value.message);
-            Timer(const Duration(seconds: 3), () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    Navigator.of(context).pop();
-
-                    return AlertDialog(
-                      title: const Text("ERROR"),
-                      content: Text(value.message),
-                    );
-                  });
-            });
-          }
+          // if (value.accessToken != null) {
+          //   // Saving the users credentials using shared prefrences
+          //   SharedPrefrenceBuilder.setUserEmail(email);
+          //   SharedPrefrenceBuilder.setUserToken(value.accessToken.toString());
+          //   //saving token to provider
+          //   Provider.of<Auth>(context,listen:false).setToken(value.accessToken.toString());
+          //   log(Provider.of<Auth>(context,listen: false).token.toString(),name: "TOKEN PROVIDER");
+          //   // Auth().getProfile(Provider.of<Auth>(context,listen: false).token.toString(), context);
+          //
+          //   // Set the User id to the user to save the usersprofile
+          //   var user = await http.get(Uri.parse(Constants.TENANTS_PROFILE),
+          //       headers: {'Authorization': 'Bearer ${value.accessToken}'});
+          //
+          //   UserProfile usr = UserProfile.fromJson(json.decode(user.body));
+          //   var id = usr.profile!.user!.id;
+          //   SharedPrefrenceBuilder.setUserID(id!);
+          //
+          //   log(SharedPrefrenceBuilder().getUserEmail.toString(),
+          //       name: "EMAIL ADDRESS GOTTEN FROM LOGIN MESSAGE");
+          //   log(SharedPrefrenceBuilder().getUserToken.toString(),
+          //       name: "USER TOKEN GOTTEN FROM LOGIN MESSAGE");
+          //   // Navigating to the tenants dashboard
+          //   Navigator.pushReplacement(context,
+          //       MaterialPageRoute(builder: (_) => const TenantDashboard()));
+          // } else {
+          //   // QuickAlert.show(context: context, type: QuickAlertType.error, text: value.message);
+          //   Timer(const Duration(seconds: 3), () {
+          //     showDialog(
+          //         context: context,
+          //         builder: (context) {
+          //           Navigator.of(context).pop();
+          //
+          //           return AlertDialog(
+          //             title: const Text("ERROR"),
+          //             content: Text(value.message),
+          //           );
+          //         });
+          //   });
+          // }
         });
       },
       text: Constants.login,
@@ -218,14 +218,14 @@ class _LoginState extends State<Login> {
                 ),
               ),
               const Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 40),
                 child: Text(
                   "Sign in",
                   style: TextStyle(
                       decoration: TextDecoration.none,
                       fontFamily: 'HindJalandhar',
                       fontWeight: FontWeight.w600,
-                      fontSize: 74,
+                      fontSize: 34,
                       color: Color(0xff22215B)),
                 ),
               ),

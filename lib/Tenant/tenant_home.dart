@@ -48,40 +48,42 @@ class _TenantHomeState extends State<TenantHome> {
   }
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-          child: Column(
-
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(40.0),
-                child: Text(
-                  Constants.dashboard,
-                  style: GoogleFonts.hind(
-                      fontSize: 17,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w700),
-                ),
-              ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Welcome $lastName',
-                      style: GoogleFonts.urbanist(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black),
-                    ),
+    return Scaffold(
+      body: SingleChildScrollView(
+            child: Column(
+      
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: Text(
+                    Constants.dashboard,
+                    style: GoogleFonts.hind(
+                        fontSize: 17,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700),
                   ),
                 ),
-              Padding(
-                padding: const EdgeInsets.only(top: 40, left: 30),
-                child: _gridView(),
-              ),
-            ],
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Welcome $lastName',
+                        style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black),
+                      ),
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 40, left: 30),
+                  child: _gridView(),
+                ),
+              ],
+            ),
           ),
-        );
+    );
 
 
   }

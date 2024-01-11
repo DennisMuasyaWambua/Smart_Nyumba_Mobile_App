@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
         '/login': (context) => const Login(),
         '/register': (context) => const Register(),
         '/otp': (context) => const Otp(),
-        '/tenantsDashboard': (context) => const TenantHome(),
+        '/tenantsDashboard': (context) => const TenantDashboard(),
         '/adminDashboard':(context)=>const AdminDashboard(),
         '/allServiceChargeTransactions':(context)=>const AllTransactionsData(),
         '/createNewRole':(context)=>const CreateRole(),

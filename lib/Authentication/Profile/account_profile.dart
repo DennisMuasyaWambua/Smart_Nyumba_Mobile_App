@@ -30,30 +30,30 @@ class _ProfileState extends State<AccountProfile> {
     super.initState();
 
 
-    //
-    // if(Provider.of<Auth>(context,listen: false).token.isEmpty){
-    //   setState(() {
-    //     token_present = false;
-    //   });
-    // }else{
-    //   setState(() {
-    //     token_present = true;
-    //   });
-    // }
-    // final account =  Auth().getProfile(Provider.of<Auth>(context,listen: false).token, context);
-    //
-    // account.then((value)async{
-    //
-    //   setState(() {
-    //     email = value.profile!.user!.email!;
-    //     name = value.profile!.user!.firstName!;
-    //     blockNumber = value.profile!.propertyBlock!.block!;
-    //     houseNumber = value.profile!.propertyBlock!.houseNumber!;
-    //     phoneNumber = value.profile!.user!.mobileNumber!;
-    //   });
-    //
-    //
-    // });
+
+    if(Provider.of<Auth>(context,listen: false).token.isEmpty){
+      setState(() {
+        token_present = false;
+      });
+    }else{
+      setState(() {
+        token_present = true;
+      });
+    }
+    final account =  Auth().getProfile(Provider.of<Auth>(context,listen: false).token, context);
+
+    account.then((value)async{
+
+      setState(() {
+        email = value.profile!.user!.email!;
+        name = value.profile!.user!.firstName!;
+        blockNumber = value.profile!.propertyBlock!.block!;
+        houseNumber = value.profile!.propertyBlock!.houseNumber!;
+        phoneNumber = value.profile!.user!.mobileNumber!;
+      });
+
+
+    });
 
   }
   @override

@@ -11,6 +11,7 @@ import 'package:smart_nyumba/ApiHelpers/pdf_invoice_api.dart';
 import 'package:smart_nyumba/Models/all_transactions.dart';
 import 'package:smart_nyumba/Models/invoice.dart';
 import 'package:smart_nyumba/Providers/payment_provider.dart';
+import 'package:smart_nyumba/Tenant/tenantDashboard.dart';
 import 'package:smart_nyumba/Tenant/tenant_home.dart';
 import 'package:smart_nyumba/Tenant/tenant_receipt.dart';
 import 'package:path_provider/path_provider.dart';
@@ -131,8 +132,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                          },
                          child: GestureDetector(
                            onTap: (){
-                             Navigator.pushNamed(context, '/tenantsDashboard');
-                             // Navigator.pushReplacement(context, new MaterialPageRoute(builder: (_)=>TenantHome()));
+                              // Navigator.pushNamed(context, '/tenantsDashboard');
+                              Navigator.pushReplacement(context, new MaterialPageRoute(builder: (_)=>TenantDashboard()));
                            },
                            child: Icon(
                              Icons.arrow_back,

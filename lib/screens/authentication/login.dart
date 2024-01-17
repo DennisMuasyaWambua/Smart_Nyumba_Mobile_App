@@ -1,14 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:smart_nyumba/utils/constants/colors.dart';
 
+import './register.dart';
 // import 'package:google_fonts/google_fonts.dart';
 
 import '../../../utils/constants/constants.dart';
 import '../../../utils/providers/auth_provider.dart';
-import '../../widgets/auth_button.dart';
+import '../../widgets/auth/_auth_widgets.dart';
 import '../tenant/tenant_dashboard.dart';
-import './register.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -20,86 +21,119 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String email = " ";
   String password = " ";
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _passwordVisible = true;
-  final _formKey = GlobalKey<FormState>();
+
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    super.initState();
+  }
+
+  // Disposing controllers after use avoids memory leaks
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-          body: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _loginForm(),
-            ],
-          ),
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 148,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 48.0,
+              ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 5),
+                      child: Text(
+                        "Smart Nyumba",
+                        style: TextStyle(
+                          decoration: TextDecoration.none,
+                          fontFamily: 'HindJalandhar',
+                          fontWeight: FontWeight.w300,
+                          fontSize: 35,
+                          color: royalBlue,
+                        ),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 40),
+                      child: Text(
+                        "Sign in",
+                        style: TextStyle(
+                          decoration: TextDecoration.none,
+                          fontFamily: 'HindJalandhar',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 34,
+                          color: royalBlue,
+                        ),
+                      ),
+                    ),
+                    const FieldLabel(labelName: "YOUR EMAIL"),
+                    EmailField(controller: _emailController),
+                    const FieldLabel(labelName: "PASSWORD"),
+                    PasswordField(controller: _passwordController),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    _buttonSubmitField(),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const Register()),
+                            );
+                          },
+                          child: const Text(
+                            'Don’t have an account? Register',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              decoration: TextDecoration.none,
+                              color: shadeBlack,
+                              fontSize: 13,
+                              fontFamily: 'Hind',
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-      )),
-    );
-  }
-
-  Widget _emailField() {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.05,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius:
-            BorderRadius.circular(MediaQuery.of(context).size.height * 0.02),
-        boxShadow: const [
-          BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))
-        ],
       ),
-      child: TextFormField(
-          controller: _emailController,
-          keyboardType: TextInputType.emailAddress,
-          style: const TextStyle(
-            color: Colors.black87,
-          ),
-          decoration: const InputDecoration(
-            contentPadding: EdgeInsets.only(left: 25),
-            border: InputBorder.none,
-          )),
-    );
-  }
-
-  Widget _passwordField() {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.05,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius:
-            BorderRadius.circular(MediaQuery.of(context).size.height * 0.02),
-        boxShadow: const [
-          BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))
-        ],
-      ),
-      child: TextFormField(
-          obscureText: _passwordVisible,
-          controller: _passwordController,
-          keyboardType: TextInputType.emailAddress,
-          style: const TextStyle(
-            color: Colors.black87,
-          ),
-          decoration: InputDecoration(
-            alignLabelWithHint: true,
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.all(15),
-            suffixIcon: InkWell(
-                onTap: _tooglePasswordVisibility,
-                child: _passwordVisible
-                    ? const Icon(Icons.visibility)
-                    : const Icon(Icons.visibility_off)),
-          )),
     );
   }
 
   Widget _buttonSubmitField() {
     return AuthButton(
+      text: Constants.login,
+      buttonBgColor: gradYellowGold,
       onClick: () {
         setState(() {
           email = _emailController.text;
@@ -114,14 +148,13 @@ class _LoginState extends State<Login> {
 
         // Navigator.pushReplacement(context,
         //     MaterialPageRoute(builder: (_) => const TenantDashboard()));
-        final login = Auth().login(email, password,context);
-
+        final login = Auth().login(email, password, context);
 
         login.then((value) async {
           debugPrint(value.toString());
           log(value.message.toString(), name: "LOGIN MESSAGE");
-          Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (_) => const TenantDashboard()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => const TenantDashboard()));
 
           // if (value.accessToken != null) {
           //   // Saving the users credentials using shared prefrences
@@ -164,123 +197,6 @@ class _LoginState extends State<Login> {
           // }
         });
       },
-      text: Constants.login,
-      textColor: const [Color(0xFFD4AF37), Color(0xFFFFD700)],
     );
-  }
-
-  // Widget _registerPage() {
-  //   return Padding(
-  //     padding: const EdgeInsets.all(8.0),
-  //     child: Center(
-  //         child: GestureDetector(
-  //             onTap: () {
-  //               Navigator.pushReplacement(context,
-  //                   MaterialPageRoute(builder: (_) => const Register()));
-  //             },
-  //             child: Text(
-  //               '${Constants.joinMessage}${Constants.register}',
-  //               style: GoogleFonts.publicSans(
-  //                   color: Constants.buttonColor, fontSize: 13),
-  //             ))),
-  //   );
-  // }
-
-  Widget _loginForm() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40.0),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(0, 140, 10, 5),
-                child: Text(
-                  "Smart Nyumba",
-                  style: TextStyle(
-                      decoration: TextDecoration.none,
-                      fontFamily: 'HindJalandhar',
-                      fontWeight: FontWeight.w300,
-                      fontSize: 35,
-                      color: Color(0xff22215B)),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 40),
-                child: Text(
-                  "Sign in",
-                  style: TextStyle(
-                      decoration: TextDecoration.none,
-                      fontFamily: 'HindJalandhar',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 34,
-                      color: Color(0xff22215B)),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 5),
-                child: Text("YOUR EMAIL",
-                    style: TextStyle(
-                        decoration: TextDecoration.none,
-                        color: Color(0xFF888888),
-                        fontSize: 13,
-                        fontFamily: 'karala',
-                        fontWeight: FontWeight.w300,
-                        letterSpacing: 1.40)),
-              ),
-              _emailField(),
-              const Padding(
-                  padding: EdgeInsets.only(bottom: 5, top: 40),
-                  child: Text("PASSWORD",
-                      style: TextStyle(
-                          decoration: TextDecoration.none,
-                          color: Color(0xFF888888),
-                          fontSize: 13,
-                          fontFamily: 'karala',
-                          fontWeight: FontWeight.w300,
-                          letterSpacing: 1.40))),
-              _passwordField(),
-              const SizedBox(
-                height: 40,
-              ),
-              _buttonSubmitField(),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (_) => const Register()));
-                },
-                child: const SizedBox(
-                  width: 300,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Text(
-                      'Don’t have an account? Register',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        decoration: TextDecoration.none,
-                        color: Color(0xFF121515),
-                        fontSize: 13,
-                        fontFamily: 'Hind',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _tooglePasswordVisibility() {
-    setState(() {
-      _passwordVisible = !_passwordVisible;
-    });
   }
 }

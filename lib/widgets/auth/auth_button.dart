@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class AuthButton extends StatelessWidget {
-  const AuthButton({Key? key, required this.text, required this.onClick, required this.textColor})
+  const AuthButton({Key? key, required this.text, required this.onClick, required this.buttonBgColor})
       : super(key: key);
   final String text;
   final Function()? onClick;
-  final List<Color> textColor;
+  final List<Color> buttonBgColor;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class AuthButton extends StatelessWidget {
           gradient: LinearGradient(
             begin: const Alignment(-0.97, 0.24),
             end: const Alignment(0.97, -0.24),
-            colors: textColor,
+            colors: buttonBgColor,
           ),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),

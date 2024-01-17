@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_nyumba/Authentication/register/register.dart';
 
 import 'package:smart_nyumba/Widgets/auth_button.dart';
@@ -169,22 +169,22 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget _registerPage() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Center(
-          child: GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (_) => const Register()));
-              },
-              child: Text(
-                '${Constants.joinMessage}${Constants.register}',
-                style: GoogleFonts.publicSans(
-                    color: Constants.buttonColor, fontSize: 13),
-              ))),
-    );
-  }
+  // Widget _registerPage() {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: Center(
+  //         child: GestureDetector(
+  //             onTap: () {
+  //               Navigator.pushReplacement(context,
+  //                   MaterialPageRoute(builder: (_) => const Register()));
+  //             },
+  //             child: Text(
+  //               '${Constants.joinMessage}${Constants.register}',
+  //               style: GoogleFonts.publicSans(
+  //                   color: Constants.buttonColor, fontSize: 13),
+  //             ))),
+  //   );
+  // }
 
   Widget _loginForm() {
     return Padding(

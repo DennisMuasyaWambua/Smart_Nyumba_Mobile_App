@@ -18,29 +18,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  void initState() {
-    super.initState();
-
-    // Timer(Duration(seconds: 2),()=>Navigator.pushReplacement(context, new MaterialPageRoute(builder: (_)=>Login())));
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => Payments()),
@@ -49,8 +26,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
       child: MaterialApp(
         home: const Login(),
-        debugShowCheckedModeBanner: false,
         routes: routes,
+        debugShowCheckedModeBanner: false,
       ),
     );
   }

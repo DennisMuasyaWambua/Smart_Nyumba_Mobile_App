@@ -152,9 +152,17 @@ class _LoginState extends State<Login> {
                 name: "EMAIL ADDRESS GOTTEN FROM LOGIN MESSAGE");
             log(SharedPrefrenceBuilder().getUserToken.toString(),
                 name: "USER TOKEN GOTTEN FROM LOGIN MESSAGE");
+            log(value.role.toString(),name: "USERS ROLE");
             // Navigating to the tenants dashboard
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (_) => const TenantDashboard()));
+            if(value.role=="tenant"){
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (_) => const TenantDashboard()));
+            }else{
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (_) => const AdminDashboard()));
+            }
+
+
           } else {
             // QuickAlert.show(context: context, type: QuickAlertType.error, text: value.message);
             Timer(const Duration(seconds: 3), () {

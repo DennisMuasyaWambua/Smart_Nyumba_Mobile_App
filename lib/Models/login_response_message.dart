@@ -13,6 +13,7 @@ class LoginResponseMessage {
     required this.status,
     required this.message,
     this.accessToken,
+    this.role,
     this.expiresIn,
     this.tokenType,
   });
@@ -20,6 +21,7 @@ class LoginResponseMessage {
   bool status;
   String message;
   String?accessToken;
+  String? role;
   String?expiresIn;
   String?tokenType;
 
@@ -27,6 +29,7 @@ class LoginResponseMessage {
     status: json["status"],
     message: json["message"],
     accessToken: json["access_token"],
+    role: json["role"],
     expiresIn: json["expires_in"],
     tokenType: json["token_type"],
   );
@@ -35,6 +38,7 @@ class LoginResponseMessage {
     "status": status,
     "message": message,
     "access_token": accessToken,
+    "role":role,
     "expires_in": expiresIn,
     "token_type": tokenType,
   };

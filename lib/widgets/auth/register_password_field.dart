@@ -25,10 +25,9 @@ class _RegisterPasswordFieldState extends State<RegisterPasswordField> {
     return Padding(
       padding: const EdgeInsets.only(top: 15.0),
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.06,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.height * 0.02),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: const [
             BoxShadow(
               color: Colors.black26,
@@ -55,7 +54,15 @@ class _RegisterPasswordFieldState extends State<RegisterPasswordField> {
             ),
             suffixIcon: InkWell(
               onTap: _tooglePasswordView,
-              child: _isVisible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
+              child: _isVisible
+                  ? const Icon(
+                      Icons.visibility,
+                      color: royalBlue,
+                    )
+                  : const Icon(
+                      Icons.visibility_off,
+                      color: royalBlue,
+                    ),
             ),
           ),
         ),

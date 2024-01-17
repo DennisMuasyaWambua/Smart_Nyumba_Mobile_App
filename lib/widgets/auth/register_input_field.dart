@@ -38,7 +38,6 @@ class RegisterInputField extends StatelessWidget {
           color: Colors.black87,
         ),
         decoration: InputDecoration(
-          constraints: BoxConstraints(minWidth: 100, maxWidth: MediaQuery.of(context).size.width),
           prefixIcon: Icon(
             prefixIcon,
             color: royalBlue,
@@ -47,23 +46,7 @@ class RegisterInputField extends StatelessWidget {
           contentPadding: const EdgeInsets.only(
             left: 25,
           ),
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(16),
-            ),
-          ),
-          enabledBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(16),
-            ),
-            borderSide: BorderSide.none,
-          ),
-          focusedBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(16),
-            ),
-            borderSide: BorderSide.none,
-          ),
+          border: InputBorder.none,
         ),
       ),
     );

@@ -10,10 +10,9 @@ class EmailField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.05,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(MediaQuery.of(context).size.height * 0.02),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
             color: Colors.black26,

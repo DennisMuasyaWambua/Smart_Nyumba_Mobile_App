@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/constants/colors.dart';
+
 class PasswordField extends StatefulWidget {
   final TextEditingController controller;
-  const PasswordField({
-    super.key,
-    required this.controller,
-  });
+  final Widget? prefixIcon;
+  final String? hintText;
+  const PasswordField({super.key, required this.controller, this.prefixIcon, this.hintText});
 
   @override
   State<PasswordField> createState() => _PasswordFieldState();
@@ -23,10 +24,9 @@ class _PasswordFieldState extends State<PasswordField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.05,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(MediaQuery.of(context).size.height * 0.02),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
             color: Colors.black26,
@@ -38,19 +38,28 @@ class _PasswordFieldState extends State<PasswordField> {
       child: TextFormField(
         obscureText: _passwordVisible,
         controller: widget.controller,
-        keyboardType: TextInputType.emailAddress,
+        keyboardType: TextInputType.visiblePassword,
         style: const TextStyle(
           color: Colors.black87,
         ),
         decoration: InputDecoration(
+          hintText: widget.hintText,
           alignLabelWithHint: true,
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.all(15),
+          contentPadding: const EdgeInsets.only(left: 25),
+          prefixIcon: widget.prefixIcon,
           suffixIcon: InkWell(
             onTap: _tooglePasswordVisibility,
-            child:
-                _passwordVisible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
+            child: _passwordVisible
+                ? const Icon(
+                    Icons.visibility,
+                    color: royalBlue,
+                  )
+                : const Icon(
+                    Icons.visibility_off,
+                    color: royalBlue,
+                  ),
           ),
+          border: InputBorder.none,
         ),
       ),
     );

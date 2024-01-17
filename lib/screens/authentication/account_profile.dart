@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_nyumba/Models/user_profile.dart';
 
-import '../../Constants/constants.dart';
-import '../../Providers/auth_provider.dart';
+import '../../../utils/constants/constants.dart';
+import '../../../utils/providers/auth_provider.dart';
+import '../../utils/models/user_profile.dart';
 
 class AccountProfile extends StatefulWidget {
   const AccountProfile({super.key});

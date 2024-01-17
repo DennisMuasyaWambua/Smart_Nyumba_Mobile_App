@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../Constants/constants.dart';
+import '../../utils/constants/constants.dart';
 
 class CreateRole extends StatefulWidget {
   const CreateRole({super.key});

@@ -5,18 +5,18 @@ import 'dart:io';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
-import 'package:provider/provider.dart';
-import 'package:smart_nyumba/ApiHelpers/pdf_invoice_api.dart';
-import 'package:smart_nyumba/Models/all_transactions.dart';
-import 'package:smart_nyumba/Models/invoice.dart';
-import 'package:smart_nyumba/Providers/payment_provider.dart';
-import 'package:smart_nyumba/Tenant/tenant_dashboard.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
+import 'package:provider/provider.dart';
 
-import '../Providers/auth_provider.dart';
+import './tenant_dashboard.dart';
+import '../../utils/api_helpers/pdf_invoice_api.dart';
+import '../../utils/models/all_transactions.dart';
+import '../../utils/models/invoice.dart';
+import '../../utils/providers/auth_provider.dart';
+import '../../utils/providers/payment_provider.dart';
 
 class AllTransactionsData extends StatefulWidget {
   const AllTransactionsData({super.key});

@@ -1,8 +1,9 @@
 // import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_nyumba/Admin/companies.dart';
-import 'package:smart_nyumba/Admin/estate_tenants.dart';
+
+import './companies.dart';
+import './estate_tenants.dart';
 
 // import '../Constants/constants.dart';
 

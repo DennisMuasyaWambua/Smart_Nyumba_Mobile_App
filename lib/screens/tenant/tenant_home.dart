@@ -8,11 +8,11 @@ import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
-import '../Constants/constants.dart';
-import '../Providers/auth_provider.dart';
-import '../Providers/payment_provider.dart';
-import '../Providers/shared_preference_builder.dart';
-import '../Providers/tenants_profile_provider.dart';
+import '../../utils/constants/constants.dart';
+import '../../utils/providers/auth_provider.dart';
+import '../../utils/providers/payment_provider.dart';
+import '../../utils/providers/shared_preference_builder.dart';
+import '../../utils/providers/tenants_profile_provider.dart';
 
 class TenantHome extends StatefulWidget {
   const TenantHome({super.key});

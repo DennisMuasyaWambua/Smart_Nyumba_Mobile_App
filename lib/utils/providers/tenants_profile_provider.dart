@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:smart_nyumba/Constants/constants.dart';
-import 'package:smart_nyumba/Models/user_profile.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
+
+import '../constants/constants.dart';
+import '../models/user_profile.dart';
 
 class TenantsProfile with ChangeNotifier {
   UserProfile profile = UserProfile();

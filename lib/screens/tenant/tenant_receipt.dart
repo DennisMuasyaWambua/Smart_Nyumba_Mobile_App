@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
-
-
 class Receipt extends StatefulWidget {
   const Receipt({super.key});
 

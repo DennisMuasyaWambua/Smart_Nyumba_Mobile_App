@@ -1,14 +1,14 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+
 // import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_nyumba/Authentication/register/register.dart';
 
-import 'package:smart_nyumba/Widgets/auth_button.dart';
-
-import '../../Constants/constants.dart';
-import '../../Providers/auth_provider.dart';
-import '../../Tenant/tenant_dashboard.dart';
+import '../../../utils/constants/constants.dart';
+import '../../../utils/providers/auth_provider.dart';
+import '../../widgets/auth_button.dart';
+import '../tenant/tenant_dashboard.dart';
+import './register.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);

@@ -4,12 +4,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:smart_nyumba/Constants/constants.dart';
-import 'package:smart_nyumba/Models/all_transactions.dart';
-import 'package:smart_nyumba/Models/check_payment_status.dart';
-import 'package:smart_nyumba/Models/pay_service_charge.dart';
 import 'package:http/http.dart' as http;
-import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
+
+import '../constants/constants.dart';
+import '../models/all_transactions.dart';
+import '../models/check_payment_status.dart';
+import '../models/pay_service_charge.dart';
+import './shared_preference_builder.dart';
 
 class Payments with ChangeNotifier {
   // all payments are handled here

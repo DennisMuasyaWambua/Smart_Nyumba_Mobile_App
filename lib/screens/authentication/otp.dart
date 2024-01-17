@@ -1,11 +1,12 @@
 
-  import 'package:flutter/material.dart';
-  import 'package:google_fonts/google_fonts.dart';
-  import 'package:pinput/pinput.dart';
-  import 'package:smart_nyumba/Authentication/login/login.dart';
-  import 'package:smart_nyumba/Constants/constants.dart';
-  import 'package:smart_nyumba/Providers/auth_provider.dart';
-  import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:pinput/pinput.dart';
+
+import '../../utils/Constants/constants.dart';
+import '../../utils/Providers/auth_provider.dart';
+import '../../utils/Providers/shared_preference_builder.dart';
+import './login.dart';
 
   class Otp extends StatefulWidget {
     const Otp({super.key});

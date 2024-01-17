@@ -1,11 +1,12 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+
 // import 'package:google_fonts/google_fonts.dart';
 
-import 'package:smart_nyumba/Authentication/Profile/account_profile.dart';
-import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
-import 'package:smart_nyumba/Tenant/tenant_home.dart';
+import '../../utils/providers/shared_preference_builder.dart';
+import '../authentication/account_profile.dart';
+import '../tenant/tenant_home.dart';
 
-// import '../Constants/constants.dart';
+// import '../constants/constants.dart';
 
 class TenantDashboard extends StatefulWidget {
   const TenantDashboard({Key? key}) : super(key: key);

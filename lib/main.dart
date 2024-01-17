@@ -2,19 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_nyumba/Admin/admin_dashboard.dart';
-import 'package:smart_nyumba/Admin/create_role.dart';
-import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
-import 'package:smart_nyumba/Providers/tenants_profile_provider.dart';
-import 'package:smart_nyumba/Tenant/all_transactions_data.dart';
-import 'package:smart_nyumba/Tenant/tenant_receipt.dart';
 
-import 'Authentication/login/login.dart';
-import 'Authentication/otp.dart';
-import 'Authentication/register/register.dart';
-import 'Providers/auth_provider.dart';
-import 'Providers/payment_provider.dart';
-import 'Tenant/tenant_dashboard.dart';
+import 'screens/authentication/_auth.dart';
+import 'utils/providers/_providers.dart';
+import 'utils/routes.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -43,7 +34,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
-
     super.initState();
 
     // Timer(Duration(seconds: 2),()=>Navigator.pushReplacement(context, new MaterialPageRoute(builder: (_)=>Login())));
@@ -53,28 +43,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-       ChangeNotifierProvider(
-        create: (context)=>Payments()
-        ),
-        ChangeNotifierProvider(
-          create: (context)=>TenantsProfile()
-        ),
-        ChangeNotifierProvider(create:(context)=>Auth()),
-    ], 
-    child:  MaterialApp(
-      home: const Login(),
-      debugShowCheckedModeBanner: false,
-      
-      routes: {
-        '/login': (context) => const Login(),
-        '/register': (context) => const Register(),
-        '/otp': (context) => const Otp(),
-        '/tenantsDashboard': (context) => const TenantDashboard(),
-        '/adminDashboard':(context)=>const AdminDashboard(),
-        '/allServiceChargeTransactions':(context)=>const AllTransactionsData(),
-        '/createNewRole':(context)=>const CreateRole(),
-        '/receipt':(context)=>const Receipt()
-      },
-    ),);
+        ChangeNotifierProvider(create: (context) => Payments()),
+        ChangeNotifierProvider(create: (context) => TenantsProfile()),
+        ChangeNotifierProvider(create: (context) => Auth()),
+      ],
+      child: MaterialApp(
+        home: const Login(),
+        debugShowCheckedModeBanner: false,
+        routes: routes,
+      ),
+    );
   }
 }

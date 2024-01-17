@@ -26,7 +26,6 @@ class _ProfileState extends State<AccountProfile> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     if (Provider.of<Auth>(context, listen: false).token.isEmpty) {

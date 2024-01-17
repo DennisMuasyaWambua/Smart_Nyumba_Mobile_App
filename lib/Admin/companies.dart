@@ -103,15 +103,13 @@ class _companiesState extends State<Companies> {
                     Positioned(
                       left: 16,
                       top: 60,
-                      child: Container(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(height: 30),
-                          ],
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(height: 30),
+                        ],
                       ),
                     ),
                     const SizedBox(
@@ -197,7 +195,7 @@ class _companiesState extends State<Companies> {
                         ),
                       ),
                     ),
-                    Positioned(
+                    const Positioned(
                       left: 124,
                       top: 16,
                       child: SizedBox(
@@ -208,60 +206,54 @@ class _companiesState extends State<Companies> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    child: Column(
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Column(
                                       mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          child: const Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                height: 25,
-                                              ),
-                                              SizedBox(
-                                                width: 164,
-                                                child: Text(
-                                                  'Clean City Services',
-                                                  style: TextStyle(
-                                                    color: Color(0xFF1A1E25),
-                                                    fontSize: 16,
-                                                    fontFamily: 'Hind',
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 0.08,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(height: 18),
-                                              Text(
-                                                'cleancity@smart.com',
-                                                style: TextStyle(
-                                                  color: Color(0xFF7D7F88),
-                                                  fontSize: 13,
-                                                  fontFamily: 'Hind',
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 0.10,
-                                                  letterSpacing: 0.13,
-                                                ),
-                                              ),
-                                            ],
+                                        SizedBox(
+                                          height: 25,
+                                        ),
+                                        SizedBox(
+                                          width: 164,
+                                          child: Text(
+                                            'Clean City Services',
+                                            style: TextStyle(
+                                              color: Color(0xFF1A1E25),
+                                              fontSize: 16,
+                                              fontFamily: 'Hind',
+                                              fontWeight: FontWeight.w400,
+                                              height: 0.08,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 18),
+                                        Text(
+                                          'cleancity@smart.com',
+                                          style: TextStyle(
+                                            color: Color(0xFF7D7F88),
+                                            fontSize: 13,
+                                            fontFamily: 'Hind',
+                                            fontWeight: FontWeight.w400,
+                                            height: 0.10,
+                                            letterSpacing: 0.13,
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ],
                         ),

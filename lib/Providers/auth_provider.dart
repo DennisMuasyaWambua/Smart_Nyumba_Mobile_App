@@ -16,9 +16,9 @@ import '../Widgets/alerts.dart';
 class Auth with ChangeNotifier {
   late String? firstName, lastName, email, houseNumber;
   late int? blockNumber;
-  var user;
+  late String? user;
 
-  var Token;
+  late String Token;
 
   String get token => Token;
   String get lName => lastName!;
@@ -32,8 +32,8 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
-  void setLastName(String LastName) {
-    lastName = LastName;
+  void setLastName(String lName) {
+    lastName = lName;
     notifyListeners();
   }
 

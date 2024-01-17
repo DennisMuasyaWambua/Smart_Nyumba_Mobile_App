@@ -71,13 +71,13 @@ class Payments with ChangeNotifier {
       });
       log(check.body.toString(), name: "THIS IS THE CHECK PAYMENT RESPONSE");
 
-      CheckPaymentStatus PaymentStatus =
+      CheckPaymentStatus pStatus =
           CheckPaymentStatus.fromJson(jsonDecode(check.body));
-      paymentStatus = PaymentStatus.data!.status!;
+      paymentStatus = pStatus.data!.status!;
 
-      log(PaymentStatus.status.toString(), name: "PAYMENT_STATUS");
-      log(PaymentStatus.message.toString(), name: "PAYMENT_MESSAGE");
-      log(PaymentStatus.data.toString(),
+      log(pStatus.status.toString(), name: "PAYMENT_STATUS");
+      log(pStatus.message.toString(), name: "PAYMENT_MESSAGE");
+      log(pStatus.data.toString(),
           name:
               "****************ALL TRANSACTIONS THAT ARE AVAILABLE***************");
       notifyListeners();

@@ -31,7 +31,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
   String name = '';
   late Invoice receipt;
   final pdf = pw.Document();
-  late File _file;
+  late File file;
   @override
   void initState() {
     super.initState();
@@ -77,12 +77,12 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
         "${documentDirectory!.parent.parent.parent.parent.parent.parent.path}/self/primary/documents";
     log(documentPath, name: "THIS IS THE DOCUMENT PATH");
     int timestamp = DateTime.now().millisecondsSinceEpoch;
-    final file = File("$documentPath/$index-receipt-$timestamp.pdf");
+    final pdfFile = File("$documentPath/$index-receipt-$timestamp.pdf");
     log(documentPath + '/$index-receipt-$timestamp.pdf'.toString(), name: "DOCUMENT PATH");
 
     file.writeAsBytesSync(await pdf.save());
     setState(() {
-      _file = file;
+      file = pdfFile;
     });
   }
 

@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPrefrenceBuilder {
   static SharedPreferences? _preferences;
   static const useremail = 'email';
-  static const Token = 'token';
+  static const token = 'token';
   static const  id = 'user_id';
 
   static Future init() async {
@@ -14,12 +14,12 @@ class SharedPrefrenceBuilder {
     await _preferences!.setString(useremail, email);
   }
 
-  static Future setUserID(int UID) async {
-    await _preferences!.setInt(id, UID );
+  static Future setUserID(int uid) async {
+    await _preferences!.setInt(id,  uid);
   }
 
   static Future setUserToken(String token) async {
-    await _preferences!.setString(Token, token);
+    await _preferences!.setString(token, token);
   }
 
   int? get getuserID {
@@ -27,7 +27,7 @@ class SharedPrefrenceBuilder {
   }
 
   String? get getUserToken {
-    return _preferences!.getString(Token);
+    return _preferences!.getString(token);
   }
 
   String? get getUserEmail {

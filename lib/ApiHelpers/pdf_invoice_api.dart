@@ -13,7 +13,7 @@ import 'package:pdf/widgets.dart';
 class PdfApi with ChangeNotifier{
  late String _file;
  late Uint8List logobytes;
- late PdfImage _logoImage;
+ late PdfImage logoImage;
  String get filePath=>_file;
  void setFile(String file){
     _file = file;
@@ -25,7 +25,7 @@ class PdfApi with ChangeNotifier{
    logobytes = bytes.buffer.asUint8List();
 
      try {
-       _logoImage = PdfImage.file(
+       logoImage = PdfImage.file(
          pdf.document,
          bytes: logobytes,
        );

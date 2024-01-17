@@ -33,7 +33,7 @@
             color: Colors.grey.shade100,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: Colors.transparent)));
-    final List<String> Otp = [];
+    final List<String> otpString = [];
     @override
     Widget build(BuildContext context) {
       return Scaffold(

@@ -17,12 +17,12 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   String email = " ";
-  String FirstName = " ";
-  String LastName = " ";
-  String IdNumber = " ";
-  String BlockNumber = " ";
-  String HouseNumber = " ";
-  String MobileNumber = " ";
+  String firstName = " ";
+  String lastName = " ";
+  String idNumber = " ";
+  String blockNumber = " ";
+  String houseNumber = " ";
+  String mobileNumber = " ";
   String password = " ";
   String confirmPassword = " ";
   String fname = "first name";
@@ -182,12 +182,12 @@ class _RegisterState extends State<Register> {
                           // SharedPrefrenceBuilder.init();
                           setState(() {
                             email = _emailController.text;
-                            FirstName = _firstNameController.text;
-                            LastName = _lastNameController.text;
-                            IdNumber = _idNumberController.text;
-                            BlockNumber = _blockNumberController.text;
-                            HouseNumber = _houseNumberController.text;
-                            MobileNumber = _mobileNumberController.text;
+                            firstName = _firstNameController.text;
+                            lastName = _lastNameController.text;
+                            idNumber = _idNumberController.text;
+                            blockNumber = _blockNumberController.text;
+                           houseNumber = _houseNumberController.text;
+                            mobileNumber = _mobileNumberController.text;
                             password = _passwordController.text;
                           });
 
@@ -203,12 +203,12 @@ class _RegisterState extends State<Register> {
 
                           final register = Auth().register(
                               email,
-                              FirstName,
-                              LastName,
-                              IdNumber,
-                              BlockNumber,
-                              HouseNumber,
-                              MobileNumber,
+                              firstName,
+                              lastName,
+                              idNumber,
+                              blockNumber,
+                             houseNumber,
+                              mobileNumber,
                               password,context);
 
                           register.then((value) {

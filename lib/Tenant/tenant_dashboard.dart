@@ -1,11 +1,11 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 import 'package:smart_nyumba/Authentication/Profile/account_profile.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/Tenant/tenant_home.dart';
 
-import '../Constants/constants.dart';
+// import '../Constants/constants.dart';
 
 class TenantDashboard extends StatefulWidget {
   const TenantDashboard({Key? key}) : super(key: key);
@@ -133,197 +133,197 @@ class _TenantDashboardState extends State<TenantDashboard> {
   //   );
   // }
 
-  Widget _paymentHistory() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Neumorphic(
-        style: NeumorphicStyle(
-            shape: NeumorphicShape.concave,
-            depth: 100,
-            boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(25.0)),
-            lightSource: LightSource.topLeft,
-            intensity: 30),
-        child: Container(
-          height: 160,
-          width: 135,
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment(-0.97, 0.24),
-                  end: Alignment(0.97, -0.24),
-                  colors: [Color(0xFFD4AF37), Color(0xFFFFD700)])),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 50),
-            child: Column(children: [
-              const Icon(
-                Icons.history,
-                color: Colors.white,
-                size: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  Constants.paymentHistory,
-                  style: GoogleFonts.hind(
-                      height: 1.33,
-                      fontSize: 15,
-                      letterSpacing: -0.24,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white),
-                ),
-              )
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _paymentHistory() {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: Neumorphic(
+  //       style: NeumorphicStyle(
+  //           shape: NeumorphicShape.concave,
+  //           depth: 100,
+  //           boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(25.0)),
+  //           lightSource: LightSource.topLeft,
+  //           intensity: 30),
+  //       child: Container(
+  //         height: 160,
+  //         width: 135,
+  //         decoration: const BoxDecoration(
+  //             gradient: LinearGradient(
+  //                 begin: Alignment(-0.97, 0.24),
+  //                 end: Alignment(0.97, -0.24),
+  //                 colors: [Color(0xFFD4AF37), Color(0xFFFFD700)])),
+  //         child: Padding(
+  //           padding: const EdgeInsets.symmetric(vertical: 50),
+  //           child: Column(children: [
+  //             const Icon(
+  //               Icons.history,
+  //               color: Colors.white,
+  //               size: 30,
+  //             ),
+  //             Padding(
+  //               padding: const EdgeInsets.only(top: 8.0),
+  //               child: Text(
+  //                 Constants.paymentHistory,
+  //                 style: GoogleFonts.hind(
+  //                     height: 1.33,
+  //                     fontSize: 15,
+  //                     letterSpacing: -0.24,
+  //                     fontWeight: FontWeight.w700,
+  //                     color: Colors.white),
+  //               ),
+  //             )
+  //           ]),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _payServiceCharge() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Neumorphic(
-        style: NeumorphicStyle(
-            shape: NeumorphicShape.concave,
-            depth: 100,
-            boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(25.0)),
-            lightSource: LightSource.topLeft,
-            intensity: 30),
-        child: Container(
-          height: 160,
-          width: 135,
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment(-0.97, 0.24),
-                  end: Alignment(0.97, -0.24),
-                  colors: [Color(0xFFD4AF37), Color(0xFFFFD700)])),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 50),
-            child: Column(children: [
-              const Icon(
-                Icons.monetization_on,
-                color: Colors.white,
-                size: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  Constants.payServiceCharge,
-                  style: GoogleFonts.hind(
-                      letterSpacing: -0.24,
-                      height: 1.33,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white),
-                ),
-              )
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _payServiceCharge() {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: Neumorphic(
+  //       style: NeumorphicStyle(
+  //           shape: NeumorphicShape.concave,
+  //           depth: 100,
+  //           boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(25.0)),
+  //           lightSource: LightSource.topLeft,
+  //           intensity: 30),
+  //       child: Container(
+  //         height: 160,
+  //         width: 135,
+  //         decoration: const BoxDecoration(
+  //             gradient: LinearGradient(
+  //                 begin: Alignment(-0.97, 0.24),
+  //                 end: Alignment(0.97, -0.24),
+  //                 colors: [Color(0xFFD4AF37), Color(0xFFFFD700)])),
+  //         child: Padding(
+  //           padding: const EdgeInsets.symmetric(vertical: 50),
+  //           child: Column(children: [
+  //             const Icon(
+  //               Icons.monetization_on,
+  //               color: Colors.white,
+  //               size: 30,
+  //             ),
+  //             Padding(
+  //               padding: const EdgeInsets.only(top: 8.0),
+  //               child: Text(
+  //                 Constants.payServiceCharge,
+  //                 style: GoogleFonts.hind(
+  //                     letterSpacing: -0.24,
+  //                     height: 1.33,
+  //                     fontSize: 15,
+  //                     fontWeight: FontWeight.w700,
+  //                     color: Colors.white),
+  //               ),
+  //             )
+  //           ]),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _requestForRepairs() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Neumorphic(
-        style: NeumorphicStyle(
-            shape: NeumorphicShape.concave,
-            depth: 100,
-            boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(25.0)),
-            lightSource: LightSource.topLeft,
-            intensity: 30),
-        child: Container(
-          height: 160,
-          width: 135,
-          decoration: ShapeDecoration(
-              color: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              shadows: const [
-                BoxShadow(
-                  color: Color(0x19A3A3A3),
-                  blurRadius: 8,
-                  offset: Offset(0, 4),
-                  spreadRadius: 0,
-                )
-              ]),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 50),
-            child: Column(children: [
-              const Icon(
-                Icons.plumbing_rounded,
-                color: Colors.black,
-                size: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  Constants.service,
-                  style: GoogleFonts.hind(
-                      height: 1.33,
-                      letterSpacing: -0.24,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black),
-                ),
-              )
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _requestForRepairs() {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: Neumorphic(
+  //       style: NeumorphicStyle(
+  //           shape: NeumorphicShape.concave,
+  //           depth: 100,
+  //           boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(25.0)),
+  //           lightSource: LightSource.topLeft,
+  //           intensity: 30),
+  //       child: Container(
+  //         height: 160,
+  //         width: 135,
+  //         decoration: ShapeDecoration(
+  //             color: Colors.white,
+  //             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  //             shadows: const [
+  //               BoxShadow(
+  //                 color: Color(0x19A3A3A3),
+  //                 blurRadius: 8,
+  //                 offset: Offset(0, 4),
+  //                 spreadRadius: 0,
+  //               )
+  //             ]),
+  //         child: Padding(
+  //           padding: const EdgeInsets.symmetric(vertical: 50),
+  //           child: Column(children: [
+  //             const Icon(
+  //               Icons.plumbing_rounded,
+  //               color: Colors.black,
+  //               size: 30,
+  //             ),
+  //             Padding(
+  //               padding: const EdgeInsets.only(top: 8.0),
+  //               child: Text(
+  //                 Constants.service,
+  //                 style: GoogleFonts.hind(
+  //                     height: 1.33,
+  //                     letterSpacing: -0.24,
+  //                     fontSize: 15,
+  //                     fontWeight: FontWeight.w400,
+  //                     color: Colors.black),
+  //               ),
+  //             )
+  //           ]),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _marketPlace() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Neumorphic(
-        style: NeumorphicStyle(
-            shape: NeumorphicShape.concave,
-            depth: 100,
-            boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(25.0)),
-            lightSource: LightSource.topLeft,
-            intensity: 30),
-        child: Container(
-          height: 160,
-          width: 135,
-          decoration: ShapeDecoration(
-              color: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              shadows: const [
-                BoxShadow(
-                  color: Color(0x19A3A3A3),
-                  blurRadius: 8,
-                  offset: Offset(0, 4),
-                  spreadRadius: 0,
-                )
-              ]),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 50),
-            child: Column(children: [
-              const Icon(
-                Icons.store,
-                color: Colors.black,
-                size: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  Constants.marketPlace,
-                  style: GoogleFonts.hind(
-                      letterSpacing: -0.24,
-                      height: 1.33,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black),
-                ),
-              )
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _marketPlace() {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: Neumorphic(
+  //       style: NeumorphicStyle(
+  //           shape: NeumorphicShape.concave,
+  //           depth: 100,
+  //           boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(25.0)),
+  //           lightSource: LightSource.topLeft,
+  //           intensity: 30),
+  //       child: Container(
+  //         height: 160,
+  //         width: 135,
+  //         decoration: ShapeDecoration(
+  //             color: Colors.white,
+  //             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  //             shadows: const [
+  //               BoxShadow(
+  //                 color: Color(0x19A3A3A3),
+  //                 blurRadius: 8,
+  //                 offset: Offset(0, 4),
+  //                 spreadRadius: 0,
+  //               )
+  //             ]),
+  //         child: Padding(
+  //           padding: const EdgeInsets.symmetric(vertical: 50),
+  //           child: Column(children: [
+  //             const Icon(
+  //               Icons.store,
+  //               color: Colors.black,
+  //               size: 30,
+  //             ),
+  //             Padding(
+  //               padding: const EdgeInsets.only(top: 8.0),
+  //               child: Text(
+  //                 Constants.marketPlace,
+  //                 style: GoogleFonts.hind(
+  //                     letterSpacing: -0.24,
+  //                     height: 1.33,
+  //                     fontSize: 15,
+  //                     fontWeight: FontWeight.w400,
+  //                     color: Colors.black),
+  //               ),
+  //             )
+  //           ]),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _bottomNavigationBar() {
     return BottomNavigationBar(

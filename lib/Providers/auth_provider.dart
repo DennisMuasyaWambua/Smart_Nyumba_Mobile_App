@@ -18,9 +18,9 @@ class Auth with ChangeNotifier {
   late int? blockNumber;
   late String? user;
 
-  late String Token;
+  late String authToken;
 
-  String get token => Token;
+  String get token => authToken;
   String get lName => lastName!;
   String get mail => email!;
   String get fname => firstName!;
@@ -28,7 +28,7 @@ class Auth with ChangeNotifier {
   String get hseNo => houseNumber!;
 
   void setToken(String newToken) {
-    Token = newToken;
+    authToken = newToken;
     notifyListeners();
   }
 
@@ -85,7 +85,7 @@ class Auth with ChangeNotifier {
       SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken.toString());
       if (loginResponseMessage.accessToken != null) {
         SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken.toString());
-        Token = loginResponseMessage.accessToken.toString();
+        authToken = loginResponseMessage.accessToken.toString();
         Provider.of<Auth>(context, listen: false)
             .setToken(loginResponseMessage.accessToken.toString());
         log(loginResponseMessage.status.toString(), name: "Status");

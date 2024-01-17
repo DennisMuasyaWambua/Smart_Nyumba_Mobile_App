@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_nyumba/Admin/companies.dart';
 import 'package:smart_nyumba/Admin/estate_tenants.dart';
 
-import '../Constants/constants.dart';
+// import '../Constants/constants.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -14,107 +14,107 @@ class AdminDashboard extends StatefulWidget {
 }
 
 class _AdminDashboardState extends State<AdminDashboard> {
-  Widget _bottomNavigationBar() {
-    return BottomNavigationBar(selectedItemColor: const Color(0xFFD4AF37), items: const [
-      BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-      BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-    ]);
-  }
+  // Widget _bottomNavigationBar() {
+  //   return BottomNavigationBar(selectedItemColor: const Color(0xFFD4AF37), items: const [
+  //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+  //     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+  //   ]);
+  // }
 
-  Widget _addPerson() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Neumorphic(
-        style: NeumorphicStyle(
-            shape: NeumorphicShape.concave,
-            depth: 100,
-            boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(25.0)),
-            lightSource: LightSource.topLeft,
-            intensity: 30),
-        child: GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, '/createNewRole');
-          },
-          child: Container(
-            height: 160,
-            width: 135,
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment(-0.97, 0.24),
-                    end: Alignment(0.97, -0.24),
-                    colors: [Color(0xFFD4AF37), Color(0xFFFFD700)])),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 50),
-              child: Column(children: [
-                const Icon(
-                  Icons.person_add,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    Constants.createRole,
-                    style: GoogleFonts.hind(
-                        letterSpacing: -0.24,
-                        height: 1.33,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white),
-                  ),
-                )
-              ]),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _addPerson() {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: Neumorphic(
+  //       style: NeumorphicStyle(
+  //           shape: NeumorphicShape.concave,
+  //           depth: 100,
+  //           boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(25.0)),
+  //           lightSource: LightSource.topLeft,
+  //           intensity: 30),
+  //       child: GestureDetector(
+  //         onTap: () {
+  //           Navigator.pushNamed(context, '/createNewRole');
+  //         },
+  //         child: Container(
+  //           height: 160,
+  //           width: 135,
+  //           decoration: const BoxDecoration(
+  //               gradient: LinearGradient(
+  //                   begin: Alignment(-0.97, 0.24),
+  //                   end: Alignment(0.97, -0.24),
+  //                   colors: [Color(0xFFD4AF37), Color(0xFFFFD700)])),
+  //           child: Padding(
+  //             padding: const EdgeInsets.symmetric(vertical: 50),
+  //             child: Column(children: [
+  //               const Icon(
+  //                 Icons.person_add,
+  //                 color: Colors.white,
+  //                 size: 30,
+  //               ),
+  //               Padding(
+  //                 padding: const EdgeInsets.only(top: 8.0),
+  //                 child: Text(
+  //                   Constants.createRole,
+  //                   style: GoogleFonts.hind(
+  //                       letterSpacing: -0.24,
+  //                       height: 1.33,
+  //                       fontSize: 15,
+  //                       fontWeight: FontWeight.w700,
+  //                       color: Colors.white),
+  //                 ),
+  //               )
+  //             ]),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _checkCumulativeServiceChargeBalance() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Neumorphic(
-        style: NeumorphicStyle(
-            shape: NeumorphicShape.concave,
-            depth: 100,
-            boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(25.0)),
-            lightSource: LightSource.topLeft,
-            intensity: 30),
-        child: Container(
-          height: 160,
-          width: 135,
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment(-0.97, 0.24),
-                  end: Alignment(0.97, -0.24),
-                  colors: [Color(0xFFD4AF37), Color(0xFFFFD700)])),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 50),
-            child: Column(children: [
-              const Icon(
-                Icons.account_balance,
-                color: Colors.white,
-                size: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  Constants.serviceChargeBalance,
-                  style: GoogleFonts.hind(
-                      letterSpacing: -0.24,
-                      height: 1.33,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white),
-                ),
-              )
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _checkCumulativeServiceChargeBalance() {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: Neumorphic(
+  //       style: NeumorphicStyle(
+  //           shape: NeumorphicShape.concave,
+  //           depth: 100,
+  //           boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(25.0)),
+  //           lightSource: LightSource.topLeft,
+  //           intensity: 30),
+  //       child: Container(
+  //         height: 160,
+  //         width: 135,
+  //         decoration: const BoxDecoration(
+  //             gradient: LinearGradient(
+  //                 begin: Alignment(-0.97, 0.24),
+  //                 end: Alignment(0.97, -0.24),
+  //                 colors: [Color(0xFFD4AF37), Color(0xFFFFD700)])),
+  //         child: Padding(
+  //           padding: const EdgeInsets.symmetric(vertical: 50),
+  //           child: Column(children: [
+  //             const Icon(
+  //               Icons.account_balance,
+  //               color: Colors.white,
+  //               size: 30,
+  //             ),
+  //             Padding(
+  //               padding: const EdgeInsets.only(top: 8.0),
+  //               child: Text(
+  //                 Constants.serviceChargeBalance,
+  //                 style: GoogleFonts.hind(
+  //                     letterSpacing: -0.24,
+  //                     height: 1.33,
+  //                     fontSize: 15,
+  //                     fontWeight: FontWeight.w700,
+  //                     color: Colors.white),
+  //               ),
+  //             )
+  //           ]),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -10,7 +10,7 @@ import 'package:smart_nyumba/Models/user_profile.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'dart:convert';
 
-import '../Constants/Constants.dart';
+import '../Constants/constants.dart';
 import '../Widgets/alerts.dart';
 
 class Auth with ChangeNotifier {

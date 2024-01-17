@@ -14,7 +14,7 @@ import 'Authentication/otp.dart';
 import 'Authentication/register/register.dart';
 import 'Providers/auth_provider.dart';
 import 'Providers/payment_provider.dart';
-import 'Tenant/tenantDashboard.dart';
+import 'Tenant/tenant_dashboard.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");

@@ -11,7 +11,7 @@ import 'package:smart_nyumba/ApiHelpers/pdf_invoice_api.dart';
 import 'package:smart_nyumba/Models/all_transactions.dart';
 import 'package:smart_nyumba/Models/invoice.dart';
 import 'package:smart_nyumba/Providers/payment_provider.dart';
-import 'package:smart_nyumba/Tenant/tenantDashboard.dart';
+import 'package:smart_nyumba/Tenant/tenant_dashboard.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;

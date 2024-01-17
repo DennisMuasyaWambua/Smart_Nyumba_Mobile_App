@@ -11,7 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart';
 
 class PdfApi with ChangeNotifier{
- var _file;
+ late String _file;
  late Uint8List logobytes;
  late PdfImage _logoImage;
  String get filePath=>_file;

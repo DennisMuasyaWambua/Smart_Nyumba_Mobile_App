@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_nyumba/Models/user_profile.dart';
 
-import '../../Constants/Constants.dart';
+import '../../Constants/constants.dart';
 import '../../Providers/auth_provider.dart';
 
 class AccountProfile extends StatefulWidget {
@@ -19,7 +19,7 @@ class _ProfileState extends State<AccountProfile> {
   int blockNumber = 0;
   String houseNumber = ' ';
   String phoneNumber = ' ';
-  bool token_present = false;
+  bool tokenPresent = false;
   Stream<UserProfile> userprofile() async* {
     yield UserProfile();
   }
@@ -30,11 +30,11 @@ class _ProfileState extends State<AccountProfile> {
 
     if (Provider.of<Auth>(context, listen: false).token.isEmpty) {
       setState(() {
-        token_present = false;
+        tokenPresent = false;
       });
     } else {
       setState(() {
-        token_present = true;
+        tokenPresent = true;
       });
     }
     final account = Auth().getProfile(Provider.of<Auth>(context, listen: false).token, context);

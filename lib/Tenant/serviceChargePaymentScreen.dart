@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_nyumba/Constants/Constants.dart';
+import 'package:smart_nyumba/Constants/constants.dart';
 
 class ServiceChargePayment extends StatefulWidget {
   const ServiceChargePayment({Key? key}) : super(key: key);

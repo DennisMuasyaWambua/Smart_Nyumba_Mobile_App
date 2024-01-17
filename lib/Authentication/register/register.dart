@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_nyumba/Constants/Constants.dart';
+import 'package:smart_nyumba/Constants/constants.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
-import 'package:smart_nyumba/Widgets/AuthButton.dart';
+import 'package:smart_nyumba/Widgets/auth_button.dart';
 
 import '../../Providers/auth_provider.dart';
 

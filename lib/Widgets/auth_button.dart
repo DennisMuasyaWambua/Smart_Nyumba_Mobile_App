@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AuthButton extends StatelessWidget {
-  const AuthButton(
-      {Key? key,
-      required this.text,
-      required this.onClick,
-      required this.textColor})
+  const AuthButton({Key? key, required this.text, required this.onClick, required this.textColor})
       : super(key: key);
-  final text, onClick;
+  final String text;
+  final Function()? onClick;
   final List<Color> textColor;
 
   @override
@@ -33,7 +30,7 @@ class AuthButton extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              '$text',
+              text,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 decoration: TextDecoration.none,

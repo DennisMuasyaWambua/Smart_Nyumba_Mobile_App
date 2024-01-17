@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_nyumba/Admin/companies.dart';
 import 'package:smart_nyumba/Admin/estate_tenants.dart';
 
-import '../Constants/Constants.dart';
+import '../Constants/constants.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});

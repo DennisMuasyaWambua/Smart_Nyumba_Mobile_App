@@ -5,7 +5,7 @@ import 'package:smart_nyumba/Authentication/Profile/account_profile.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/Tenant/tenant_home.dart';
 
-import '../Constants/Constants.dart';
+import '../Constants/constants.dart';
 
 class TenantDashboard extends StatefulWidget {
   const TenantDashboard({Key? key}) : super(key: key);

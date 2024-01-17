@@ -4,9 +4,9 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:smart_nyumba/Constants/Constants.dart';
+import 'package:smart_nyumba/Constants/constants.dart';
 import 'package:smart_nyumba/Models/all_transactions.dart';
-import 'package:smart_nyumba/Models/check-payment-status.dart';
+import 'package:smart_nyumba/Models/check_payment_status.dart';
 import 'package:smart_nyumba/Models/pay_service_charge.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';

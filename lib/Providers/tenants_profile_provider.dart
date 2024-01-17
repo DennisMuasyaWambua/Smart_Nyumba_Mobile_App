@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:smart_nyumba/Constants/Constants.dart';
+import 'package:smart_nyumba/Constants/constants.dart';
 import 'package:smart_nyumba/Models/user_profile.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;

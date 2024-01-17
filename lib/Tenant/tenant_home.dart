@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
-import '../Constants/Constants.dart';
+import '../Constants/constants.dart';
 import '../Providers/auth_provider.dart';
 import '../Providers/payment_provider.dart';
 import '../Providers/shared_preference_builder.dart';

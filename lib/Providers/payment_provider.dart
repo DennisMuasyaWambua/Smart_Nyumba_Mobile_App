@@ -2,12 +2,10 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:smart_nyumba/Constants/Constants.dart';
 import 'package:smart_nyumba/Models/all_transactions.dart';
-import 'package:smart_nyumba/Models/amount.dart';
 import 'package:smart_nyumba/Models/check-payment-status.dart';
 import 'package:smart_nyumba/Models/pay_service_charge.dart';
 import 'package:http/http.dart' as http;
@@ -26,14 +24,14 @@ class Payments with ChangeNotifier {
 
   //payment of serviceCharge
   Future<PayServiceCharge> payServiceCharge(String mobileNumber,String amount, String serviceName) async {
-    String serviceChargeEndpoint = "services/pay-service/";
+    // String serviceChargeEndpoint = "services/pay-service/";
     // getting the users email address
     String userEmail = SharedPrefrenceBuilder().getUserEmail!;
 
     log(userEmail.toString(), name: "USER_EMAIL FROM SHARED_PREFERENCES");
 
       Uri servicecharge = Uri.parse(Constants.PAY_SERVICE);
-      Uri serviceAmt = Uri.parse(Constants.SERVICE_FEE_AMOUNT);
+      // Uri serviceAmt = Uri.parse(Constants.SERVICE_FEE_AMOUNT);
       // var serviceamt = await http.get(serviceAmt,headers:{'Authorization': 'Bearer $token'});
       // log(serviceamt.body.toString(),name: "SERVICE AMOUNT");
       // Amount amt = Amount.fromJson(json.decode(serviceamt.body));

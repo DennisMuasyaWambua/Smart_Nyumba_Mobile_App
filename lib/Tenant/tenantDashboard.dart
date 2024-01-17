@@ -1,21 +1,11 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:ffi';
-
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:quickalert/quickalert.dart';
+
 import 'package:smart_nyumba/Authentication/Profile/account_profile.dart';
-import 'package:smart_nyumba/Models/user_profile.dart';
-import 'package:smart_nyumba/Providers/payment_provider.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
-import 'package:smart_nyumba/Providers/tenants_profile_provider.dart';
 import 'package:smart_nyumba/Tenant/tenant_home.dart';
 
 import '../Constants/Constants.dart';
-import '../Providers/auth_provider.dart';
 
 class TenantDashboard extends StatefulWidget {
   const TenantDashboard({Key? key}) : super(key: key);
@@ -27,29 +17,26 @@ class TenantDashboard extends StatefulWidget {
 class _TenantDashboardState extends State<TenantDashboard> {
   //getting the Tenats profile from the backend
   int hasUserPaid = 0;
-  int myIndex =0;
-  var lastName;
-  var token =  SharedPrefrenceBuilder().getUserToken;
-  List<Widget> pages = [
-    TenantHome(),
-    AccountProfile()
-  ];
+  int myIndex = 0;
+  late String lastName;
+  var token = SharedPrefrenceBuilder().getUserToken;
+  List<Widget> pages = [const TenantHome(), const AccountProfile()];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     // Auth().getProfile(Provider.of<Auth>(context,listen: false).token, context);
   }
+
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
-     body: IndexedStack(
-       children: pages,
-       index: myIndex,
-     ),
-     bottomNavigationBar: _bottomNavigationBar(),
-   );
+    return Scaffold(
+      body: IndexedStack(
+        index: myIndex,
+        children: pages,
+      ),
+      bottomNavigationBar: _bottomNavigationBar(),
+    );
   }
 
   // Widget _gridView() {
@@ -251,8 +238,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
           width: 135,
           decoration: ShapeDecoration(
               color: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               shadows: const [
                 BoxShadow(
                   color: Color(0x19A3A3A3),
@@ -303,8 +289,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
           width: 135,
           decoration: ShapeDecoration(
               color: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               shadows: const [
                 BoxShadow(
                   color: Color(0x19A3A3A3),
@@ -342,18 +327,16 @@ class _TenantDashboardState extends State<TenantDashboard> {
 
   Widget _bottomNavigationBar() {
     return BottomNavigationBar(
-      onTap: (index){
+        onTap: (index) {
           setState(() {
-            myIndex=index;
+            myIndex = index;
           });
-      },
+        },
         currentIndex: myIndex,
-      selectedItemColor: const Color(0xFFD4AF37),
-      items: const[
-        BottomNavigationBarItem(icon: Icon(Icons.home),label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.person),label: 'Profile'),
-
-
-    ]);
+        selectedItemColor: const Color(0xFFD4AF37),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ]);
   }
 }

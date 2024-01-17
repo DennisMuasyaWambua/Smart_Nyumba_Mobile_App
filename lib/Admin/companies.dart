@@ -16,8 +16,10 @@ class _companiesState extends State<Companies> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 40,),
-              Container(
+              const SizedBox(
+                height: 40,
+              ),
+              SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: 48,
                 child: Row(
@@ -25,14 +27,14 @@ class _companiesState extends State<Companies> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
+                    SizedBox(
                       height: 48,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
+                          const SizedBox(
                             width: 20,
                             height: 15,
                             child: Stack(
@@ -40,19 +42,17 @@ class _companiesState extends State<Companies> {
                                 Positioned(
                                   left: 0,
                                   top: 0,
-                                  child: Container(
+                                  child: SizedBox(
                                     width: 20,
                                     height: 15,
-                                    child: Stack(children: [
-
-                                        ]),
+                                    child: Stack(children: []),
                                   ),
                                 ),
                               ],
                             ),
                           ),
                           const SizedBox(width: 16),
-                          Container(
+                          SizedBox(
                             width: 243,
                             height: 48,
                             child: Stack(
@@ -64,15 +64,15 @@ class _companiesState extends State<Companies> {
                                     width: 243,
                                     height: 48,
                                     decoration: ShapeDecoration(
-                                      color: Color(0xFFF2F1F2),
+                                      color: const Color(0xFFF2F1F2),
                                       shape: RoundedRectangleBorder(
-                                        side: BorderSide(width: 0.80, color: Color(0xFFE3E2E6)),
+                                        side:
+                                            const BorderSide(width: 0.80, color: Color(0xFFE3E2E6)),
                                         borderRadius: BorderRadius.circular(72),
                                       ),
                                     ),
                                   ),
                                 ),
-
                               ],
                             ),
                           ),
@@ -80,16 +80,14 @@ class _companiesState extends State<Companies> {
                       ),
                     ),
                     const SizedBox(width: 17),
-
                   ],
                 ),
-
               ),
               Container(
                 width: 375,
                 height: 41,
                 clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xFFFCFCFC),
                   boxShadow: [
                     BoxShadow(
@@ -116,16 +114,13 @@ class _companiesState extends State<Companies> {
                         ),
                       ),
                     ),
-                    Container(
+                    const SizedBox(
                       width: 37,
                       height: 30,
-                      child: Stack(
-                          children: [
-
-                          ]),
+                      child: Stack(children: []),
                     ),
-                    Positioned(
-                      left:45,
+                    const Positioned(
+                      left: 45,
                       top: 30,
                       child: Text(
                         'Add Company',
@@ -139,15 +134,12 @@ class _companiesState extends State<Companies> {
                         ),
                       ),
                     ),
-                    Positioned(
-                        top: 15,
-                        left: 300,
-                        child: Icon(Icons.add))
+                    const Positioned(top: 15, left: 300, child: Icon(Icons.add))
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 40,left: 10),
+              const Padding(
+                padding: EdgeInsets.only(top: 40, left: 10),
                 child: Text(
                   'Service companies',
                   style: TextStyle(
@@ -161,7 +153,9 @@ class _companiesState extends State<Companies> {
                   ),
                 ),
               ),
-              SizedBox(height: 25,),
+              const SizedBox(
+                height: 25,
+              ),
               Container(
                 width: 300,
                 height: 99,
@@ -170,7 +164,7 @@ class _companiesState extends State<Companies> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  shadows: [
+                  shadows: const [
                     BoxShadow(
                       color: Color(0x26424242),
                       blurRadius: 96,
@@ -188,9 +182,10 @@ class _companiesState extends State<Companies> {
                         width: 106,
                         height: 99,
                         clipBehavior: Clip.antiAlias,
-                        decoration: ShapeDecoration(
+                        decoration: const ShapeDecoration(
                           image: DecorationImage(
-                            image: NetworkImage("https://gmcleaning.co.ke/wp-content/uploads/2022/04/Gm-Cleaning-Services-Team.jpg"),
+                            image: NetworkImage(
+                                "https://gmcleaning.co.ke/wp-content/uploads/2022/04/Gm-Cleaning-Services-Team.jpg"),
                             fit: BoxFit.cover,
                           ),
                           shape: RoundedRectangleBorder(
@@ -205,7 +200,7 @@ class _companiesState extends State<Companies> {
                     Positioned(
                       left: 124,
                       top: 16,
-                      child: Container(
+                      child: SizedBox(
                         width: 160,
                         height: 134,
                         child: Column(
@@ -226,7 +221,7 @@ class _companiesState extends State<Companies> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Container(
-                                          child: Column(
+                                          child: const Column(
                                             mainAxisSize: MainAxisSize.min,
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,7 +242,7 @@ class _companiesState extends State<Companies> {
                                                   ),
                                                 ),
                                               ),
-                                              const SizedBox(height: 18),
+                                              SizedBox(height: 18),
                                               Text(
                                                 'cleancity@smart.com',
                                                 style: TextStyle(

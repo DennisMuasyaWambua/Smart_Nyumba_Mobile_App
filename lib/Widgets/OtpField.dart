@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class OtpField extends StatefulWidget {
   const OtpField({Key? key, required this.numberInput}) : super(key: key);
-  final numberInput;
+  final int  numberInput;
 
   @override
   State<OtpField> createState() => _OtpFieldState();

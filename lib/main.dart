@@ -7,7 +7,6 @@ import 'package:smart_nyumba/Admin/create_role.dart';
 import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/Providers/tenants_profile_provider.dart';
 import 'package:smart_nyumba/Tenant/all_transactions_data.dart';
-import 'package:smart_nyumba/Tenant/tenant_home.dart';
 import 'package:smart_nyumba/Tenant/tenant_receipt.dart';
 
 import 'Authentication/login/login.dart';
@@ -44,7 +43,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
 
     // Timer(Duration(seconds: 2),()=>Navigator.pushReplacement(context, new MaterialPageRoute(builder: (_)=>Login())));

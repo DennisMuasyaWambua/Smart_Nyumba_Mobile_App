@@ -1,22 +1,14 @@
-import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:smart_nyumba/Admin/admin_dashboard.dart';
 import 'package:smart_nyumba/Authentication/register/register.dart';
-
-import 'package:smart_nyumba/Models/user_profile.dart';
-import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
 
 import 'package:smart_nyumba/Widgets/AuthButton.dart';
 
 import '../../Constants/Constants.dart';
 import '../../Providers/auth_provider.dart';
 import '../../Tenant/tenantDashboard.dart';
-import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -115,7 +107,7 @@ class _LoginState extends State<Login> {
         });
         // Navigate to the Admin's dashboard
         // Navigator.pushNamed(context, '/adminDashboard');
-        print("$email $password");
+        debugPrint("$email $password");
 
         log(email.toString(), name: "EMAIL PARAMETER AT LOGIN");
         log(password.toString(), name: "PASSWORD PARAMETER AT LOGIN");
@@ -126,7 +118,7 @@ class _LoginState extends State<Login> {
 
 
         login.then((value) async {
-          print(value.toString());
+          debugPrint(value.toString());
           log(value.message.toString(), name: "LOGIN MESSAGE");
           Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (_) => const TenantDashboard()));

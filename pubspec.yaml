@@ -55,6 +55,7 @@ dependencies:
   open_file: ^3.3.2
   http: ^1.1.0
   permission_handler: ^10.1.0
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:
@@ -96,6 +97,10 @@ flutter:
     - assets/images/smartnyumbablack.png
     - assets/images/person.png
     - assets/images/account_icon.png
+    - assets/icons/home.svg
+    - assets/icons/home-activated.svg
+    - assets/icons/user.svg
+    - assets/icons/user-activated.svg
     - .env
 
 

@@ -1,4 +1,5 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 // import 'package:google_fonts/google_fonts.dart';
 
@@ -36,7 +37,24 @@ class _TenantDashboardState extends State<TenantDashboard> {
         index: myIndex,
         children: pages,
       ),
-      bottomNavigationBar: _bottomNavigationBar(),
+      bottomNavigationBar: BottomNavigationBar(
+          onTap: (index) {
+            setState(() {
+              myIndex = index;
+            });
+          },
+          currentIndex: myIndex,
+          selectedItemColor: const Color(0xFFD4AF37),
+          items: [
+            BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                    myIndex == 1 ? 'assets/icons/home.svg' : 'assets/icons/home-activated.svg'),
+                label: 'Home'),
+            BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                    myIndex == 0 ? 'assets/icons/user.svg' : 'assets/icons/user-activated.svg'),
+                label: 'Profile'),
+          ]),
     );
   }
 
@@ -325,19 +343,4 @@ class _TenantDashboardState extends State<TenantDashboard> {
   //     ),
   //   );
   // }
-
-  Widget _bottomNavigationBar() {
-    return BottomNavigationBar(
-        onTap: (index) {
-          setState(() {
-            myIndex = index;
-          });
-        },
-        currentIndex: myIndex,
-        selectedItemColor: const Color(0xFFD4AF37),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ]);
-  }
 }

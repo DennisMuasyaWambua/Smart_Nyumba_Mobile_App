@@ -57,6 +57,7 @@ class Auth with ChangeNotifier {
   // log in method
   Future<LoginResponseMessage> login(String email, password,BuildContext context) async {
     String loginEndpoint = Constants.LOGIN_URL;
+    String adminLoginEndpoint = Constants.ADMIN_LOGIN_URL;
     log(loginEndpoint.toString(), name: "LOGIN URL");
     log("${email.toString()}${password.toString()}",
         name: "PARAMETERS BEING  USED");
@@ -64,6 +65,7 @@ class Auth with ChangeNotifier {
 
     try {
       var uri = Uri.parse(loginEndpoint);
+      var adminUri = Uri.parse(adminLoginEndpoint);
       final response =
           await http.post(uri, body: {'email': email, 'password': password});
       log(uri.toString(), name: "LOGIN URL");
@@ -90,7 +92,16 @@ class Auth with ChangeNotifier {
         notifyListeners();
         return loginResponseMessage;
 
-      } else {
+      }else if(!loginResponseMessage.status){
+        //checking if the user is an onboarded admin
+        final adminLoginResponse = await http.post(adminUri,body: {'email':email,'password':password});
+        log(adminLoginResponse.body.toString(), name: " RESPONSE");
+        log(adminLoginResponse.statusCode.toString(), name: "Status code");
+        LoginResponseMessage adminLoginResponseMessage =
+        LoginResponseMessage.fromJson(json.decode(adminLoginResponse.body));
+        return adminLoginResponseMessage;
+
+      }else {
         log(loginResponseMessage.status.toString(), name: "Status");
         log(loginResponseMessage.message.toString(), name: "Error message");
         showDialog(context: context, builder: (BuildContext context)=>Alert().alert(loginResponseMessage.message.toString()));

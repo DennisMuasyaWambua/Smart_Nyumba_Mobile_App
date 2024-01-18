@@ -140,6 +140,14 @@ class _LoginState extends State<Login> {
             log(Provider.of<Auth>(context,listen: false).token.toString(),name: "TOKEN PROVIDER");
             // Auth().getProfile(Provider.of<Auth>(context,listen: false).token.toString(), context);
 
+            if(value.role=="tenant"){
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (_) => const TenantDashboard()));
+            }else{
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (_) => const AdminDashboard()));
+            }
+
             // Set the User id to the user to save the usersprofile
             var user = await http.get(Uri.parse(Constants.TENANTS_PROFILE),
                 headers: {'Authorization': 'Bearer ${value.accessToken}'});
@@ -154,13 +162,7 @@ class _LoginState extends State<Login> {
                 name: "USER TOKEN GOTTEN FROM LOGIN MESSAGE");
             log(value.role.toString(),name: "USERS ROLE");
             // Navigating to the tenants dashboard
-            if(value.role=="tenant"){
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (_) => const TenantDashboard()));
-            }else{
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (_) => const AdminDashboard()));
-            }
+
 
 
           } else {

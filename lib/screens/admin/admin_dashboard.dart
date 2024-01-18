@@ -1,6 +1,7 @@
 // import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import './companies.dart';
 import './estate_tenants.dart';
@@ -15,12 +16,7 @@ class AdminDashboard extends StatefulWidget {
 }
 
 class _AdminDashboardState extends State<AdminDashboard> {
-  // Widget _bottomNavigationBar() {
-  //   return BottomNavigationBar(selectedItemColor: const Color(0xFFD4AF37), items: const [
-  //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-  //     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-  //   ]);
-  // }
+  int myIndex = 0;
 
   // Widget _addPerson() {
   //   return Padding(
@@ -163,107 +159,77 @@ class _AdminDashboardState extends State<AdminDashboard> {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.15,
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const Companies()));
-              },
-              child: Container(
-                width: 300,
-                height: 50,
-                decoration: ShapeDecoration(
-                  color: Colors.black,
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 40,
+              ),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const Companies()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  minimumSize: const Size.fromHeight(58),
                   shape: RoundedRectangleBorder(
-                    side: const BorderSide(width: 1),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  shadows: const [
-                    BoxShadow(
-                      color: Color(0x3F000000),
-                      blurRadius: 4,
-                      offset: Offset(0, 4),
-                      spreadRadius: 0,
-                    )
-                  ],
                 ),
-                child: Center(
-                    child: Text(
+                child: const Text(
                   "Companies",
-                  style: GoogleFonts.hind(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      height: 0.05,
-                      letterSpacing: 0.29),
-                )),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Container(
-              width: 300,
-              height: 50,
-              decoration: ShapeDecoration(
-                color: Colors.black,
-                shape: RoundedRectangleBorder(
-                  side: const BorderSide(width: 1),
-                  borderRadius: BorderRadius.circular(20),
+                  style: TextStyle(fontSize: 20),
                 ),
-                shadows: const [
-                  BoxShadow(
-                    color: Color(0x3F000000),
-                    blurRadius: 4,
-                    offset: Offset(0, 4),
-                    spreadRadius: 0,
-                  )
-                ],
               ),
-              child: Center(
-                  child: Text(
-                "Payments",
-                style: GoogleFonts.hind(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    height: 0.05,
-                    letterSpacing: 0.29),
-              )),
             ),
             const SizedBox(
               height: 30,
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const EstateTenants()));
-              },
-              child: Container(
-                width: 300,
-                height: 50,
-                decoration: ShapeDecoration(
-                  color: Colors.black,
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 40,
+              ),
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  minimumSize: const Size.fromHeight(58),
                   shape: RoundedRectangleBorder(
-                    side: const BorderSide(width: 1),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  shadows: const [
-                    BoxShadow(
-                      color: Color(0x3F000000),
-                      blurRadius: 4,
-                      offset: Offset(0, 4),
-                      spreadRadius: 0,
-                    )
-                  ],
                 ),
-                child: Center(
-                    child: Text(
+                child: const Text(
+                  "Payments",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 40,
+              ),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const EstateTenants()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  minimumSize: const Size.fromHeight(58),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
                   "Tenants",
-                  style: GoogleFonts.hind(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      height: 0.05,
-                      letterSpacing: 0.29),
-                )),
+                  style: TextStyle(fontSize: 20),
+                ),
               ),
             ),
             const SizedBox(
@@ -272,6 +238,24 @@ class _AdminDashboardState extends State<AdminDashboard> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+          onTap: (index) {
+            setState(() {
+              myIndex = index;
+            });
+          },
+          currentIndex: myIndex,
+          selectedItemColor: const Color(0xFFD4AF37),
+          items: [
+            BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                    myIndex == 1 ? 'assets/icons/home.svg' : 'assets/icons/home-activated.svg'),
+                label: 'Home'),
+            BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                    myIndex == 0 ? 'assets/icons/user.svg' : 'assets/icons/user-activated.svg'),
+                label: 'Profile'),
+          ]),
     );
   }
 }

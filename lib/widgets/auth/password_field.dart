@@ -45,7 +45,7 @@ class _PasswordFieldState extends State<PasswordField> {
         decoration: InputDecoration(
           hintText: widget.hintText,
           alignLabelWithHint: true,
-          contentPadding: const EdgeInsets.only(left: 25),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
           prefixIcon: widget.prefixIcon,
           suffixIcon: InkWell(
             onTap: _tooglePasswordVisibility,

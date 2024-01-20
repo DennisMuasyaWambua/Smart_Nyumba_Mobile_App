@@ -28,7 +28,7 @@ class EmailField extends StatelessWidget {
           color: Colors.black87,
         ),
         decoration: const InputDecoration(
-          contentPadding: EdgeInsets.only(left: 25),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16),
           border: InputBorder.none,
         ),
       ),

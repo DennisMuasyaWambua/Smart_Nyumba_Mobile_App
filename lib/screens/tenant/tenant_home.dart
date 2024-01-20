@@ -9,6 +9,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../../utils/constants/constants.dart';
+import '../../utils/models/user_profile.dart';
 import '../../utils/providers/auth_provider.dart';
 import '../../utils/providers/payment_provider.dart';
 import '../../utils/providers/shared_preference_builder.dart';
@@ -25,7 +26,7 @@ class _TenantHomeState extends State<TenantHome> {
   int hasUserPaid = 0;
   int myIndex =0;
   var lastName = ' ';
-  var token =  SharedPrefrenceBuilder().getUserToken;
+  var token =  SharedPrefrenceBuilder.getUserToken;
   @override
   void initState() {
     super.initState();
@@ -39,8 +40,8 @@ class _TenantHomeState extends State<TenantHome> {
         log(lastName.toString(),name: "USERS LAST NAME");
       });
 
-      // User? user = value.profile!.user;
-      // Provider.of<Auth>(context,listen: false).setUsersData(user!);
+      User? user = value.profile!.user;
+      Provider.of<Auth>(context,listen: false).setUsersData(user!);
 
     });
   }
@@ -48,8 +49,7 @@ class _TenantHomeState extends State<TenantHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-            child: Column(
-      
+            child: Column(      
               children: [
                 Padding(
                   padding: const EdgeInsets.all(40.0),
@@ -97,7 +97,7 @@ class _TenantHomeState extends State<TenantHome> {
 
             GestureDetector(
                 onTap: () {
-                  var token = SharedPrefrenceBuilder().getUserToken.toString();
+                  var token = SharedPrefrenceBuilder.getUserToken;
 
                   log(token.toString(),
                       name: "TOKEN BEING SHARED WITH PROVIDER STATE MANAGER");

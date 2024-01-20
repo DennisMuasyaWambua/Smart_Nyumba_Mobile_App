@@ -60,7 +60,7 @@ class StepperControls extends StatelessWidget {
 
                           SharedPrefrenceBuilder.setUserEmail(email);
 
-                          var storedMail = SharedPrefrenceBuilder().getUserEmail;
+                          var storedMail = SharedPrefrenceBuilder.getUserEmail;
 
                           log(storedMail.toString(), name: "Stored Mail");
 

@@ -141,7 +141,7 @@ class _LoginState extends State<Login> {
         });
         // Navigate to the Admin's dashboard
         // Navigator.pushNamed(context, '/adminDashboard');
-        debugPrint("$email $password");
+        debugPrint("$email, $password");
 
         log(email.toString(), name: "EMAIL PARAMETER AT LOGIN");
         log(password.toString(), name: "PASSWORD PARAMETER AT LOGIN");

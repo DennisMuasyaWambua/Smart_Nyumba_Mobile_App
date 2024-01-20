@@ -17,7 +17,7 @@ import '../providers/shared_preference_builder.dart';
 class Auth with ChangeNotifier {
   late String? firstName, lastName, email, houseNumber;
   late int? blockNumber;
-  late String? user;
+  late User? user;
 
   late String authToken;
 
@@ -43,7 +43,7 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
-  void setUsersData(String usr) {
+  void setUsersData(User usr) {
     user = usr;
     notifyListeners();
   }
@@ -67,14 +67,14 @@ class Auth with ChangeNotifier {
   Future<LoginResponseMessage> login(String email, password, BuildContext context) async {
     String loginEndpoint = Constants.LOGIN_URL;
     log(loginEndpoint.toString(), name: "LOGIN URL");
-    log("${email.toString()}${password.toString()}", name: "PARAMETERS BEING  USED");
+    log("${email.toString()}, ${password.toString()}", name: "PARAMETERS BEING  USED");
     debugPrint(loginEndpoint);
 
     try {
       var uri = Uri.parse(loginEndpoint);
       final response = await http.post(uri, body: {'email': email, 'password': password});
       log(uri.toString(), name: "LOGIN URL");
-      debugPrint(response.body);
+      // debugPrint(response.body);
       log(response.body.toString(), name: " RESPONSE");
       log(response.statusCode.toString(), name: "Status code");
       LoginResponseMessage loginResponseMessage =
@@ -83,12 +83,10 @@ class Auth with ChangeNotifier {
       log(loginResponseMessage.message.toString(), name: "Response message from login");
       // Saving the token from logging in
 
-      SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken.toString());
+      SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
       if (loginResponseMessage.accessToken != null) {
         SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken.toString());
-        authToken = loginResponseMessage.accessToken.toString();
-        Provider.of<Auth>(context, listen: false)
-            .setToken(loginResponseMessage.accessToken.toString());
+        setToken(loginResponseMessage.accessToken!);
         log(loginResponseMessage.status.toString(), name: "Status");
         showDialog(
             context: context,
@@ -104,7 +102,7 @@ class Auth with ChangeNotifier {
             context: context,
             builder: (BuildContext context) =>
                 Alert().alert(loginResponseMessage.message.toString()));
-        // print(loginResponseMessage.message);
+        print(loginResponseMessage.message);
         return LoginResponseMessage(message: "An error occurred", status: false);
       }
     } catch (e) {

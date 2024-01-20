@@ -21,13 +21,13 @@ class Payments with ChangeNotifier {
   int get serviceChargeAmount => _serviceChargeAmount;
   var userId;
   int paymentStatus = 0;
-  String? token = SharedPrefrenceBuilder().getUserToken;
+  String? token = SharedPrefrenceBuilder.getUserToken;
 
   //payment of serviceCharge
   Future<PayServiceCharge> payServiceCharge(String mobileNumber,String amount, String serviceName) async {
     // String serviceChargeEndpoint = "services/pay-service/";
     // getting the users email address
-    String userEmail = SharedPrefrenceBuilder().getUserEmail!;
+    String userEmail = SharedPrefrenceBuilder.getUserEmail!;
 
     log(userEmail.toString(), name: "USER_EMAIL FROM SHARED_PREFERENCES");
 
@@ -63,7 +63,7 @@ class Payments with ChangeNotifier {
 
   Future<int?> checkPaymentStatus() async {
     try {
-      String userEmail = SharedPrefrenceBuilder().getUserEmail!;
+      String userEmail = SharedPrefrenceBuilder.getUserEmail!;
       var check = await http
           .post(Uri.parse(Constants.CHECK_PAYMENT_COMPLETION), headers: {
         'Authorization': 'Bearer $token',

@@ -22,8 +22,8 @@ class _OtpState extends State<Otp> {
   String box2 = '';
   String box3 = '';
   String box4 = '';
-  var mail = SharedPrefrenceBuilder().getUserEmail;
-  // var mail = "";
+  // var mail = SharedPrefrenceBuilder.getUserEmail;
+  var mail = "";
 
   final defaultPinTheme = PinTheme(
     width: 56,

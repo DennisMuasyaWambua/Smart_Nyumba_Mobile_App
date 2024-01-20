@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:smart_nyumba/utils/constants/colors.dart';
-
 import './register.dart';
 // import 'package:google_fonts/google_fonts.dart';
 
@@ -26,6 +25,8 @@ class _LoginState extends State<Login> {
   late TextEditingController _passwordController;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  String authErrorString = "";
 
   @override
   void initState() {
@@ -98,7 +99,7 @@ class _LoginState extends State<Login> {
                     _buttonSubmitField(),
                     Center(
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 20),
+                        padding: const EdgeInsets.only(top: 20, bottom: 20),
                         child: TextButton(
                           onPressed: () {
                             Navigator.pushReplacement(
@@ -120,6 +121,14 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ),
+                    Center(
+                      child: Text(
+                        authErrorString,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -130,14 +139,37 @@ class _LoginState extends State<Login> {
     );
   }
 
+  bool isLoading = false;
+
   Widget _buttonSubmitField() {
     return AuthButton(
-      text: Constants.login,
+      text: Center(
+        child: isLoading
+            ? const CircularProgressIndicator(
+                color: Colors.white,
+              )
+            : const Text(
+                Constants.login,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  decoration: TextDecoration.none,
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontFamily: 'Hind',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+      ),
       buttonBgColor: gradYellowGold,
       onClick: () {
+        if (_emailController.text == "" || _passwordController.text == "") {
+          return;
+        }
         setState(() {
           email = _emailController.text;
           password = _passwordController.text;
+          authErrorString = "";
+          isLoading = true;
         });
         // Navigate to the Admin's dashboard
         // Navigator.pushNamed(context, '/adminDashboard');
@@ -151,10 +183,16 @@ class _LoginState extends State<Login> {
         final login = Auth().login(email, password, context);
 
         login.then((value) async {
-          debugPrint(value.toString());
-          log(value.message.toString(), name: "LOGIN MESSAGE");
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => const TenantDashboard()));
+          setState(() {
+            isLoading = false;
+          });
+
+          value.message == "Login Successful"
+              ? Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (_) => const TenantDashboard()))
+              : setState(() {
+                  authErrorString = value.message;
+                });
 
           // if (value.accessToken != null) {
           //   // Saving the users credentials using shared prefrences

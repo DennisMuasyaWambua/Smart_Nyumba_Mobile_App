@@ -14,7 +14,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   int currentStep = 0;
-  
+
   late TextEditingController _emailController;
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
@@ -99,134 +99,132 @@ class _RegisterState extends State<Register> {
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                child: Expanded(
-                  // The theme is to make the stepper at the top royalBlue
-                  child: Theme(
-                    data: ThemeData(
-                      colorScheme: const ColorScheme(
-                        brightness: Brightness.light,
-                        primary: royalBlue,
-                        onPrimary: Colors.white,
-                        secondary: royalBlue,
-                        onSecondary: Colors.white,
-                        error: Color.fromRGBO(183, 28, 28, 1),
-                        onError: Colors.white,
-                        background: Color(0x61000000),
-                        onBackground: Colors.white,
-                        surface: Colors.white,
-                        onSurface: Colors.black,
-                      ),
-                      textButtonTheme: TextButtonThemeData(
-                        style: ButtonStyle(
-                          shape: MaterialStatePropertyAll(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                // The theme is to make the stepper at the top royalBlue
+                child: Theme(
+                  data: ThemeData(
+                    colorScheme: const ColorScheme(
+                      brightness: Brightness.light,
+                      primary: royalBlue,
+                      onPrimary: Colors.white,
+                      secondary: royalBlue,
+                      onSecondary: Colors.white,
+                      error: Color.fromRGBO(183, 28, 28, 1),
+                      onError: Colors.white,
+                      background: Color(0x61000000),
+                      onBackground: Colors.white,
+                      surface: Colors.white,
+                      onSurface: Colors.black,
+                    ),
+                    textButtonTheme: TextButtonThemeData(
+                      style: ButtonStyle(
+                        shape: MaterialStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
                         ),
                       ),
                     ),
-                    child: Stepper(
-                      type: StepperType.horizontal,
-                      elevation: 0,
-                      currentStep: currentStep,
-                      onStepContinue: () {
-                        setState(() {
-                          currentStep != 2 ? currentStep = currentStep + 1 : null;
-                        });
-                      },
-                      onStepCancel: () {
-                        setState(() {
-                          currentStep != 0 ? currentStep = currentStep - 1 : null;
-                        });
-                      },
-                      controlsBuilder: (_, ControlsDetails details) {
-                        return StepperControls(
-                          currentStep: currentStep,
-                          details: details,
-                          email: _emailController.text,
-                          firstName: _firstNameController.text,
-                          lastName: _lastNameController.text,
-                          idNumber: _idNumberController.text,
-                          blockNumber: _blockNumberController.text,
-                          houseNumber: _houseNumberController.text,
-                          mobileNumber: _mobileNumberController.text,
-                          password: _passwordController.text,
-                        );
-                      },
-                      steps: [
-                        Step(
-                          isActive: currentStep > -1,
-                          title: const SizedBox(),
-                          content: Column(children: [
+                  ),
+                  child: Stepper(
+                    type: StepperType.horizontal,
+                    elevation: 0,
+                    currentStep: currentStep,
+                    onStepContinue: () {
+                      setState(() {
+                        currentStep != 2 ? currentStep = currentStep + 1 : null;
+                      });
+                    },
+                    onStepCancel: () {
+                      setState(() {
+                        currentStep != 0 ? currentStep = currentStep - 1 : null;
+                      });
+                    },
+                    controlsBuilder: (_, ControlsDetails details) {
+                      return StepperControls(
+                        currentStep: currentStep,
+                        details: details,
+                        email: _emailController.text,
+                        firstName: _firstNameController.text,
+                        lastName: _lastNameController.text,
+                        idNumber: _idNumberController.text,
+                        blockNumber: _blockNumberController.text,
+                        houseNumber: _houseNumberController.text,
+                        mobileNumber: _mobileNumberController.text,
+                        password: _passwordController.text,
+                      );
+                    },
+                    steps: [
+                      Step(
+                        isActive: currentStep > -1,
+                        title: const SizedBox(),
+                        content: Column(children: [
+                          RegisterInputField(
+                            controller: _firstNameController,
+                            prefixIcon: Icons.person,
+                            hintText: "First Name",
+                            keyboardType: TextInputType.name,
+                          ),
+                          RegisterInputField(
+                            controller: _lastNameController,
+                            prefixIcon: Icons.person,
+                            hintText: "Last Name",
+                            keyboardType: TextInputType.name,
+                          ),
+                          RegisterInputField(
+                            controller: _idNumberController,
+                            prefixIcon: Icons.credit_card_off_rounded,
+                            hintText: "ID Number",
+                            keyboardType: TextInputType.number,
+                          ),
+                          RegisterInputField(
+                            controller: _mobileNumberController,
+                            prefixIcon: Icons.phone,
+                            hintText: "Phone Number",
+                            keyboardType: TextInputType.phone,
+                          ),
+                        ]),
+                      ),
+                      Step(
+                        isActive: currentStep > 0,
+                        title: const SizedBox(),
+                        content: Column(
+                          children: [
                             RegisterInputField(
-                              controller: _firstNameController,
-                              prefixIcon: Icons.person,
-                              hintText: "First Name",
+                              controller: _blockNumberController,
+                              prefixIcon: Icons.apartment_rounded,
+                              hintText: "Block Number",
                               keyboardType: TextInputType.name,
                             ),
                             RegisterInputField(
-                              controller: _lastNameController,
-                              prefixIcon: Icons.person,
-                              hintText: "Last Name",
+                              controller: _houseNumberController,
+                              prefixIcon: Icons.house,
+                              hintText: "House Number",
                               keyboardType: TextInputType.name,
                             ),
+                          ],
+                        ),
+                      ),
+                      Step(
+                        isActive: currentStep > 1,
+                        title: const SizedBox(),
+                        content: Column(
+                          children: [
                             RegisterInputField(
-                              controller: _idNumberController,
-                              prefixIcon: Icons.credit_card_off_rounded,
-                              hintText: "ID Number",
-                              keyboardType: TextInputType.number,
+                              controller: _emailController,
+                              prefixIcon: Icons.email,
+                              hintText: "Email",
+                              keyboardType: TextInputType.emailAddress,
                             ),
-                            RegisterInputField(
-                              controller: _mobileNumberController,
-                              prefixIcon: Icons.phone,
-                              hintText: "Phone Number",
-                              keyboardType: TextInputType.phone,
+                            RegisterPasswordField(
+                              controller: _passwordController,
                             ),
-                          ]),
+                            RegisterConfirmPasswordField(
+                              controller: _confirmPasswordController,
+                            ),
+                          ],
                         ),
-                        Step(
-                          isActive: currentStep > 0,
-                          title: const SizedBox(),
-                          content: Column(
-                            children: [
-                              RegisterInputField(
-                                controller: _blockNumberController,
-                                prefixIcon: Icons.apartment_rounded,
-                                hintText: "Block Number",
-                                keyboardType: TextInputType.name,
-                              ),
-                              RegisterInputField(
-                                controller: _houseNumberController,
-                                prefixIcon: Icons.house,
-                                hintText: "House Number",
-                                keyboardType: TextInputType.name,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Step(
-                          isActive: currentStep > 1,
-                          title: const SizedBox(),
-                          content: Column(
-                            children: [
-                              RegisterInputField(
-                                controller: _emailController,
-                                prefixIcon: Icons.email,
-                                hintText: "Email",
-                                keyboardType: TextInputType.emailAddress,
-                              ),
-                              RegisterPasswordField(
-                                controller: _passwordController,
-                              ),
-                              RegisterConfirmPasswordField(
-                                controller: _confirmPasswordController,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),

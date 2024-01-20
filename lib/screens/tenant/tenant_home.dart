@@ -102,7 +102,7 @@ class _TenantHomeState extends State<TenantHome> {
                   log(token.toString(),
                       name: "TOKEN BEING SHARED WITH PROVIDER STATE MANAGER");
                   var user = Provider.of<TenantsProfile>(context, listen: false)
-                      .getUserProfile(token);
+                      .getUserProfile(token!);
 
                   user.then((value) {
                     log(value.email.toString(),

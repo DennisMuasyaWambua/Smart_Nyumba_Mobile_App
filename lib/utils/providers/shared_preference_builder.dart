@@ -26,7 +26,7 @@ class SharedPrefrenceBuilder {
     return _preferences!.getInt(id);
   }
 
-  static get getUserToken {
+  static String? get getUserToken {
     return _preferences!.getString(userToken);
   }
 

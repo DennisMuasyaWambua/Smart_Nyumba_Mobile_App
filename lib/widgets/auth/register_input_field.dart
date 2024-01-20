@@ -43,9 +43,7 @@ class RegisterInputField extends StatelessWidget {
             color: royalBlue,
           ),
           hintText: hintText,
-          contentPadding: const EdgeInsets.only(
-            left: 25,
-          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           border: InputBorder.none,
         ),
       ),

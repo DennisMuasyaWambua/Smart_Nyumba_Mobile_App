@@ -56,11 +56,11 @@ class _RegisterPasswordFieldState extends State<RegisterPasswordField> {
               onTap: _tooglePasswordView,
               child: _isVisible
                   ? const Icon(
-                      Icons.visibility,
+                      Icons.visibility_off,
                       color: royalBlue,
                     )
                   : const Icon(
-                      Icons.visibility_off,
+                      Icons.visibility,
                       color: royalBlue,
                     ),
             ),

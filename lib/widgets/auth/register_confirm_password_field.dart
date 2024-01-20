@@ -44,7 +44,7 @@ class _RegisterConfirmPasswordFieldState extends State<RegisterConfirmPasswordFi
             color: Colors.black87,
           ),
           decoration: InputDecoration(
-            hintText: "Password",
+            hintText: "Confirm Password",
             alignLabelWithHint: true,
             border: InputBorder.none,
             contentPadding: const EdgeInsets.all(15),
@@ -56,11 +56,11 @@ class _RegisterConfirmPasswordFieldState extends State<RegisterConfirmPasswordFi
               onTap: _tooglePasswordView,
               child: _isVisible
                   ? const Icon(
-                      Icons.visibility,
+                      Icons.visibility_off,
                       color: royalBlue,
                     )
                   : const Icon(
-                      Icons.visibility_off,
+                      Icons.visibility,
                       color: royalBlue,
                     ),
             ),

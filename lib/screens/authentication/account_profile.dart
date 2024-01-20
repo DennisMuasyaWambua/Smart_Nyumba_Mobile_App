@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_nyumba/utils/providers/shared_preference_builder.dart';
 
 import '../../../utils/constants/constants.dart';
 import '../../../utils/providers/auth_provider.dart';
@@ -28,7 +29,9 @@ class _ProfileState extends State<AccountProfile> {
   void initState() {
     super.initState();
 
-    if (Provider.of<Auth>(context, listen: false).token.isEmpty) {
+    String? token = SharedPrefrenceBuilder.getUserToken;
+
+    if (token == null) {
       setState(() {
         tokenPresent = false;
       });
@@ -37,7 +40,7 @@ class _ProfileState extends State<AccountProfile> {
         tokenPresent = true;
       });
     }
-    final account = Auth().getProfile(Provider.of<Auth>(context, listen: false).token, context);
+    final account = Auth().getProfile(token!, context);
 
     account.then((value) async {
       setState(() {

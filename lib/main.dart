@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_nyumba/screens/authentication/_auth.dart';
-
+import 'package:smart_nyumba/screens/tenant/tenant_dashboard.dart';
 
 import 'utils/providers/_providers.dart';
 import 'utils/routes.dart';
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => Auth()),
       ],
       child: MaterialApp(
-        home: const Login(),
+        home: SharedPrefrenceBuilder.getUserToken != null ? const TenantDashboard() : const Login(),
         routes: routes,
         theme: ThemeData(
           appBarTheme: const AppBarTheme(

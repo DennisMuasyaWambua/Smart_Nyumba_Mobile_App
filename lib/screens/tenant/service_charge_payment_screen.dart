@@ -14,13 +14,11 @@ class _ServiceChargePaymentState extends State<ServiceChargePayment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MaterialApp(
-        home: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: [topNav(context), paymentCard(context)],
-          ),
+      body: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: [topNav(context), paymentCard(context)],
         ),
       ),
     );

@@ -16,7 +16,8 @@ class _TenantsDrawerState extends State<TenantsDrawer> {
         children: const [
           UserAccountsDrawerHeader(
             accountName: Text("accountName"),
-             accountEmail: Text("accountEmail"))
+            accountEmail: Text("accountEmail"),
+          ),
         ],
       ),
     );

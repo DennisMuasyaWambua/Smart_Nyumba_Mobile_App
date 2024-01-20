@@ -88,232 +88,227 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: StreamBuilder(
-          stream: Provider.of<Payments>(context, listen: false).getAllTransactions(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(color: Color(0xFFFFD700)),
-              );
-            } else if (snapshot.hasData) {
-              List<Transaction>? paymentTransactions = snapshot.data;
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 50, left: 30.0),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {},
-                            child: GestureDetector(
-                              onTap: () {
-                                // Navigator.pushNamed(context, '/tenantsDashboard');
-                                Navigator.pushReplacement(context,
-                                    MaterialPageRoute(builder: (_) => const TenantDashboard()));
-                              },
-                              child: const Icon(
-                                Icons.arrow_back,
-                                color: Colors.black,
-                              ),
+    return Scaffold(
+      body: StreamBuilder(
+        stream: Provider.of<Payments>(context, listen: false).getAllTransactions(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(color: Color(0xFFFFD700)),
+            );
+          } else if (snapshot.hasData) {
+            List<Transaction>? paymentTransactions = snapshot.data;
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50, left: 30.0),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {},
+                          child: GestureDetector(
+                            onTap: () {
+                              // Navigator.pushNamed(context, '/tenantsDashboard');
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (_) => const TenantDashboard()));
+                            },
+                            child: const Icon(
+                              Icons.arrow_back,
+                              color: Colors.black,
                             ),
                           ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.25,
-                          ),
-                          Text(
-                            "Payments",
-                            style: GoogleFonts.hind(
-                                fontSize: 17, color: Colors.black, fontWeight: FontWeight.w700),
-                          ),
-                        ],
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.25,
+                        ),
+                        Text(
+                          "Payments",
+                          style: GoogleFonts.hind(
+                              fontSize: 17, color: Colors.black, fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30.0, left: 30.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Service Charge',
+                        style: GoogleFonts.urbanist(
+                            fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
                       ),
                     ),
+                  ),
 
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30.0, left: 30.0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Service Charge',
-                          style: GoogleFonts.urbanist(
-                              fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                    // Balance card
-                    Center(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.70,
-                        height: MediaQuery.of(context).size.height * 0.20,
-                        decoration: ShapeDecoration(
-                          gradient: const LinearGradient(
-                            begin: Alignment(-0.97, 0.24),
-                            end: Alignment(0.97, -0.24),
-                            colors: [Color(0xFFFFD700), Color(0xFFD4AF37)],
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            SizedBox(height: MediaQuery.of(context).size.height * 0.10),
-                            Text(
-                              "KES: 0",
-                              style: GoogleFonts.hind(
-                                  color: Colors.white,
-                                  fontSize: 21,
-                                  fontWeight: FontWeight.w600,
-                                  height: 0.05,
-                                  letterSpacing: -0.34),
-                            ),
-                            SizedBox(height: MediaQuery.of(context).size.height * 0.07),
-                            Text(
-                              "Available Balance",
-                              style: GoogleFonts.hind(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  height: 0.05,
-                                  letterSpacing: -0.34),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.10),
-
-                    // DATA TABLE
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.98,
-                      height: MediaQuery.of(context).size.height * 0.45,
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                  // Balance card
+                  Center(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.70,
+                      height: MediaQuery.of(context).size.height * 0.20,
                       decoration: ShapeDecoration(
+                        gradient: const LinearGradient(
+                          begin: Alignment(-0.97, 0.24),
+                          end: Alignment(0.97, -0.24),
+                          colors: [Color(0xFFFFD700), Color(0xFFD4AF37)],
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: Card(
-                        elevation: 25,
-                        child: Column(
-                          children: [
-                            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 12.0),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "Transactions",
-                                  style: GoogleFonts.inter(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      height: 0.06,
-                                      letterSpacing: 0.35),
-                                ),
-                              ),
-                            ),
-                            Flexible(
-                              child: DataTable2(
-                                  columnSpacing: 0,
-                                  horizontalMargin: 10,
-                                  minWidth: 0,
-                                  sortAscending: isAscending,
-                                  sortColumnIndex: sortColumnIndex,
-                                  columns: [
-                                    DataColumn2(
-                                        label: Text(
-                                      "Date paid",
-                                      style: GoogleFonts.inter(
-                                          color: const Color(0xFF77767E),
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w400,
-                                          height: 0.11),
-                                    )),
-                                    DataColumn(
-                                        label: Text(
-                                      "Amount",
-                                      style: GoogleFonts.inter(
-                                          color: const Color(0xFF77767E),
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w400,
-                                          height: 0.11),
-                                    )),
-                                    DataColumn(
-                                        label: Text(
-                                      "Payment mode",
-                                      style: GoogleFonts.inter(
-                                          color: const Color(0xFF77767E),
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w400,
-                                          height: 0.11),
-                                    )),
-                                  ],
-                                  rows: List<DataRow>.generate(
-                                      paymentTransactions!.length,
-                                      (index) => DataRow(
-                                              cells: <DataCell>[
-                                                DataCell(
-                                                    Text("${paymentTransactions[index].datePaid}")),
-                                                DataCell(Text(
-                                                    "KES ${paymentTransactions[index].amount}")),
-                                                DataCell(Text(
-                                                    "${paymentTransactions[index].paymentMode}"))
-                                              ],
-                                              onSelectChanged: (bool? selected) async {
-                                                if (selected != null && selected) {
-                                                  //    Generate pdf upon selection
-                                                  setState(() {
-                                                    receipt = Invoice(
-                                                        name: name,
-                                                        estateName: 'Akilla 2',
-                                                        amount: paymentTransactions[index]
-                                                            .amount
-                                                            .toString(),
-                                                        datepaid: paymentTransactions[index]
-                                                            .datePaid
-                                                            .toString(),
-                                                        purpose: "Service Charge");
-                                                  });
-                                                  log(receipt.name.toString(),
-                                                      name: "RECEIPT OBJECT");
-
-                                                  final pdfFile = await PdfApi.pdfGeneration(
-                                                      'Akilla 2',
-                                                      paymentTransactions[index]
-                                                          .datePaid
-                                                          .toString(),
-                                                      name,
-                                                      paymentTransactions[index].amount.toString(),
-                                                      "Service Charge");
-                                                  log(pdfFile.toString(), name: "PDF FILE PATH");
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (_) => AlertDialog(
-                                                            content: PdfView(
-                                                              path: pdfFile.path,
-                                                            ),
-                                                          ));
-                                                }
-                                              }))),
-                            )
-                          ],
-                        ),
+                      child: Column(
+                        children: [
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+                          Text(
+                            "KES: 0",
+                            style: GoogleFonts.hind(
+                                color: Colors.white,
+                                fontSize: 21,
+                                fontWeight: FontWeight.w600,
+                                height: 0.05,
+                                letterSpacing: -0.34),
+                          ),
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.07),
+                          Text(
+                            "Available Balance",
+                            style: GoogleFonts.hind(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                height: 0.05,
+                                letterSpacing: -0.34),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              );
-            } else {
-              return const Center(child: Text("User has no Transactions available"));
-            }
-          },
-        ),
+                  ),
+
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+
+                  // DATA TABLE
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.98,
+                    height: MediaQuery.of(context).size.height * 0.45,
+                    decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Card(
+                      elevation: 25,
+                      child: Column(
+                        children: [
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Transactions",
+                                style: GoogleFonts.inter(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    height: 0.06,
+                                    letterSpacing: 0.35),
+                              ),
+                            ),
+                          ),
+                          Flexible(
+                            child: DataTable2(
+                                columnSpacing: 0,
+                                horizontalMargin: 10,
+                                minWidth: 0,
+                                sortAscending: isAscending,
+                                sortColumnIndex: sortColumnIndex,
+                                columns: [
+                                  DataColumn2(
+                                      label: Text(
+                                    "Date paid",
+                                    style: GoogleFonts.inter(
+                                        color: const Color(0xFF77767E),
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w400,
+                                        height: 0.11),
+                                  )),
+                                  DataColumn(
+                                      label: Text(
+                                    "Amount",
+                                    style: GoogleFonts.inter(
+                                        color: const Color(0xFF77767E),
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w400,
+                                        height: 0.11),
+                                  )),
+                                  DataColumn(
+                                      label: Text(
+                                    "Payment mode",
+                                    style: GoogleFonts.inter(
+                                        color: const Color(0xFF77767E),
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w400,
+                                        height: 0.11),
+                                  )),
+                                ],
+                                rows: List<DataRow>.generate(
+                                    paymentTransactions!.length,
+                                    (index) => DataRow(
+                                            cells: <DataCell>[
+                                              DataCell(
+                                                  Text("${paymentTransactions[index].datePaid}")),
+                                              DataCell(
+                                                  Text("KES ${paymentTransactions[index].amount}")),
+                                              DataCell(
+                                                  Text("${paymentTransactions[index].paymentMode}"))
+                                            ],
+                                            onSelectChanged: (bool? selected) async {
+                                              if (selected != null && selected) {
+                                                //    Generate pdf upon selection
+                                                setState(() {
+                                                  receipt = Invoice(
+                                                      name: name,
+                                                      estateName: 'Akilla 2',
+                                                      amount: paymentTransactions[index]
+                                                          .amount
+                                                          .toString(),
+                                                      datepaid: paymentTransactions[index]
+                                                          .datePaid
+                                                          .toString(),
+                                                      purpose: "Service Charge");
+                                                });
+                                                log(receipt.name.toString(),
+                                                    name: "RECEIPT OBJECT");
+
+                                                final pdfFile = await PdfApi.pdfGeneration(
+                                                    'Akilla 2',
+                                                    paymentTransactions[index].datePaid.toString(),
+                                                    name,
+                                                    paymentTransactions[index].amount.toString(),
+                                                    "Service Charge");
+                                                log(pdfFile.toString(), name: "PDF FILE PATH");
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (_) => AlertDialog(
+                                                          content: PdfView(
+                                                            path: pdfFile.path,
+                                                          ),
+                                                        ));
+                                              }
+                                            }))),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return const Center(child: Text("User has no Transactions available"));
+          }
+        },
       ),
     );
   }

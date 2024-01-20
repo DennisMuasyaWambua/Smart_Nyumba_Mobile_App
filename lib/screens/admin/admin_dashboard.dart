@@ -116,124 +116,68 @@ class _AdminDashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Admin Dashboard'),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 50.0),
-              child: Center(
-                child: CircleAvatar(
-                  backgroundImage: AssetImage("assets/images/account_icon.png"),
-                  radius: 30,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            Text(
-              "Chairman",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.hind(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                height: 0.04,
-                letterSpacing: 0.31,
-                color: const Color(0xFF1A1E25),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Text(
-              "smartnyumba@gmail.com",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.hind(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-                height: 0.06,
-                letterSpacing: 0.32,
-                color: const Color(0xFF7D7F88),
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.15,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const Companies()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  minimumSize: const Size.fromHeight(58),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              width: MediaQuery.of(context).size.width,
+              height: 500,
+              child: ListView(
+                children: [
+                  ListTile(
+                    leading: const CircleAvatar(
+                      backgroundImage: AssetImage("assets/images/account_icon.png"),
+                      radius: 30,
+                    ),
+                    title: Text(
+                      'Chairman',
+                      style: GoogleFonts.hind(
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF1A1E25),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'smartnyumba@gmail.com',
+                      style: GoogleFonts.hind(
+                        color: const Color(0xFF7D7F88),
+                      ),
+                    ),
                   ),
-                ),
-                child: const Text(
-                  "Companies",
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
-              ),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  minimumSize: const Size.fromHeight(58),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const Companies(),
+                        ),
+                      );
+                    },
+                    title: const Text('Companies'),
+                    trailing: const Icon(Icons.chevron_right, color: Colors.black),
                   ),
-                ),
-                child: const Text(
-                  "Payments",
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const EstateTenants()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  minimumSize: const Size.fromHeight(58),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  ListTile(
+                    onTap: () {},
+                    title: const Text('Payments'),
+                    trailing: const Icon(Icons.chevron_right, color: Colors.black),
                   ),
-                ),
-                child: const Text(
-                  "Tenants",
-                  style: TextStyle(fontSize: 20),
-                ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const EstateTenants(),
+                        ),
+                      );
+                    },
+                    title: const Text('Tenants'),
+                    trailing: const Icon(Icons.chevron_right, color: Colors.black),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(
-              height: 30,
             ),
           ],
         ),

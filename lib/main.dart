@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_nyumba/screens/admin/_admin.dart';
-import 'package:smart_nyumba/screens/tenant/_tenant.dart';
+import 'package:smart_nyumba/screens/authentication/_auth.dart';
+
 
 import 'utils/providers/_providers.dart';
 import 'utils/routes.dart';
@@ -26,8 +26,22 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => Auth()),
       ],
       child: MaterialApp(
-        home: const AdminDashboard(),
+        home: const Login(),
         routes: routes,
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            titleTextStyle: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+            elevation: 0,
+            backgroundColor: Color(0xfffafafa),
+            iconTheme: IconThemeData(color: Colors.black),
+            actionsIconTheme: IconThemeData(color: Colors.black),
+            centerTitle: true,
+          ),
+        ),
         debugShowCheckedModeBanner: false,
       ),
     );

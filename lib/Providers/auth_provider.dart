@@ -2,15 +2,15 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_nyumba/Models/login_response_message.dart';
+import 'package:smart_nyumba/utils/models/login_response_message.dart';
 import 'package:http/http.dart' as http;
-import 'package:smart_nyumba/Models/register_response_message.dart';
-import 'package:smart_nyumba/Models/send_otp.dart';
-import 'package:smart_nyumba/Models/user_profile.dart';
-import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
+import 'package:smart_nyumba/utils/models/register_response_message.dart';
+import 'package:smart_nyumba/utils/models/send_otp.dart';
+import 'package:smart_nyumba/utils/models/user_profile.dart';
+import 'package:smart_nyumba/utils/providers/shared_preference_builder.dart';
 import 'dart:convert';
 
-import '../Constants/Constants.dart';
+import '../../utils/constants/constants.dart';
 import '../Widgets/alerts.dart';
 
 class Auth with ChangeNotifier {

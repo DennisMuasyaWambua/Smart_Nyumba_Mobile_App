@@ -5,17 +5,17 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_nyumba/Admin/admin_dashboard.dart';
-import 'package:smart_nyumba/Authentication/register/register.dart';
+import 'package:smart_nyumba/screens/admin/admin_dashboard.dart';
+import 'package:smart_nyumba/screens/authentication/register.dart';
 
-import 'package:smart_nyumba/Models/user_profile.dart';
-import 'package:smart_nyumba/Providers/shared_preference_builder.dart';
+import 'package:smart_nyumba/utils/models/user_profile.dart';
+import 'package:smart_nyumba/utils/providers/shared_preference_builder.dart';
 
-import 'package:smart_nyumba/Widgets/AuthButton.dart';
+import 'package:smart_nyumba/widgets/auth/auth_button.dart';
 
-import '../../Constants/Constants.dart';
-import '../../Providers/auth_provider.dart';
-import '../../Tenant/tenantDashboard.dart';
+import '../../utils/constants/constants.dart';
+import '../../utils/providers/auth_provider.dart';
+import '../../screens/tenant/tenant_dashboard.dart';
 import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
@@ -156,10 +156,10 @@ class _LoginState extends State<Login> {
             var id = usr.profile!.user!.id;
             SharedPrefrenceBuilder.setUserID(id!);
 
-            log(SharedPrefrenceBuilder().getUserEmail.toString(),
-                name: "EMAIL ADDRESS GOTTEN FROM LOGIN MESSAGE");
-            log(SharedPrefrenceBuilder().getUserToken.toString(),
-                name: "USER TOKEN GOTTEN FROM LOGIN MESSAGE");
+
+
+
+
             log(value.role.toString(),name: "USERS ROLE");
             // Navigating to the tenants dashboard
 
@@ -183,7 +183,8 @@ class _LoginState extends State<Login> {
         });
       },
       text: Constants.login,
-      textColor: const [Color(0xFFD4AF37), Color(0xFFFFD700)],
+      buttonBgColor: const [Color(0xFFD4AF37), Color(0xFFFFD700)],
+
     );
   }
 

@@ -53,7 +53,9 @@ dependencies:
   path_provider: ^2.1.1
   pdf_viewer_plugin: ^2.0.1
   open_file: ^3.3.2
-  permission_handler: ^11.1.0
+  http: ^1.1.0
+  permission_handler: ^10.1.0
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:
@@ -95,6 +97,10 @@ flutter:
     - assets/images/smartnyumbablack.png
     - assets/images/person.png
     - assets/images/account_icon.png
+    - assets/icons/home.svg
+    - assets/icons/home-activated.svg
+    - assets/icons/user.svg
+    - assets/icons/user-activated.svg
     - .env
 
 

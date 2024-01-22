@@ -2,6 +2,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,12 +11,11 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_nyumba/utils/providers/_providers.dart';
 
-import './tenant_dashboard.dart';
 import '../../utils/api_helpers/pdf_invoice_api.dart';
 import '../../utils/models/all_transactions.dart';
 import '../../utils/models/invoice.dart';
+import '../../utils/providers/_providers.dart';
 
 class AllTransactionsData extends StatefulWidget {
   const AllTransactionsData({super.key});
@@ -112,36 +112,6 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 50, left: 30.0),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {},
-                          child: GestureDetector(
-                            onTap: () {
-                              // Navigator.pushNamed(context, '/tenantsDashboard');
-                              Navigator.pushReplacement(context,
-                                  MaterialPageRoute(builder: (_) => const TenantDashboard()));
-                            },
-                            child: const Icon(
-                              Icons.arrow_back,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.25,
-                        ),
-                        Text(
-                          "Payments",
-                          style: GoogleFonts.hind(
-                              fontSize: 17, color: Colors.black, fontWeight: FontWeight.w700),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  Padding(
                     padding: const EdgeInsets.only(top: 30.0, left: 30.0),
                     child: Align(
                       alignment: Alignment.centerLeft,
@@ -228,90 +198,93 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                           ),
                           Flexible(
                             child: DataTable2(
-                                columnSpacing: 0,
-                                horizontalMargin: 10,
-                                minWidth: 0,
-                                sortAscending: isAscending,
-                                sortColumnIndex: sortColumnIndex,
-                                columns: [
-                                  DataColumn2(
-                                      label: Text(
-                                    "Date paid",
+                              columnSpacing: 0,
+                              horizontalMargin: 10,
+                              minWidth: 0,
+                              sortAscending: isAscending,
+                              sortColumnIndex: sortColumnIndex,
+                              columns: [
+                                DataColumn2(
+                                    label: Text(
+                                  "Date paid",
+                                  style: GoogleFonts.inter(
+                                      color: const Color(0xFF77767E),
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.w400,
+                                      height: 0.11),
+                                )),
+                                DataColumn(
+                                  label: Text(
+                                    "Amount",
                                     style: GoogleFonts.inter(
                                         color: const Color(0xFF77767E),
                                         fontSize: 12.0,
                                         fontWeight: FontWeight.w400,
                                         height: 0.11),
-                                  )),
-                                  DataColumn(
-                                    label: Text(
-                                      "Amount",
-                                      style: GoogleFonts.inter(
-                                          color: const Color(0xFF77767E),
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w400,
-                                          height: 0.11),
-                                    ),
                                   ),
-                                  DataColumn(
-                                    label: Text(
-                                      "Payment mode",
-                                      style: GoogleFonts.inter(
-                                          color: const Color(0xFF77767E),
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w400,
-                                          height: 0.11),
-                                    ),
+                                ),
+                                DataColumn(
+                                  label: Text(
+                                    "Payment mode",
+                                    style: GoogleFonts.inter(
+                                        color: const Color(0xFF77767E),
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w400,
+                                        height: 0.11),
                                   ),
-                                ],
-                                rows: List<DataRow>.generate(
-                                    paymentTransactions!.length,
-                                    (index) => DataRow(
-                                            cells: <DataCell>[
-                                              DataCell(
-                                                Text("${paymentTransactions[index].datePaid}"),
-                                              ),
-                                              DataCell(
-                                                Text("KES ${paymentTransactions[index].amount}"),
-                                              ),
-                                              DataCell(
-                                                Text("${paymentTransactions[index].paymentMode}"),
-                                              )
-                                            ],
-                                            onSelectChanged: (bool? selected) async {
-                                              if (selected != null && selected) {
-                                                //    Generate pdf upon selection
-                                                setState(() {
-                                                  receipt = Invoice(
-                                                      name: name,
-                                                      estateName: 'Akilla 2',
-                                                      amount: paymentTransactions[index]
-                                                          .amount
-                                                          .toString(),
-                                                      datepaid: paymentTransactions[index]
-                                                          .datePaid
-                                                          .toString(),
-                                                      purpose: "Service Charge");
-                                                });
-                                                log(receipt.name.toString(),
-                                                    name: "RECEIPT OBJECT");
+                                ),
+                              ],
+                              rows: List<DataRow>.generate(
+                                paymentTransactions!.length,
+                                (index) => DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(
+                                      Text(
+                                        
+                                        DateFormat('d-M-y')
+                                            .format(paymentTransactions[index].datePaid!),
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Text("KES ${paymentTransactions[index].amount}"),
+                                    ),
+                                    DataCell(
+                                      Text("${paymentTransactions[index].paymentMode}"),
+                                    )
+                                  ],
+                                  onSelectChanged: (bool? selected) async {
+                                    if (selected != null && selected) {
+                                      //    Generate pdf upon selection
+                                      setState(() {
+                                        receipt = Invoice(
+                                            name: name,
+                                            estateName: 'Akilla 2',
+                                            amount: paymentTransactions[index].amount.toString(),
+                                            datepaid:
+                                                paymentTransactions[index].datePaid.toString(),
+                                            purpose: "Service Charge");
+                                      });
+                                      log(receipt.name.toString(), name: "RECEIPT OBJECT");
 
-                                                final pdfFile = await PdfApi.pdfGeneration(
-                                                    'Akilla 2',
-                                                    paymentTransactions[index].datePaid.toString(),
-                                                    name,
-                                                    paymentTransactions[index].amount.toString(),
-                                                    "Service Charge");
-                                                log(pdfFile.toString(), name: "PDF FILE PATH");
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (_) => AlertDialog(
-                                                          content: PdfView(
-                                                            path: pdfFile.path,
-                                                          ),
-                                                        ));
-                                              }
-                                            }))),
+                                      final pdfFile = await PdfApi.pdfGeneration(
+                                          'Akilla 2',
+                                          paymentTransactions[index].datePaid.toString(),
+                                          name,
+                                          paymentTransactions[index].amount.toString(),
+                                          "Service Charge");
+                                      log(pdfFile.toString(), name: "PDF FILE PATH");
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => AlertDialog(
+                                                content: PdfView(
+                                                  path: pdfFile.path,
+                                                ),
+                                              ));
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
                           )
                         ],
                       ),
@@ -321,7 +294,9 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
               ),
             );
           } else {
-            return const Center(child: Text("User has no transactions available"));
+            return const Center(
+              child: Text("User has no transactions available"),
+            );
           }
         },
       ),

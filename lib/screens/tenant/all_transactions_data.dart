@@ -10,13 +10,12 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_nyumba/utils/providers/_providers.dart';
 
 import './tenant_dashboard.dart';
 import '../../utils/api_helpers/pdf_invoice_api.dart';
 import '../../utils/models/all_transactions.dart';
 import '../../utils/models/invoice.dart';
-import '../../utils/providers/auth_provider.dart';
-import '../../utils/providers/payment_provider.dart';
 
 class AllTransactionsData extends StatefulWidget {
   const AllTransactionsData({super.key});
@@ -35,7 +34,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
   @override
   void initState() {
     super.initState();
-    final account = Auth().getProfile(Provider.of<Auth>(context, listen: false).token, context);
+    final account = Auth().getProfile(SharedPrefrenceBuilder.getUserToken!, context);
     account.then((value) {
       setState(() {
         name = value.profile!.user!.firstName!;
@@ -53,22 +52,30 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
   }
 
   writePdf() {
-    pdf.addPage(pw.MultiPage(
+    pdf.addPage(
+      pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
         margin: const pw.EdgeInsets.all(15),
         build: (pw.Context context) {
           return <pw.Widget>[
             pw.Center(
-                child: pw.Column(children: [
-              pw.Header(level: 0, text: "Fiscal Receipt"),
-              pw.Row(children: [
-                pw.Text("Date"),
-                pw.SizedBox(width: 200),
-                pw.Text("Akilla 2 estate"),
-              ]),
-            ]))
+              child: pw.Column(
+                children: [
+                  pw.Header(level: 0, text: "Fiscal Receipt"),
+                  pw.Row(
+                    children: [
+                      pw.Text("Date"),
+                      pw.SizedBox(width: 200),
+                      pw.Text("Akilla 2 estate"),
+                    ],
+                  ),
+                ],
+              ),
+            )
           ];
-        }));
+        },
+      ),
+    );
   }
 
   savePdf(int index) async {
@@ -89,6 +96,9 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Payment Statements"),
+      ),
       body: StreamBuilder(
         stream: Provider.of<Payments>(context, listen: false).getAllTransactions(),
         builder: (context, snapshot) {
@@ -234,34 +244,39 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                                         height: 0.11),
                                   )),
                                   DataColumn(
-                                      label: Text(
-                                    "Amount",
-                                    style: GoogleFonts.inter(
-                                        color: const Color(0xFF77767E),
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w400,
-                                        height: 0.11),
-                                  )),
+                                    label: Text(
+                                      "Amount",
+                                      style: GoogleFonts.inter(
+                                          color: const Color(0xFF77767E),
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.w400,
+                                          height: 0.11),
+                                    ),
+                                  ),
                                   DataColumn(
-                                      label: Text(
-                                    "Payment mode",
-                                    style: GoogleFonts.inter(
-                                        color: const Color(0xFF77767E),
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w400,
-                                        height: 0.11),
-                                  )),
+                                    label: Text(
+                                      "Payment mode",
+                                      style: GoogleFonts.inter(
+                                          color: const Color(0xFF77767E),
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.w400,
+                                          height: 0.11),
+                                    ),
+                                  ),
                                 ],
                                 rows: List<DataRow>.generate(
                                     paymentTransactions!.length,
                                     (index) => DataRow(
                                             cells: <DataCell>[
                                               DataCell(
-                                                  Text("${paymentTransactions[index].datePaid}")),
+                                                Text("${paymentTransactions[index].datePaid}"),
+                                              ),
                                               DataCell(
-                                                  Text("KES ${paymentTransactions[index].amount}")),
+                                                Text("KES ${paymentTransactions[index].amount}"),
+                                              ),
                                               DataCell(
-                                                  Text("${paymentTransactions[index].paymentMode}"))
+                                                Text("${paymentTransactions[index].paymentMode}"),
+                                              )
                                             ],
                                             onSelectChanged: (bool? selected) async {
                                               if (selected != null && selected) {
@@ -306,7 +321,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
               ),
             );
           } else {
-            return const Center(child: Text("User has no Transactions available"));
+            return const Center(child: Text("User has no transactions available"));
           }
         },
       ),

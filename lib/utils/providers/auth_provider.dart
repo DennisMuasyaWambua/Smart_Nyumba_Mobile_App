@@ -108,9 +108,9 @@ class Auth with ChangeNotifier {
           return LoginResponseMessage(status: false, message: "Enter a valid email address");
         } else if (loginResponseMessage.message == "Please provide correct username or password") {
           return LoginResponseMessage(status: false, message: "Invalid username or password");
-        } else if(loginResponseMessage.message == "user does not exist") {
+        } else if (loginResponseMessage.message == "user does not exist") {
           return LoginResponseMessage(status: false, message: "User does not exist");
-        } 
+        }
         return loginResponseMessage;
       }
     } catch (e) {

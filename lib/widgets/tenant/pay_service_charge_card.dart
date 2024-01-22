@@ -5,9 +5,10 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:smart_nyumba/utils/providers/_providers.dart';
 
 import '../../utils/constants/constants.dart';
+import '../../utils/providers/_providers.dart';
+import 'pay_service_charge_alert_dialog.dart';
 
 // ignore: must_be_immutable
 class PayServiceChargeCard extends StatelessWidget {
@@ -18,6 +19,10 @@ class PayServiceChargeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => const PayServiceChargeAlertDialog(),
+        );
         var token = SharedPrefrenceBuilder.getUserToken;
 
         log(token.toString(), name: "TOKEN BEING SHARED WITH PROVIDER STATE MANAGER");

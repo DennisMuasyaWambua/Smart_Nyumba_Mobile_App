@@ -19,6 +19,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime tokenExpirationDate = DateTime.parse(SharedPrefrenceBuilder.getExpirationTime!);
+    final bool isTokenValid = tokenExpirationDate.isAfter(DateTime.now());
+    !isTokenValid
+        ? SharedPrefrenceBuilder.clerInvalidToken()
+        : null;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => Payments()),
@@ -26,7 +32,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => Auth()),
       ],
       child: MaterialApp(
-        home: SharedPrefrenceBuilder.getUserToken != null ? const TenantDashboard() : const Login(),
+        home: (SharedPrefrenceBuilder.getUserToken != null && isTokenValid)
+            ? const TenantDashboard()
+            : const Login(),
         routes: routes,
         initialRoute: '/login',
         theme: ThemeData(

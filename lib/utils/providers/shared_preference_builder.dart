@@ -4,7 +4,8 @@ class SharedPrefrenceBuilder {
   static SharedPreferences? _preferences;
   static const useremail = 'email';
   static const userToken = 'token';
-  static const  id = 'user_id';
+  static const id = 'user_id';
+  static const tokenEpirationTime = 'expiration_time';
 
   static Future init() async {
     _preferences = await SharedPreferences.getInstance();
@@ -15,11 +16,15 @@ class SharedPrefrenceBuilder {
   }
 
   static Future setUserID(int uid) async {
-    await _preferences!.setInt(id,  uid);
+    await _preferences!.setInt(id, uid);
   }
 
   static Future setUserToken(String token) async {
     await _preferences!.setString(userToken, token);
+  }
+
+  static Future setExpirationTime(DateTime expirationTime) async {
+    await _preferences!.setString(tokenEpirationTime, expirationTime.toIso8601String());
   }
 
   static int? get getuserID {
@@ -32,6 +37,15 @@ class SharedPrefrenceBuilder {
 
   static String? get getUserEmail {
     return _preferences!.getString(useremail);
+  }
+
+  static String? get getExpirationTime {
+    return _preferences!.getString(tokenEpirationTime);
+  }
+
+  static void clerInvalidToken() async {
+    await _preferences!.remove(SharedPrefrenceBuilder.userToken);
+    await _preferences!.remove(SharedPrefrenceBuilder.tokenEpirationTime);
   }
 
   static void removePreferences(String key) async {

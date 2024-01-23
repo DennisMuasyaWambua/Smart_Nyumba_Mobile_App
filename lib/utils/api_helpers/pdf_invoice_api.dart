@@ -36,7 +36,7 @@ class PdfApi with ChangeNotifier{
 
  }
 
-  static Future pdfGeneration(String estateName, datePaid, name, amount, purpose)async{
+  static Future pdfGeneration(String estateName, datePaid, name, amount, purpose) async {
     final pdf = pw.Document();
 
 

@@ -60,7 +60,8 @@ class Constants {
   static const String USER_PROFILE = "$AUTHENTICATION_BASE_URL/user-profile/";
 
   //PAYMENT related constants
-  static const String PAYMENT_BASE_URL = "https://smartnyumbabackup-production.up.railway.app/apps/api/v1/tenant-services";
+  static const String PAYMENT_BASE_URL = "https://api.smartnyumba.com/apps/api/v1/tenant-services";
+
   static const String PAY_SERVICE = "$PAYMENT_BASE_URL/pay-service/";
   static const String MPESA_CALLBACK = "$PAYMENT_BASE_URL/mpesa-callback";
   static const String ALL_TRANSACTIONS = "$PAYMENT_BASE_URL/all-transactions/";

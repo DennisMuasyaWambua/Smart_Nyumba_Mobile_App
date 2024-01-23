@@ -4,7 +4,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 import '../../Widgets/alerts.dart';
 import '../constants/constants.dart';
@@ -63,47 +62,56 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
+  late LoginResponseMessage loginResponseMessage;
+
   // log in method
   Future<LoginResponseMessage> login(String email, password, BuildContext context) async {
     String loginEndpoint = Constants.LOGIN_URL;
-    log(loginEndpoint.toString(), name: "LOGIN URL");
-    log("${email.toString()}, ${password.toString()}", name: "PARAMETERS BEING  USED");
-    debugPrint(loginEndpoint);
+    // log(loginEndpoint.toString(), name: "LOGIN URL");
+    // log("${email.toString()}, ${password.toString()}", name: "PARAMETERS BEING  USED");
+    // debugPrint(loginEndpoint);
 
     try {
       var uri = Uri.parse(loginEndpoint);
       final response = await http.post(uri, body: {'email': email, 'password': password});
-      log(uri.toString(), name: "LOGIN URL");
+      // log(uri.toString(), name: "LOGIN URL");
       // debugPrint(response.body);
-      log(response.body.toString(), name: " RESPONSE");
-      log(response.statusCode.toString(), name: "Status code");
-      LoginResponseMessage loginResponseMessage =
-          LoginResponseMessage.fromJson(json.decode(response.body));
-      // print(loginResponseMessage.message);
+      // log(response.body.toString(), name: " RESPONSE");
+      // log(response.statusCode.toString(), name: "Status code");
+      loginResponseMessage = LoginResponseMessage.fromJson(json.decode(response.body));
       log(loginResponseMessage.message.toString(), name: "Response message from login");
       // Saving the token from logging in
 
-      SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
+      // SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
       if (loginResponseMessage.accessToken != null) {
-        SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken.toString());
+        SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
         setToken(loginResponseMessage.accessToken!);
-        log(loginResponseMessage.status.toString(), name: "Status");
-        showDialog(
-            context: context,
-            builder: (BuildContext context) =>
-                Alert().alert(loginResponseMessage.message.toString()));
-        log(loginResponseMessage.message.toString(), name: "Success message");
+        // log(loginResponseMessage.status.toString(), name: "Status");
+        // showDialog(
+        //   context: context,
+        //   builder: (BuildContext context) => Alert().alert(
+        //     loginResponseMessage.message.toString(),
+        //   ),
+        // );
+        // log(loginResponseMessage.message.toString(), name: "Success message");
         notifyListeners();
         return loginResponseMessage;
       } else {
-        log(loginResponseMessage.status.toString(), name: "Status");
-        log(loginResponseMessage.message.toString(), name: "Error message");
-        showDialog(
-            context: context,
-            builder: (BuildContext context) =>
-                Alert().alert(loginResponseMessage.message.toString()));
-        print(loginResponseMessage.message);
-        return LoginResponseMessage(message: "An error occurred", status: false);
+        // log(loginResponseMessage.status.toString(), name: "Status");
+        // log(loginResponseMessage.message.toString(), name: "Error message");
+        // showDialog(
+        //     context: context,
+        //     builder: (BuildContext context) =>
+        //         Alert().alert(loginResponseMessage.message.toString()));
+        // print(loginResponseMessage.message);
+        if (loginResponseMessage.message == "Invalid data provided") {
+          return LoginResponseMessage(status: false, message: "Enter a valid email address");
+        } else if (loginResponseMessage.message == "Please provide correct username or password") {
+          return LoginResponseMessage(status: false, message: "Invalid username or password");
+        } else if(loginResponseMessage.message == "user does not exist") {
+          return LoginResponseMessage(status: false, message: "User does not exist");
+        } 
+        return loginResponseMessage;
       }
     } catch (e) {
       log("${Exception(e.toString())}", name: "Exception message from login");
@@ -191,11 +199,11 @@ class Auth with ChangeNotifier {
       houseNumber = user.profile!.propertyBlock!.houseNumber;
       blockNumber = user.profile!.propertyBlock!.block;
 
-      Provider.of<Auth>(context, listen: false).setEmail(email!);
-      Provider.of<Auth>(context, listen: false).setFirstName(firstName!);
-      Provider.of<Auth>(context, listen: false).setLastName(lastName!);
-      Provider.of<Auth>(context, listen: false).setHouseNumber(houseNumber!);
-      Provider.of<Auth>(context, listen: false).setBlockNumber(blockNumber!);
+      setEmail(email!);
+      setFirstName(firstName!);
+      setLastName(lastName!);
+      setHouseNumber(houseNumber!);
+      setBlockNumber(blockNumber!);
 
       notifyListeners();
       return user;

@@ -49,10 +49,8 @@ class Constants {
   // URL constants
 
   //authentication related constants
-  static const String BASE_API_URL =
-      "https://smartnyumbabackup-production.up.railway.app/apps/api/v1";
-  static const String AUTHENTICATION_BASE_URL =
-      "https://smartnyumbabackup-production.up.railway.app/apps/api/v1/auth";
+  static const String BASE_API_URL = "https://smartnyumbabackup-production.up.railway.app/apps/api/v1";
+  static const String AUTHENTICATION_BASE_URL ="https://smartnyumbabackup-production.up.railway.app/apps/api/v1/auth";
   static const String LOGIN_URL = "$AUTHENTICATION_BASE_URL/user-login/";
   static const String ADMIN_LOGIN_URL = "$AUTHENTICATION_BASE_URL/admin-login/";
   static const String REGISTER_URL = "$AUTHENTICATION_BASE_URL/user-register/";

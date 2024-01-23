@@ -182,7 +182,7 @@ class _LoginState extends State<Login> {
           }
         });
       },
-      text: Constants.login,
+      text: Text(Constants.login),
       buttonBgColor: const [Color(0xFFD4AF37), Color(0xFFFFD700)],
 
     );

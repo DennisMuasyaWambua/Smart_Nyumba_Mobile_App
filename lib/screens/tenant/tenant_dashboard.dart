@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 // import 'package:google_fonts/google_fonts.dart';
 
+import '../../Providers/auth_provider.dart';
+
 import '../../utils/providers/shared_preference_builder.dart';
 import '../authentication/account_profile.dart';
 import '../tenant/tenant_home.dart';
@@ -27,7 +29,7 @@ class _TenantDashboardState extends State<TenantDashboard> {
   @override
   void initState() {
     super.initState();
-    // Auth().getProfile(Provider.of<Auth>(context,listen: false).token, context);
+    Auth().getProfile(token!, context);
   }
 
   @override

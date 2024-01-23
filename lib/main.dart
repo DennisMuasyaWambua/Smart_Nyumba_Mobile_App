@@ -19,12 +19,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime tokenExpirationDate = DateTime.parse(SharedPrefrenceBuilder.getExpirationTime!);
-    final bool isTokenValid = tokenExpirationDate.isAfter(DateTime.now());
-    !isTokenValid
-        ? SharedPrefrenceBuilder.clerInvalidToken()
-        : null;
-        
+    late DateTime? tokenExpirationDate;
+    late bool isTokenValid = false;
+
+    if(SharedPrefrenceBuilder.getExpirationTime != null) {
+      tokenExpirationDate = DateTime.parse(SharedPrefrenceBuilder.getExpirationTime!);
+      isTokenValid = tokenExpirationDate.isAfter(DateTime.now());
+      !isTokenValid ? SharedPrefrenceBuilder.clearInvalidToken() : null;
+    }
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => Payments()),

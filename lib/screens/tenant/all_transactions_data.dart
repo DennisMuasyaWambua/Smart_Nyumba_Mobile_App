@@ -2,15 +2,17 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
+import 'package:printing/printing.dart';
+// import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_nyumba/utils/constants/colors.dart';
 
 import '../../utils/api_helpers/pdf_invoice_api.dart';
 import '../../utils/models/all_transactions.dart';
@@ -31,6 +33,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
   late Invoice receipt;
   final pdf = pw.Document();
   late File file;
+
   @override
   void initState() {
     super.initState();
@@ -93,6 +96,29 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
     });
   }
 
+  previewPDF(File pdfFile) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        content: SizedBox(
+          height: 500,
+          width: 700,
+          child: Theme(
+            data: ThemeData(
+              primaryColor: const Color(0xFFFFD700),
+              // switchTheme: const SwitchThemeData(
+              //   trackColor: MaterialStatePropertyAll(royalBlue),
+              // ),
+            ),
+            child: PdfPreview(
+              build: (format) => pdfFile.readAsBytesSync(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,7 +159,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                         gradient: const LinearGradient(
                           begin: Alignment(-0.97, 0.24),
                           end: Alignment(0.97, -0.24),
-                          colors: [Color(0xFFFFD700), Color(0xFFD4AF37)],
+                          colors: gradYellowGold,
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -205,14 +231,15 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                               sortColumnIndex: sortColumnIndex,
                               columns: [
                                 DataColumn2(
-                                    label: Text(
-                                  "Date paid",
-                                  style: GoogleFonts.inter(
-                                      color: const Color(0xFF77767E),
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w400,
-                                      height: 0.11),
-                                )),
+                                  label: Text(
+                                    "Date paid",
+                                    style: GoogleFonts.inter(
+                                        color: const Color(0xFF77767E),
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w400,
+                                        height: 0.11),
+                                  ),
+                                ),
                                 DataColumn(
                                   label: Text(
                                     "Amount",
@@ -239,7 +266,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                                 (index) => DataRow(
                                   cells: <DataCell>[
                                     DataCell(
-                                      Text(                                  
+                                      Text(
                                         DateFormat('d-M-y')
                                             .format(paymentTransactions[index].datePaid!),
                                       ),
@@ -254,6 +281,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                                   onSelectChanged: (bool? selected) async {
                                     if (selected != null && selected) {
                                       //    Generate pdf upon selection
+                                      final String date = DateFormat.yMMMd()
+                                          .format(paymentTransactions[index].datePaid!);
                                       setState(() {
                                         receipt = Invoice(
                                             name: name,
@@ -267,18 +296,12 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
 
                                       final pdfFile = await PdfApi.pdfGeneration(
                                           'Akilla 2',
-                                          paymentTransactions[index].datePaid.toString(),
+                                          date,
                                           name,
                                           paymentTransactions[index].amount.toString(),
                                           "Service Charge");
                                       log(pdfFile.toString(), name: "PDF FILE PATH");
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) => AlertDialog(
-                                                content: PdfView(
-                                                  path: pdfFile.path,
-                                                ),
-                                              ));
+                                      previewPDF(pdfFile);
                                     }
                                   },
                                 ),

@@ -86,6 +86,10 @@ class Auth with ChangeNotifier {
       if (loginResponseMessage.accessToken != null) {
         SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
         setToken(loginResponseMessage.accessToken!);
+        SharedPrefrenceBuilder.setExpirationTime(
+          DateTime.now().add(const Duration(hours: 1)),
+        );
+        // log(SharedPrefrenceBuilder.getExpirationTime!, name: "Token Expiration Time");
         // log(loginResponseMessage.status.toString(), name: "Status");
         // showDialog(
         //   context: context,

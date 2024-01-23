@@ -239,8 +239,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                                 (index) => DataRow(
                                   cells: <DataCell>[
                                     DataCell(
-                                      Text(
-                                        
+                                      Text(                                  
                                         DateFormat('d-M-y')
                                             .format(paymentTransactions[index].datePaid!),
                                       ),

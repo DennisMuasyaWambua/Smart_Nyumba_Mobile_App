@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_nyumba/utils/providers/shared_preference_builder.dart';
+import 'package:smart_nyumba/widgets/button_layout.dart';
 
 import '../../../utils/constants/constants.dart';
 import '../../../utils/providers/auth_provider.dart';
@@ -212,7 +213,22 @@ class _ProfileState extends State<AccountProfile> {
                       )),
                 ],
               ),
-            )
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            ButtonLayout(
+              width: 120,
+              text: const Text(
+                "Logout",
+                style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontFamily: 'Hind',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              onClick: () {},
+            ),
           ],
         ),
       ),

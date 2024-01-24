@@ -76,10 +76,11 @@ class Auth with ChangeNotifier {
       final response = await http.post(uri, body: {'email': email, 'password': password});
       // log(uri.toString(), name: "LOGIN URL");
       // debugPrint(response.body);
-      // log(response.body.toString(), name: " RESPONSE");
+      log(response.body.toString(), name: " RESPONSE");
       // log(response.statusCode.toString(), name: "Status code");
       loginResponseMessage = LoginResponseMessage.fromJson(json.decode(response.body));
       log(loginResponseMessage.message.toString(), name: "Response message from login");
+      log(loginResponseMessage.role!, name: "User Role");
       // Saving the token from logging in
 
       // SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);

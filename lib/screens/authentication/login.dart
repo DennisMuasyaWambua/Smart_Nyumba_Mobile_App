@@ -1,14 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:smart_nyumba/utils/constants/colors.dart';
-import './register.dart';
-// import 'package:google_fonts/google_fonts.dart';
 
+// import 'package:google_fonts/google_fonts.dart';
 import '../../../utils/constants/constants.dart';
 import '../../../utils/providers/auth_provider.dart';
+import '../../utils/constants/colors.dart';
 import '../../widgets/auth/_auth_widgets.dart';
+import '../admin/_admin.dart';
 import '../tenant/tenant_dashboard.dart';
+import 'register.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -188,8 +189,19 @@ class _LoginState extends State<Login> {
           });
 
           value.message == "Login Successful"
-              ? Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => const TenantDashboard()))
+              ? value.role == "tenant"
+                  ? Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const TenantDashboard(),
+                      ),
+                    )
+                  : Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const AdminDashboard(),
+                      ),
+                    )
               : setState(() {
                   authErrorString = value.message;
                 });

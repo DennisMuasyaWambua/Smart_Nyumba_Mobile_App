@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:smart_nyumba/widgets/button_layout.dart';
 
 // import 'package:google_fonts/google_fonts.dart';
 import '../../../utils/constants/constants.dart';
@@ -143,25 +144,24 @@ class _LoginState extends State<Login> {
   bool isLoading = false;
 
   Widget _buttonSubmitField() {
-    return AuthButton(
-      text: Center(
-        child: isLoading
-            ? const CircularProgressIndicator(
+    return ButtonLayout(
+      width: double.infinity,
+      height: 56,
+      text: isLoading
+          ? const CircularProgressIndicator(
+              color: Colors.white,
+            )
+          : const Text(
+              Constants.login,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                decoration: TextDecoration.none,
                 color: Colors.white,
-              )
-            : const Text(
-                Constants.login,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  decoration: TextDecoration.none,
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontFamily: 'Hind',
-                  fontWeight: FontWeight.w500,
-                ),
+                fontSize: 20,
+                fontFamily: 'Hind',
+                fontWeight: FontWeight.w500,
               ),
-      ),
-      buttonBgColor: gradYellowGold,
+            ),
       onClick: () {
         if (_emailController.text == "" || _passwordController.text == "") {
           return;

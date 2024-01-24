@@ -9,15 +9,14 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
-// import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_nyumba/utils/constants/colors.dart';
 
 import '../../utils/api_helpers/pdf_invoice_api.dart';
+import '../../utils/constants/colors.dart';
 import '../../utils/models/all_transactions.dart';
 import '../../utils/models/invoice.dart';
 import '../../utils/providers/_providers.dart';
+import '../../widgets/tenant/pdf_dialogs/preview_pdf_alert_dialog.dart';
 
 class AllTransactionsData extends StatefulWidget {
   const AllTransactionsData({super.key});
@@ -44,6 +43,18 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
       });
       log(name.toString(), name: "USERS NAME");
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    final DateTime tokenExpirationDate = DateTime.parse(SharedPrefrenceBuilder.getExpirationTime!);
+    final bool isTokenValid = tokenExpirationDate.isAfter(DateTime.now());
+    if (!isTokenValid) {
+      SharedPrefrenceBuilder.clearInvalidToken();
+      Navigator.pushNamed(context, '/login');
+    }
+
+    super.didChangeDependencies();
   }
 
   void onSort(int columnIndex, bool ascending) {
@@ -96,27 +107,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
     });
   }
 
-  previewPDF(File pdfFile) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        content: SizedBox(
-          height: 500,
-          width: 700,
-          child: Theme(
-            data: ThemeData(
-              primaryColor: const Color(0xFFFFD700),
-              // switchTheme: const SwitchThemeData(
-              //   trackColor: MaterialStatePropertyAll(royalBlue),
-              // ),
-            ),
-            child: PdfPreview(
-              build: (format) => pdfFile.readAsBytesSync(),
-            ),
-          ),
-        ),
-      ),
-    );
+  previewPDF(File pdfFile, DateTime datePaid) {
+    showDialog(context: context, builder: (_) => PreviewPDFAlertDialog(file: pdfFile, datePaid: datePaid));
   }
 
   @override
@@ -203,114 +195,216 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Card(
-                      elevation: 25,
-                      child: Column(
-                        children: [
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Transactions",
-                                style: GoogleFonts.inter(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    height: 0.06,
-                                    letterSpacing: 0.35),
+                    child: DataTable2(
+                      columnSpacing: 0,
+                      showBottomBorder: true,
+                      sortColumnIndex: 1,
+                      columns: [
+                        // const DataColumn2(
+                        //   fixedWidth: 50,
+                        //   label: SizedBox(),
+                        // ),
+                        DataColumn2(
+                          // fixedWidth: 10,
+                          label: Center(
+                            child: Text(
+                              "Date Paid",
+                              style: GoogleFonts.inter(
+                                color: const Color(0xFF77767E),
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w400,
+                                height: 0.11,
                               ),
                             ),
                           ),
-                          Flexible(
-                            child: DataTable2(
-                              columnSpacing: 0,
-                              horizontalMargin: 10,
-                              minWidth: 0,
-                              sortAscending: isAscending,
-                              sortColumnIndex: sortColumnIndex,
-                              columns: [
-                                DataColumn2(
-                                  label: Text(
-                                    "Date paid",
-                                    style: GoogleFonts.inter(
-                                        color: const Color(0xFF77767E),
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w400,
-                                        height: 0.11),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Text(
-                                    "Amount",
-                                    style: GoogleFonts.inter(
-                                        color: const Color(0xFF77767E),
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w400,
-                                        height: 0.11),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Text(
-                                    "Payment mode",
-                                    style: GoogleFonts.inter(
-                                        color: const Color(0xFF77767E),
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w400,
-                                        height: 0.11),
-                                  ),
-                                ),
-                              ],
-                              rows: List<DataRow>.generate(
-                                paymentTransactions!.length,
-                                (index) => DataRow(
-                                  cells: <DataCell>[
-                                    DataCell(
-                                      Text(
-                                        DateFormat('d-M-y')
-                                            .format(paymentTransactions[index].datePaid!),
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text("KES ${paymentTransactions[index].amount}"),
-                                    ),
-                                    DataCell(
-                                      Text("${paymentTransactions[index].paymentMode}"),
-                                    )
-                                  ],
-                                  onSelectChanged: (bool? selected) async {
-                                    if (selected != null && selected) {
-                                      //    Generate pdf upon selection
-                                      final String date = DateFormat.yMMMd()
-                                          .format(paymentTransactions[index].datePaid!);
-                                      setState(() {
-                                        receipt = Invoice(
-                                            name: name,
-                                            estateName: 'Akilla 2',
-                                            amount: paymentTransactions[index].amount.toString(),
-                                            datepaid:
-                                                paymentTransactions[index].datePaid.toString(),
-                                            purpose: "Service Charge");
-                                      });
-                                      log(receipt.name.toString(), name: "RECEIPT OBJECT");
-
-                                      final pdfFile = await PdfApi.pdfGeneration(
-                                          'Akilla 2',
-                                          date,
-                                          name,
-                                          paymentTransactions[index].amount.toString(),
-                                          "Service Charge");
-                                      log(pdfFile.toString(), name: "PDF FILE PATH");
-                                      previewPDF(pdfFile);
-                                    }
-                                  },
-                                ),
+                        ),
+                        DataColumn2(
+                          // fixedWidth: 100,
+                          label: Center(
+                            child: Text(
+                              "Amount",
+                              style: GoogleFonts.inter(
+                                color: const Color(0xFF77767E),
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w400,
+                                height: 0.11,
                               ),
                             ),
-                          )
-                        ],
-                      ),
+                          ),
+                        ),
+                        DataColumn2(
+                          fixedWidth: 120,
+                          label: Center(
+                            child: Text(
+                              "Payment Mode",
+                              style: GoogleFonts.inter(
+                                color: const Color(0xFF77767E),
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w400,
+                                height: 0.11,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                      rows: [
+                        for (Transaction transaction in paymentTransactions!)
+                          DataRow2(
+                            cells: [
+                              // DataCell(
+                              //   Center(
+                              //     child: Checkbox(
+                              //       value: false,
+                              //       onChanged: (value) {},
+                              //     ),
+                              //   ),
+                              // ),
+                              DataCell(
+                                Center(
+                                  child: Text(
+                                    DateFormat('d-M-y').format(transaction.datePaid!),
+                                  ),
+                                ),
+                              ),
+                              DataCell(
+                                Center(
+                                  child: Text("KES ${transaction.amount!}"),
+                                ),
+                              ),
+                              DataCell(
+                                Center(
+                                  child: Text(transaction.paymentMode!),
+                                ),
+                              ),
+                            ],
+                            onSelectChanged: (selected) async {
+                              final String date = DateFormat.yMMMd().format(transaction.datePaid!);
+                              // setState(() {
+                              receipt = Invoice(
+                                  name: name,
+                                  estateName: 'Akilla 2',
+                                  amount: transaction.amount.toString(),
+                                  datepaid: transaction.datePaid.toString(),
+                                  purpose: "Service Charge");
+                              // });
+                              log(receipt.name.toString(), name: "RECEIPT OBJECT");
+
+                              final pdfFile = await PdfApi.pdfGeneration('Akilla 2', date, name,
+                                  transaction.amount.toString(), "Service Charge");
+                              log(pdfFile.toString(), name: "PDF FILE PATH");
+                              previewPDF(pdfFile, transaction.datePaid!);
+                            },
+                          ),
+                      ],
                     ),
+                    // child: Card(
+                    //   elevation: 25,
+                    //   child: Column(
+                    //     children: [
+                    //       SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                    //       Padding(
+                    //         padding: const EdgeInsets.only(left: 12.0),
+                    //         child: Align(
+                    //           alignment: Alignment.centerLeft,
+                    //           child: Text(
+                    //             "Transactions",
+                    //             style: GoogleFonts.inter(
+                    //                 fontSize: 16,
+                    //                 fontWeight: FontWeight.w600,
+                    //                 height: 0.06,
+                    //                 letterSpacing: 0.35),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Flexible(
+                    //         child: DataTable2(
+                    //           columnSpacing: 0,
+                    //           horizontalMargin: 10,
+                    //           minWidth: 0,
+                    //           sortAscending: isAscending,
+                    //           sortColumnIndex: sortColumnIndex,
+                    //           columns: [
+                    //             DataColumn2(
+                    //               label: Text(
+                    //                 "Date paid",
+                    //                 style: GoogleFonts.inter(
+                    //                     color: const Color(0xFF77767E),
+                    //                     fontSize: 12.0,
+                    //                     fontWeight: FontWeight.w400,
+                    //                     height: 0.11),
+                    //               ),
+                    //             ),
+                    //             DataColumn(
+                    //               label: Text(
+                    //                 "Amount",
+                    //                 style: GoogleFonts.inter(
+                    //                     color: const Color(0xFF77767E),
+                    //                     fontSize: 12.0,
+                    //                     fontWeight: FontWeight.w400,
+                    //                     height: 0.11),
+                    //               ),
+                    //             ),
+                    //             DataColumn(
+                    //               label: Text(
+                    //                 "Payment mode",
+                    //                 style: GoogleFonts.inter(
+                    //                     color: const Color(0xFF77767E),
+                    //                     fontSize: 12.0,
+                    //                     fontWeight: FontWeight.w400,
+                    //                     height: 0.11),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //           rows: List<DataRow>.generate(
+                    //             paymentTransactions!.length,
+                    //             (index) => DataRow(
+                    //               cells: <DataCell>[
+                    //                 DataCell(
+                    //                   Text(
+                    //                     DateFormat('d-M-y')
+                    //                         .format(paymentTransactions[index].datePaid!),
+                    //                   ),
+                    //                 ),
+                    //                 DataCell(
+                    //                   Text("KES ${paymentTransactions[index].amount}"),
+                    //                 ),
+                    //                 DataCell(
+                    //                   Text("${paymentTransactions[index].paymentMode}"),
+                    //                 )
+                    //               ],
+                    //               onSelectChanged: (bool? selected) async {
+                    //                 if (selected != null && selected) {
+                    //                   //    Generate pdf upon selection
+                    //                   final String date = DateFormat.yMMMd()
+                    //                       .format(paymentTransactions[index].datePaid!);
+                    //                   setState(() {
+                    //                     receipt = Invoice(
+                    //                         name: name,
+                    //                         estateName: 'Akilla 2',
+                    //                         amount: paymentTransactions[index].amount.toString(),
+                    //                         datepaid:
+                    //                             paymentTransactions[index].datePaid.toString(),
+                    //                         purpose: "Service Charge");
+                    //                   });
+                    //                   log(receipt.name.toString(), name: "RECEIPT OBJECT");
+
+                    //                   final pdfFile = await PdfApi.pdfGeneration(
+                    //                       'Akilla 2',
+                    //                       date,
+                    //                       name,
+                    //                       paymentTransactions[index].amount.toString(),
+                    //                       "Service Charge");
+                    //                   log(pdfFile.toString(), name: "PDF FILE PATH");
+                    //                   previewPDF(pdfFile);
+                    //                 }
+                    //               },
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       )
+                    //     ],
+                    //   ),
+                    // ),
                   ),
                 ],
               ),

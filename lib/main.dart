@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
+
 import 'screens/authentication/_auth.dart';
 import 'screens/tenant/tenant_dashboard.dart';
-
 import 'utils/providers/_providers.dart';
 import 'utils/routes.dart';
 
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     late DateTime? tokenExpirationDate;
     late bool isTokenValid = false;
 
-    if(SharedPrefrenceBuilder.getExpirationTime != null) {
+    if (SharedPrefrenceBuilder.getExpirationTime != null) {
       tokenExpirationDate = DateTime.parse(SharedPrefrenceBuilder.getExpirationTime!);
       isTokenValid = tokenExpirationDate.isAfter(DateTime.now());
       !isTokenValid ? SharedPrefrenceBuilder.clearInvalidToken() : null;

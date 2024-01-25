@@ -142,6 +142,7 @@ class _RegisterState extends State<Register> {
                       });
                     },
                     controlsBuilder: (_, ControlsDetails details) {
+                      // StepperControls widget contains the routing information
                       return StepperControls(
                         currentStep: currentStep,
                         details: details,

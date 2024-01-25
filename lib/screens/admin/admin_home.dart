@@ -5,7 +5,7 @@ import '_admin.dart';
 
 class AdminHome extends StatelessWidget {
   static const routeName = "/admin-home";
-  
+
   const AdminHome({super.key});
 
   @override
@@ -25,18 +25,16 @@ class AdminHome extends StatelessWidget {
                 children: [
                   ListTile(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const Companies(),
-                        ),
-                      );
+                      Navigator.of(context).pushNamed(Companies.routeName);
                     },
                     title: Text(
                       'Companies',
                       style: GoogleFonts.hind(),
                     ),
-                    trailing: const Icon(Icons.chevron_right, color: Colors.black),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.black,
+                    ),
                   ),
                   ListTile(
                     onTap: () {},
@@ -44,22 +42,23 @@ class AdminHome extends StatelessWidget {
                       'Payments',
                       style: GoogleFonts.hind(),
                     ),
-                    trailing: const Icon(Icons.chevron_right, color: Colors.black),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.black,
+                    ),
                   ),
                   ListTile(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const EstateTenants(),
-                        ),
-                      );
+                      Navigator.of(context).pushNamed(EstateTenants.routeName);
                     },
-                    title:Text(
+                    title: Text(
                       'Tenants',
                       style: GoogleFonts.hind(),
                     ),
-                    trailing: const Icon(Icons.chevron_right, color: Colors.black),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.black,
+                    ),
                   ),
                 ],
               ),

@@ -106,10 +106,7 @@ class _LoginState extends State<Login> {
                         padding: const EdgeInsets.only(top: 20, bottom: 20),
                         child: TextButton(
                           onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (_) => const Register()),
-                            );
+                            Navigator.of(context).pushReplacementNamed(Register.routeName);
                           },
                           child: const Text(
                             'Don’t have an account? Register',
@@ -192,18 +189,8 @@ class _LoginState extends State<Login> {
 
           value.message == "Login Successful"
               ? value.role == "tenant"
-                  ? Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const TenantDashboard(),
-                      ),
-                    )
-                  : Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const AdminDashboard(),
-                      ),
-                    )
+                  ? Navigator.of(context).pushReplacementNamed(TenantDashboard.routeName)
+                  : Navigator.of(context).pushReplacementNamed(AdminDashboard.routeName)
               : setState(() {
                   authErrorString = value.message;
                 });

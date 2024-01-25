@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:smart_nyumba/screens/authentication/login.dart';
+import 'package:smart_nyumba/screens/authentication/otp.dart';
 
 import '../../utils/providers/auth_provider.dart';
 import '../../utils/providers/shared_preference_builder.dart';
@@ -80,7 +82,7 @@ class StepperControls extends StatelessWidget {
                                       content: Text(value.message),
                                     );
                                   });
-                              Navigator.pushNamed(context, "/otp");
+                              Navigator.of(context).pushReplacementNamed(Otp.routeName);
                             } else {
                               showDialog(
                                   context: context,
@@ -109,7 +111,7 @@ class StepperControls extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/login');
+              Navigator.of(context).pushReplacementNamed(Login.routeName);
             },
             child: const Text("Already have an account? Login"),
           ),

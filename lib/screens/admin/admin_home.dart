@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '_admin.dart';
 
 class AdminHome extends StatelessWidget {
+  static const routeName = "/admin-home";
+  
   const AdminHome({super.key});
 
   @override

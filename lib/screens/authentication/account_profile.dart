@@ -8,6 +8,7 @@ import '../../utils/providers/shared_preference_builder.dart';
 import '../../widgets/auth/logout_button.dart';
 
 class AccountProfile extends StatefulWidget {
+  static const routeName = "/tenant-profile";
   const AccountProfile({super.key});
 
   @override

@@ -13,7 +13,9 @@ import '../tenant/tenant_dashboard.dart';
 import 'register.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  static const routeName = "/login";
+
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();

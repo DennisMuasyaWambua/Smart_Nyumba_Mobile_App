@@ -5,6 +5,8 @@ import 'admin_home.dart';
 import 'admin_profile.dart';
 
 class AdminDashboard extends StatefulWidget {
+  static const routeName = "/admin-dashboard";
+  
   const AdminDashboard({super.key});
 
   @override

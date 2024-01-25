@@ -6,7 +6,9 @@ import '../../utils/constants/constants.dart';
 import '../../widgets/auth/_auth_widgets.dart';
 
 class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+  static const routeName = "/register";
+
+  const Register({super.key});
 
   @override
   State<Register> createState() => _RegisterState();

@@ -17,6 +17,7 @@ import '../../utils/providers/_providers.dart';
 import '../../widgets/tenant/pdf_dialogs/preview_pdf_alert_dialog.dart';
 
 class AllTransactionsData extends StatefulWidget {
+  static const routeName = "/all-tx-data";
   const AllTransactionsData({super.key});
 
   @override

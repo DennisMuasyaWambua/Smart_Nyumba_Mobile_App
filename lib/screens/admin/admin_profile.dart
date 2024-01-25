@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../widgets/auth/logout_button.dart';
 
 class AdminProfile extends StatelessWidget {
+  static const routeName = "/admin-profile";
+
   const AdminProfile({super.key});
 
   @override

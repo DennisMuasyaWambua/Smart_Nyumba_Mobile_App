@@ -11,6 +11,7 @@ import '../../utils/providers/shared_preference_builder.dart';
 import '../../widgets/tenant/tenant_dashboard_grid.dart';
 
 class TenantHome extends StatefulWidget {
+  static const routeName = "/tenant-home";
   const TenantHome({super.key});
 
   @override

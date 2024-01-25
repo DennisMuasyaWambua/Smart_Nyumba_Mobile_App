@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../utils/constants/constants.dart';
 
 class CreateRole extends StatefulWidget {
+  static const routeName = "/create-role";
   const CreateRole({super.key});
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EstateTenants extends StatefulWidget {
+  static const routeName = "/estate-tenants";
   const EstateTenants({super.key});
 
   @override

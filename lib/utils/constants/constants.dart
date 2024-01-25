@@ -61,6 +61,10 @@ class Constants {
   static const String RESEND_OTP = "$AUTHENTICATION_BASE_URL/user-resend-otp/";
   static const String USER_PROFILE = "$AUTHENTICATION_BASE_URL/user-profile/";
 
+  static const String TENANT_LOGOUT_URL = "https://api.smartnyumba.com/apps/api/v1/auth/user-logout/";
+  static const String ADMIN_LOGOUT_URL = "https://api.smartnyumba.com/apps/api/v1/auth/admin-logout/";
+
+
   //PAYMENT related constants
   // static const String PAYMENT_BASE_URL = "https://smartnyumba-production.up.railway.app/apps/admin/api/v1/tenant-services";
   static const String PAYMENT_BASE_URL = "https://api.smartnyumba.com/apps/api/v1/tenant-services";

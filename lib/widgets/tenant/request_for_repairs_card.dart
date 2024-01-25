@@ -1,6 +1,7 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../screens/tenant/request_for_repairs_screen.dart';
 import '../../utils/constants/constants.dart';
 
 class RequestForRepairsCard extends StatelessWidget {
@@ -9,7 +10,7 @@ class RequestForRepairsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => Navigator.of(context).pushNamed(RequestForRepairsScreen.routeName),
       child: Padding(
         padding: const EdgeInsets.only(left: 0.5, right: 5.0),
         child: Neumorphic(

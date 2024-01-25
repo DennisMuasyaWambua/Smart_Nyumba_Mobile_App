@@ -10,6 +10,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   Otp.routeName: (context) => const Otp(),
   AccountProfile.routeName: (context) => const AccountProfile(),
   AllTransactionsData.routeName: (context) => const AllTransactionsData(),
+  RequestForRepairsScreen.routeName : (context) => const RequestForRepairsScreen(),
   TenantDashboard.routeName: (context) => const TenantDashboard(),
   TenantHome.routeName: (context) => const TenantHome(),
   AdminDashboard.routeName: (context) => const AdminDashboard(),

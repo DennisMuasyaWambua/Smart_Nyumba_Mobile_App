@@ -5,7 +5,31 @@ import '../../utils/models/user_profile.dart';
 import '../../utils/providers/_providers.dart';
 import '../../widgets/button_layout.dart';
 
-enum RepairType { plumbing, electrical, flooring, woodwork, glasswork, other }
+enum RepairType {
+  plumbing,
+  electrical,
+  flooring,
+  woodwork,
+  glasswork,
+  other;
+
+  String get text {
+    switch (this) {
+      case plumbing:
+        return "Plumbing";
+      case electrical:
+        return "Electrical";
+      case flooring:
+        return "Flooring";
+      case woodwork:
+        return "Woodwork";
+      case glasswork:
+        return "Glasswork";
+      case other:
+        return "Other";
+    }
+  }
+}
 
 class RequestForRepairsScreen extends StatefulWidget {
   static const routeName = "/request-for-repairs";

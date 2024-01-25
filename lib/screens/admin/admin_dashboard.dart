@@ -1,12 +1,8 @@
-// import 'package:flutter/material.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import './companies.dart';
-import './estate_tenants.dart';
-
-// import '../Constants/constants.dart';
+import 'admin_home.dart';
+import 'admin_profile.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -17,6 +13,7 @@ class AdminDashboard extends StatefulWidget {
 
 class _AdminDashboardState extends State<AdminDashboard> {
   int myIndex = 0;
+  List<Widget> pages = [const AdminHome(), const AdminProfile()];
 
   // Widget _addPerson() {
   //   return Padding(
@@ -116,71 +113,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Admin Dashboard'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              width: MediaQuery.of(context).size.width,
-              height: 500,
-              child: ListView(
-                children: [
-                  ListTile(
-                    leading: const CircleAvatar(
-                      backgroundImage: AssetImage("assets/images/account_icon.png"),
-                      radius: 30,
-                    ),
-                    title: Text(
-                      'Chairman',
-                      style: GoogleFonts.hind(
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1A1E25),
-                      ),
-                    ),
-                    subtitle: Text(
-                      'smartnyumba@gmail.com',
-                      style: GoogleFonts.hind(
-                        color: const Color(0xFF7D7F88),
-                      ),
-                    ),
-                  ),
-                  ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const Companies(),
-                        ),
-                      );
-                    },
-                    title: const Text('Companies'),
-                    trailing: const Icon(Icons.chevron_right, color: Colors.black),
-                  ),
-                  ListTile(
-                    onTap: () {},
-                    title: const Text('Payments'),
-                    trailing: const Icon(Icons.chevron_right, color: Colors.black),
-                  ),
-                  ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const EstateTenants(),
-                        ),
-                      );
-                    },
-                    title: const Text('Tenants'),
-                    trailing: const Icon(Icons.chevron_right, color: Colors.black),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+      body: IndexedStack(
+        index: myIndex,
+        children: pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
           onTap: (index) {

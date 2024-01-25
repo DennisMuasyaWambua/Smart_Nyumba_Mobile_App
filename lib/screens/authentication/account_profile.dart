@@ -202,14 +202,20 @@ class _ProfileState extends State<AccountProfile> {
                       child: Text(
                         "Payment Method: MPESA",
                         style: GoogleFonts.hind(
-                            fontSize: 13, fontWeight: FontWeight.w400, color: Colors.grey),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey,
+                        ),
                       )),
                   Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         "Mobile No: $phoneNumber",
                         style: GoogleFonts.hind(
-                            fontSize: 13, fontWeight: FontWeight.w400, color: Colors.grey),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey,
+                        ),
                       )),
                 ],
               ),

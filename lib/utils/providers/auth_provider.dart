@@ -67,6 +67,7 @@ class Auth with ChangeNotifier {
   // log in method
   Future<LoginResponseMessage> login(String email, password, BuildContext context) async {
     String loginEndpoint = Constants.LOGIN_URL;
+    String adminLoginEndPoint = Constants.ADMIN_LOGIN_URL;
     // log(loginEndpoint.toString(), name: "LOGIN URL");
     // log("${email.toString()}, ${password.toString()}", name: "PARAMETERS BEING  USED");
     // debugPrint(loginEndpoint);
@@ -80,7 +81,6 @@ class Auth with ChangeNotifier {
       // log(response.statusCode.toString(), name: "Status code");
       loginResponseMessage = LoginResponseMessage.fromJson(json.decode(response.body));
       log(loginResponseMessage.message.toString(), name: "Response message from login");
-      log(loginResponseMessage.role!, name: "User Role");
       // Saving the token from logging in
 
       // SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
@@ -115,6 +115,27 @@ class Auth with ChangeNotifier {
           return LoginResponseMessage(status: false, message: "Invalid username or password");
         } else if (loginResponseMessage.message == "user does not exist") {
           return LoginResponseMessage(status: false, message: "User does not exist");
+        } else if (loginResponseMessage.message == "tenant with this email does not exist") {
+          try {
+            var adminUri = Uri.parse(adminLoginEndPoint);
+            final adminResponse =
+                await http.post(adminUri, body: {'email': email, 'password': password});
+            LoginResponseMessage adminResponseMessage =
+                LoginResponseMessage.fromJson(json.decode(adminResponse.body));
+
+            if (adminResponseMessage.accessToken != null) {
+              SharedPrefrenceBuilder.setUserToken(adminResponseMessage.accessToken!);
+              setToken(adminResponseMessage.accessToken!);
+              SharedPrefrenceBuilder.setExpirationTime(
+                DateTime.now().add(const Duration(hours: 1)),
+              );
+              notifyListeners();
+              return adminResponseMessage;
+            }
+          } catch (e) {
+            log("${Exception(e.toString())}", name: "Admin exception message from login");
+            throw Exception(e.toString());
+          }
         }
         return loginResponseMessage;
       }

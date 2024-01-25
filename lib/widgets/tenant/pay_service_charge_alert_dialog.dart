@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_nyumba/widgets/button_layout.dart';
 
-import '../../utils/constants/colors.dart';
-
 class PayServiceChargeAlertDialog extends StatefulWidget {
   const PayServiceChargeAlertDialog({super.key});
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_nyumba/widgets/button_layout.dart';
 
 import '../../utils/constants/colors.dart';
 
@@ -77,30 +78,17 @@ class _PayServiceChargeAlertDialogState extends State<PayServiceChargeAlertDialo
                 ),
               ),
             ),
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 8,
-                ),
-                decoration: ShapeDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment(-0.97, 0.24),
-                    end: Alignment(0.97, -0.24),
-                    colors: gradYellowGold,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-                child: const Center(
-                  child: Text(
-                    'Pay',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
+            ButtonLayout(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 40,
+                vertical: 0,
               ),
+              borderRadius: 4,
+              text: const Text(
+                'Pay',
+                style: TextStyle(color: Colors.white),
+              ),
+              onClick: () {},
             ),
           ],
         ),

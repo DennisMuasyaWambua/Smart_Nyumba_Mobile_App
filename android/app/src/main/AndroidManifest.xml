@@ -5,7 +5,7 @@
     <uses-permission android:name="ANDROID.PERMISSION.WRITE_EXTERNAL_STORAGE"/>
 
     <application
-        android:label="smart_nyumba"
+        android:label="Smart Nyumba"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

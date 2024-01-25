@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_nyumba/utils/providers/shared_preference_builder.dart';
-import 'package:smart_nyumba/widgets/button_layout.dart';
 
 import '../../../utils/constants/constants.dart';
 import '../../../utils/providers/auth_provider.dart';
 import '../../utils/models/user_profile.dart';
+import '../../utils/providers/shared_preference_builder.dart';
+import '../../widgets/auth/logout_button.dart';
 
 class AccountProfile extends StatefulWidget {
   const AccountProfile({super.key});
@@ -208,33 +208,20 @@ class _ProfileState extends State<AccountProfile> {
                         ),
                       )),
                   Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Mobile No: $phoneNumber",
-                        style: GoogleFonts.hind(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey,
-                        ),
-                      )),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Mobile No: $phoneNumber",
+                      style: GoogleFonts.hind(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            ButtonLayout(
-              width: 120,
-              text: const Text(
-                "Logout",
-                style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontFamily: 'Hind',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              onClick: () {},
-            ),
+            const LogoutButton(),
           ],
         ),
       ),

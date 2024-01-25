@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
-import 'package:smart_nyumba/widgets/tenant/pdf_dialogs/download_pdf_alert_dialog.dart';
+
+import '../../../utils/constants/colors.dart';
+import 'download_pdf_alert_dialog.dart';
 
 class PreviewPDFAlertDialog extends StatelessWidget {
   final File file;
@@ -17,7 +19,7 @@ class PreviewPDFAlertDialog extends StatelessWidget {
         width: 700,
         child: Theme(
           data: ThemeData(
-            primaryColor: const Color(0xFFFFD700),
+            primaryColor: lightGold,
           ),
           child: PdfPreview(
             useActions: false,

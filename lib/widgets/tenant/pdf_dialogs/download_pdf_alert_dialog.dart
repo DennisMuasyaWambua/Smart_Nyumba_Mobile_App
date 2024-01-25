@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../utils/constants/colors.dart';
+
 class DownloadPDFAlertDialog extends StatefulWidget {
   final DateTime date;
   const DownloadPDFAlertDialog({super.key, required this.date});
@@ -73,7 +75,7 @@ class _DownloadPDFAlertDialogState extends State<DownloadPDFAlertDialog> {
                       horizontal: 32,
                       vertical: 8,
                     ),
-                    backgroundColor: const Color(0xFFFFD700),
+                    backgroundColor: lightGold,
                   ),
                   child: const Text(
                     "Device",
@@ -85,7 +87,7 @@ class _DownloadPDFAlertDialogState extends State<DownloadPDFAlertDialog> {
                 ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFFD700),
+                    backgroundColor: lightGold,
                   ),
                   child: const Text(
                     "Google Drive",

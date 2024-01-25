@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
+import 'screens/admin/_admin.dart';
 import 'screens/authentication/_auth.dart';
 import 'screens/tenant/tenant_dashboard.dart';
 import 'utils/providers/_providers.dart';
@@ -36,7 +37,9 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         home: (SharedPrefrenceBuilder.getUserToken != null && isTokenValid)
-            ? const TenantDashboard()
+            ? SharedPrefrenceBuilder.getUserRole == "tenant"
+                ? const TenantDashboard()
+                : const AdminDashboard()
             : const Login(),
         routes: routes,
         theme: ThemeData(

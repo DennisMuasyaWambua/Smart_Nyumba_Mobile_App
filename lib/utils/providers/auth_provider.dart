@@ -86,6 +86,7 @@ class Auth with ChangeNotifier {
       // SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
       if (loginResponseMessage.accessToken != null) {
         SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
+        SharedPrefrenceBuilder.setUserRole(loginResponseMessage.role!);
         setToken(loginResponseMessage.accessToken!);
         SharedPrefrenceBuilder.setExpirationTime(
           DateTime.now().add(const Duration(hours: 1)),
@@ -125,6 +126,7 @@ class Auth with ChangeNotifier {
 
             if (adminResponseMessage.accessToken != null) {
               SharedPrefrenceBuilder.setUserToken(adminResponseMessage.accessToken!);
+              SharedPrefrenceBuilder.setUserRole(adminResponseMessage.role!);
               setToken(adminResponseMessage.accessToken!);
               SharedPrefrenceBuilder.setExpirationTime(
                 DateTime.now().add(const Duration(hours: 1)),

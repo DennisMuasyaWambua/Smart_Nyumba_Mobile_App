@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:smart_nyumba/utils/constants/colors.dart';
 
 class ButtonLayout extends StatelessWidget {
-  final double width;
+  final double? width;
   final double? height;
   final Widget text;
+  final EdgeInsetsGeometry? padding;
+  final double? borderRadius;
   final Function()? onClick;
 
   const ButtonLayout({
     super.key,
-    required this.width,
+    this.width,
     this.height,
     required this.text,
+    this.padding,
+    this.borderRadius,
     required this.onClick,
   });
 
@@ -21,8 +25,14 @@ class ButtonLayout extends StatelessWidget {
       onTap: onClick,
       child: Container(
         width: width,
-        height: height ?? 40,
-        padding: const EdgeInsets.only(top: 2, bottom: 2.98, left: 20, right:20,),
+        height: height ?? 36,
+        padding: padding ??
+            const EdgeInsets.only(
+              top: 2,
+              bottom: 2.98,
+              left: 20,
+              right: 20,
+            ),
         clipBehavior: Clip.antiAlias,
         decoration: ShapeDecoration(
           gradient: const LinearGradient(
@@ -31,7 +41,7 @@ class ButtonLayout extends StatelessWidget {
             colors: gradYellowGold,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius:  BorderRadius.circular(borderRadius ?? 12),
           ),
         ),
         child: Center(child: text),

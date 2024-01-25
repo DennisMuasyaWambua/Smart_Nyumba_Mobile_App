@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:smart_nyumba/utils/models/user_profile.dart';
-import 'package:smart_nyumba/widgets/button_layout.dart';
+import 'package:flutter/material.dart';
 
+import '../../utils/models/user_profile.dart';
 import '../../utils/providers/_providers.dart';
+import '../../widgets/button_layout.dart';
 
 enum RepairType { plumbing, electrical, flooring, woodwork, glasswork, other }
 
@@ -19,6 +19,7 @@ class RequestForRepairsScreen extends StatefulWidget {
 
 class _RequestForRepairsScreenState extends State<RequestForRepairsScreen> {
   bool tokenPresent = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late TextEditingController blockNumberController;
   late TextEditingController houseNumberController;
   late TextEditingController descriptionController;
@@ -89,6 +90,7 @@ class _RequestForRepairsScreenState extends State<RequestForRepairsScreen> {
       ),
       body: SingleChildScrollView(
         child: Form(
+          key: _formKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(

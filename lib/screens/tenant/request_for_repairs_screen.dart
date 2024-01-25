@@ -7,8 +7,6 @@ import '../../widgets/button_layout.dart';
 
 enum RepairType { plumbing, electrical, flooring, woodwork, glasswork, other }
 
-enum RequestingFor { me, neighbour, both }
-
 class RequestForRepairsScreen extends StatefulWidget {
   static const routeName = "/request-for-repairs";
   const RequestForRepairsScreen({super.key});

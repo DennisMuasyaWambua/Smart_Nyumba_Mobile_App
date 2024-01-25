@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../widgets/auth/logout_button.dart';
+
 class AdminProfile extends StatelessWidget {
   const AdminProfile({super.key});
 
@@ -17,7 +19,7 @@ class AdminProfile extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               width: MediaQuery.of(context).size.width,
               height: 500,
-              child: ListView(
+              child: Column(
                 children: [
                   ListTile(
                     leading: const CircleAvatar(
@@ -38,7 +40,7 @@ class AdminProfile extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+                  const LogoutButton(),
                 ],
               ),
             ),

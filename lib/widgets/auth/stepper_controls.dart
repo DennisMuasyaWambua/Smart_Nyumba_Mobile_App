@@ -1,12 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:smart_nyumba/screens/authentication/login.dart';
-import 'package:smart_nyumba/screens/authentication/otp.dart';
-import 'package:smart_nyumba/utils/constants/colors.dart';
+import 'package:provider/provider.dart';
 
-import '../../utils/providers/auth_provider.dart';
-import '../../utils/providers/shared_preference_builder.dart';
+import '../../screens/authentication/login.dart';
+import '../../screens/authentication/otp.dart';
+import '../../utils/constants/colors.dart';
+import '../../utils/providers/_providers.dart';
 
 class StepperControls extends StatefulWidget {
   final int currentStep;
@@ -108,6 +108,16 @@ class _StepperControlsState extends State<StepperControls> {
                                   });
                                 }
 
+                                if (!Provider.of<InternetChecker>(context, listen: false)
+                                    .isInternetActive) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  Provider.of<InternetChecker>(context, listen: false)
+                                      .showInternetConnectionDialog(context);
+                                  return;
+                                }
+
                                 setState(() {
                                   isLoading = true;
                                 });
@@ -150,7 +160,7 @@ class _StepperControlsState extends State<StepperControls> {
                                   } else {
                                     setState(() {
                                       isLoading = false;
-                                      authErrorString =value.message;
+                                      authErrorString = value.message;
                                     });
                                   }
                                 });

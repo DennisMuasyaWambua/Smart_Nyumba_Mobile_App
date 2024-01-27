@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_nyumba/widgets/button_layout.dart';
-import 'package:smart_nyumba/widgets/internet_connection_dialog.dart';
 
 // import 'package:google_fonts/google_fonts.dart';
 import '../../../utils/constants/constants.dart';
@@ -44,7 +43,7 @@ class _LoginState extends State<Login> {
 
   @override
   void didChangeDependencies() {
-    // Check for internet connectivity. 
+    // Check for internet connectivity.
     // If you are running in debug mode, comment out the code to avoid errors.
     Provider.of<InternetChecker>(context).checkForInternetConnection();
     super.didChangeDependencies();
@@ -56,13 +55,6 @@ class _LoginState extends State<Login> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  showInternetConnectionDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => const InternetConnectionDialog(),
-    );
   }
 
   @override
@@ -160,7 +152,8 @@ class _LoginState extends State<Login> {
                           setState(() {
                             isLoading = false;
                           });
-                          showInternetConnectionDialog();
+                          Provider.of<InternetChecker>(context, listen: false)
+                              .showInternetConnectionDialog(context);
                           return;
                         }
 

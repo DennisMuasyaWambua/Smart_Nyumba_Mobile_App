@@ -5,6 +5,7 @@ import '../../utils/constants/colors.dart';
 class RegisterInputField extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType keyboardType;
+  final TextInputAction textInputAction;
   final IconData? prefixIcon;
   final String hintText;
 
@@ -14,6 +15,7 @@ class RegisterInputField extends StatelessWidget {
     required this.prefixIcon,
     required this.hintText,
     required this.keyboardType,
+    required this.textInputAction,
   });
 
   @override
@@ -34,6 +36,7 @@ class RegisterInputField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         keyboardType: keyboardType,
+        textInputAction: textInputAction,
         style: const TextStyle(
           color: Colors.black87,
         ),

@@ -40,6 +40,7 @@ class _RegisterPasswordFieldState extends State<RegisterPasswordField> {
           obscureText: _isVisible,
           controller: widget.controller,
           keyboardType: TextInputType.visiblePassword,
+          textInputAction: TextInputAction.next,
           style: const TextStyle(
             color: Colors.black87,
           ),

@@ -196,6 +196,7 @@ class _RequestForRepairsScreenState extends State<RequestForRepairsScreen> {
                 ),
                 DropdownButton2(
                   value: repairType,
+                  underline: const SizedBox(),
                   items: const [
                     DropdownMenuItem(
                       value: RepairType.plumbing,

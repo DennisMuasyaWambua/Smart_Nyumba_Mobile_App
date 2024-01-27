@@ -19,6 +19,7 @@ class StepperControls extends StatefulWidget {
   final String houseNumber;
   final String mobileNumber;
   final String password;
+  final String confirmPassword;
 
   const StepperControls({
     super.key,
@@ -32,6 +33,7 @@ class StepperControls extends StatefulWidget {
     required this.houseNumber,
     required this.mobileNumber,
     required this.password,
+    required this.confirmPassword,
   });
 
   @override
@@ -40,6 +42,7 @@ class StepperControls extends StatefulWidget {
 
 class _StepperControlsState extends State<StepperControls> {
   bool isLoading = false;
+  String authErrorString = "";
 
   bool nullValueCheck() {
     if (widget.email.isEmpty ||
@@ -90,18 +93,31 @@ class _StepperControlsState extends State<StepperControls> {
                             : () {
                                 // Check if any values are null
                                 if (nullValueCheck()) {
+                                  setState(() {
+                                    authErrorString = "All fields are required";
+                                  });
                                   return;
+                                } else if (widget.password != widget.confirmPassword) {
+                                  setState(() {
+                                    authErrorString = "Passwords do not match";
+                                  });
+                                  return;
+                                } else {
+                                  setState(() {
+                                    authErrorString = "";
+                                  });
                                 }
 
                                 setState(() {
                                   isLoading = true;
                                 });
+
                                 String usermail = widget.email.toString();
                                 log(usermail.toString(), name: "mail from input");
 
                                 SharedPrefrenceBuilder.setUserEmail(widget.email);
 
-                                var storedMail = SharedPrefrenceBuilder.getUserEmail;
+                                String storedMail = SharedPrefrenceBuilder.getUserEmail!;
 
                                 log(storedMail.toString(), name: "Stored Mail");
 
@@ -118,10 +134,10 @@ class _StepperControlsState extends State<StepperControls> {
 
                                 register.then((value) {
                                   log(
-                                    value.message.toString(),
+                                    value.status.toString(),
                                     name: " register response message",
                                   );
-                                  if (value.status = true) {
+                                  if (value.status == true) {
                                     showDialog(
                                         context: context,
                                         builder: (context) {
@@ -129,19 +145,13 @@ class _StepperControlsState extends State<StepperControls> {
                                             content: Text(value.message),
                                           );
                                         });
+
                                     Navigator.of(context).pushReplacementNamed(Otp.routeName);
                                   } else {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          Future.delayed(const Duration(seconds: 3), () {
-                                            Navigator.of(context).pop();
-                                          });
-                                          return AlertDialog(
-                                            title: const Text("Error"),
-                                            content: Text(value.message),
-                                          );
-                                        });
+                                    setState(() {
+                                      isLoading = false;
+                                      authErrorString =value.message;
+                                    });
                                   }
                                 });
                               },
@@ -163,6 +173,15 @@ class _StepperControlsState extends State<StepperControls> {
               Navigator.of(context).pushReplacementNamed(Login.routeName);
             },
             child: const Text("Already have an account? Login"),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Text(
+            authErrorString,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.error,
+            ),
           ),
         ],
       ),

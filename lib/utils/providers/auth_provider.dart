@@ -5,7 +5,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../../widgets/alerts.dart';
 import '../constants/constants.dart';
 import '../models/login_response_message.dart';
 import '../models/register_response_message.dart';
@@ -167,17 +166,7 @@ class Auth with ChangeNotifier {
       log(response.body.toString(), name: "Register response");
       RegisterResponse registerResponse = RegisterResponse.fromJson(jsonDecode(response.body));
 
-      if (registerResponse.status = true) {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) => Alert().alert(registerResponse.message.toString()));
-        return registerResponse;
-      } else {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) => Alert().alert(registerResponse.message.toString()));
-        return registerResponse;
-      }
+      return registerResponse;
     } catch (e) {
       // Navigator.pushNamed(context, "/otp");
       log(e.toString(), name: "Exception message from user register");

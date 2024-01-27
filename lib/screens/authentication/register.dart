@@ -154,6 +154,7 @@ class _RegisterState extends State<Register> {
                         houseNumber: _houseNumberController.text,
                         mobileNumber: _mobileNumberController.text,
                         password: _passwordController.text,
+                        confirmPassword: _confirmPasswordController.text,
                       );
                     },
                     steps: [

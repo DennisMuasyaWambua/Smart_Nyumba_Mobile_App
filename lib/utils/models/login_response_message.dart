@@ -16,7 +16,6 @@ class LoginResponseMessage {
     this.role,
     this.expiresIn,
     this.tokenType,
-    this.role,
   });
 
   bool status;

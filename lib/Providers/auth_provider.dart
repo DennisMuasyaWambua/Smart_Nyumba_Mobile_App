@@ -11,7 +11,7 @@ import 'package:smart_nyumba/utils/providers/shared_preference_builder.dart';
 import 'dart:convert';
 
 import '../../utils/constants/constants.dart';
-import '../Widgets/alerts.dart';
+
 
 class Auth with ChangeNotifier {
   var firstName,lastName,email,houseNumber,blockNumber;
@@ -87,7 +87,7 @@ class Auth with ChangeNotifier {
         Token =  loginResponseMessage.accessToken.toString();
         Provider.of<Auth>(context,listen:false).setToken(loginResponseMessage.accessToken.toString());
         log(loginResponseMessage.status.toString(), name: "Status");
-        showDialog(context: context, builder: (BuildContext context)=>Alert().alert(loginResponseMessage.message.toString()));
+        // showDialog(context: context, builder: (BuildContext context)=>Alert().alert(loginResponseMessage.message.toString()));
         log(loginResponseMessage.message.toString(), name: "Success message");
         notifyListeners();
         return loginResponseMessage;
@@ -104,7 +104,7 @@ class Auth with ChangeNotifier {
       }else {
         log(loginResponseMessage.status.toString(), name: "Status");
         log(loginResponseMessage.message.toString(), name: "Error message");
-        showDialog(context: context, builder: (BuildContext context)=>Alert().alert(loginResponseMessage.message.toString()));
+        // showDialog(context: context, builder: (BuildContext context)=>Alert().alert(loginResponseMessage.message.toString()));
         // print(loginResponseMessage.message);
         return LoginResponseMessage(
             message: "An error occurred", status: false);
@@ -138,10 +138,10 @@ class Auth with ChangeNotifier {
           RegisterResponse.fromJson(jsonDecode(response.body));
 
       if (registerResponse.status = true) {
-        showDialog(context: context, builder: (BuildContext context)=>Alert().alert(registerResponse.message.toString()));
+        // showDialog(context: context, builder: (BuildContext context)=>Alert().alert(registerResponse.message.toString()));
         return registerResponse;
       } else {
-        showDialog(context: context, builder: (BuildContext context)=>Alert().alert(registerResponse.message.toString()));
+        // showDialog(context: context, builder: (BuildContext context)=>Alert().alert(registerResponse.message.toString()));
         return registerResponse;
       }
     } catch (e) {

@@ -13,7 +13,6 @@ class LoginResponseMessage {
     required this.status,
     required this.message,
     this.accessToken,
-    this.role,
     this.expiresIn,
     this.tokenType,
     this.role,

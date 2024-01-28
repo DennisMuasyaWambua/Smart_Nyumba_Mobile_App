@@ -7,6 +7,8 @@ import '../../utils/providers/auth_provider.dart';
 import '../../utils/providers/shared_preference_builder.dart';
 
 class Otp extends StatefulWidget {
+  static const routeName = "/otp";
+
   const Otp({super.key});
 
   @override
@@ -22,8 +24,7 @@ class _OtpState extends State<Otp> {
   String box2 = '';
   String box3 = '';
   String box4 = '';
-  // var mail = SharedPrefrenceBuilder.getUserEmail;
-  var mail = "";
+  String mail = SharedPrefrenceBuilder.getUserEmail!;
 
   final defaultPinTheme = PinTheme(
     width: 56,

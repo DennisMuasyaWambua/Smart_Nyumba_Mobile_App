@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Companies extends StatefulWidget {
-  static const routeName = "companies";
+  static const routeName = "/companies";
 
   const Companies({super.key});
 

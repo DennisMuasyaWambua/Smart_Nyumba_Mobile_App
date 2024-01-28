@@ -1,17 +1,22 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:smart_nyumba/utils/constants/colors.dart';
-import './register.dart';
-// import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_nyumba/widgets/button_layout.dart';
 
+// import 'package:google_fonts/google_fonts.dart';
 import '../../../utils/constants/constants.dart';
-import '../../../utils/providers/auth_provider.dart';
+import '../../../utils/providers/_providers.dart';
+import '../../utils/constants/colors.dart';
 import '../../widgets/auth/_auth_widgets.dart';
+import '../admin/_admin.dart';
 import '../tenant/tenant_dashboard.dart';
+import 'register.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  static const routeName = "/login";
+
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -26,6 +31,7 @@ class _LoginState extends State<Login> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  bool isLoading = false;
   String authErrorString = "";
 
   @override
@@ -33,6 +39,14 @@ class _LoginState extends State<Login> {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // Check for internet connectivity.
+    // If you are running in debug mode, comment out the code to avoid errors.
+    Provider.of<InternetChecker>(context).checkForInternetConnection();
+    super.didChangeDependencies();
   }
 
   // Disposing controllers after use avoids memory leaks
@@ -96,16 +110,78 @@ class _LoginState extends State<Login> {
                     const SizedBox(
                       height: 40,
                     ),
-                    _buttonSubmitField(),
+                    ButtonLayout(
+                      width: double.infinity,
+                      height: 56,
+                      text: isLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : const Text(
+                              Constants.login,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                decoration: TextDecoration.none,
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontFamily: 'Hind',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                      onClick: () {
+                        if (_emailController.text == "" || _passwordController.text == "") {
+                          setState(() {
+                            authErrorString = "Empty fields";
+                          });
+                          return;
+                        }
+                        setState(() {
+                          email = _emailController.text;
+                          password = _passwordController.text;
+                          authErrorString = "";
+                          isLoading = true;
+                        });
+
+                        debugPrint("$email, $password");
+
+                        log(email.toString(), name: "EMAIL PARAMETER AT LOGIN");
+                        log(password.toString(), name: "PASSWORD PARAMETER AT LOGIN");
+
+                        if (!Provider.of<InternetChecker>(context, listen: false)
+                            .isInternetActive) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                          Provider.of<InternetChecker>(context, listen: false)
+                              .showInternetConnectionDialog(context);
+                          return;
+                        }
+
+                        final login = Auth().login(email, password, context);
+
+                        login.then((value) async {
+                          setState(() {
+                            isLoading = false;
+                          });
+
+                          value.message == "Login Successful"
+                              ? value.role == "tenant"
+                                  ? Navigator.of(context)
+                                      .pushReplacementNamed(TenantDashboard.routeName)
+                                  : Navigator.of(context)
+                                      .pushReplacementNamed(AdminDashboard.routeName)
+                              : setState(() {
+                                  authErrorString = value.message;
+                                });
+                        });
+                      },
+                    ),
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 20, bottom: 20),
                         child: TextButton(
                           onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (_) => const Register()),
-                            );
+                            Navigator.of(context).pushReplacementNamed(Register.routeName);
                           },
                           child: const Text(
                             'Don’t have an account? Register',
@@ -136,105 +212,6 @@ class _LoginState extends State<Login> {
           ],
         ),
       ),
-    );
-  }
-
-  bool isLoading = false;
-
-  Widget _buttonSubmitField() {
-    return AuthButton(
-      text: Center(
-        child: isLoading
-            ? const CircularProgressIndicator(
-                color: Colors.white,
-              )
-            : const Text(
-                Constants.login,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  decoration: TextDecoration.none,
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontFamily: 'Hind',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-      ),
-      buttonBgColor: gradYellowGold,
-      onClick: () {
-        if (_emailController.text == "" || _passwordController.text == "") {
-          return;
-        }
-        setState(() {
-          email = _emailController.text;
-          password = _passwordController.text;
-          authErrorString = "";
-          isLoading = true;
-        });
-        // Navigate to the Admin's dashboard
-        // Navigator.pushNamed(context, '/adminDashboard');
-        debugPrint("$email, $password");
-
-        log(email.toString(), name: "EMAIL PARAMETER AT LOGIN");
-        log(password.toString(), name: "PASSWORD PARAMETER AT LOGIN");
-
-        // Navigator.pushReplacement(context,
-        //     MaterialPageRoute(builder: (_) => const TenantDashboard()));
-        final login = Auth().login(email, password, context);
-
-        login.then((value) async {
-          setState(() {
-            isLoading = false;
-          });
-
-          value.message == "Login Successful"
-              ? Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => const TenantDashboard()))
-              : setState(() {
-                  authErrorString = value.message;
-                });
-
-          // if (value.accessToken != null) {
-          //   // Saving the users credentials using shared prefrences
-          //   SharedPrefrenceBuilder.setUserEmail(email);
-          //   SharedPrefrenceBuilder.setUserToken(value.accessToken.toString());
-          //   //saving token to provider
-          //   Provider.of<Auth>(context,listen:false).setToken(value.accessToken.toString());
-          //   log(Provider.of<Auth>(context,listen: false).token.toString(),name: "TOKEN PROVIDER");
-          //   // Auth().getProfile(Provider.of<Auth>(context,listen: false).token.toString(), context);
-          //
-          //   // Set the User id to the user to save the usersprofile
-          //   var user = await http.get(Uri.parse(Constants.TENANTS_PROFILE),
-          //       headers: {'Authorization': 'Bearer ${value.accessToken}'});
-          //
-          //   UserProfile usr = UserProfile.fromJson(json.decode(user.body));
-          //   var id = usr.profile!.user!.id;
-          //   SharedPrefrenceBuilder.setUserID(id!);
-          //
-          //   log(SharedPrefrenceBuilder().getUserEmail.toString(),
-          //       name: "EMAIL ADDRESS GOTTEN FROM LOGIN MESSAGE");
-          //   log(SharedPrefrenceBuilder().getUserToken.toString(),
-          //       name: "USER TOKEN GOTTEN FROM LOGIN MESSAGE");
-          //   // Navigating to the tenants dashboard
-          //   Navigator.pushReplacement(context,
-          //       MaterialPageRoute(builder: (_) => const TenantDashboard()));
-          // } else {
-          //   // QuickAlert.show(context: context, type: QuickAlertType.error, text: value.message);
-          //   Timer(const Duration(seconds: 3), () {
-          //     showDialog(
-          //         context: context,
-          //         builder: (context) {
-          //           Navigator.of(context).pop();
-          //
-          //           return AlertDialog(
-          //             title: const Text("ERROR"),
-          //             content: Text(value.message),
-          //           );
-          //         });
-          //   });
-          // }
-        });
-      },
     );
   }
 }

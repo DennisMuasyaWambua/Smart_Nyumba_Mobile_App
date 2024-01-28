@@ -5,7 +5,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../../Widgets/alerts.dart';
 import '../constants/constants.dart';
 import '../models/login_response_message.dart';
 import '../models/register_response_message.dart';
@@ -67,6 +66,7 @@ class Auth with ChangeNotifier {
   // log in method
   Future<LoginResponseMessage> login(String email, password, BuildContext context) async {
     String loginEndpoint = Constants.LOGIN_URL;
+    String adminLoginEndPoint = Constants.ADMIN_LOGIN_URL;
     // log(loginEndpoint.toString(), name: "LOGIN URL");
     // log("${email.toString()}, ${password.toString()}", name: "PARAMETERS BEING  USED");
     // debugPrint(loginEndpoint);
@@ -76,7 +76,7 @@ class Auth with ChangeNotifier {
       final response = await http.post(uri, body: {'email': email, 'password': password});
       // log(uri.toString(), name: "LOGIN URL");
       // debugPrint(response.body);
-      // log(response.body.toString(), name: " RESPONSE");
+      log(response.body.toString(), name: " RESPONSE");
       // log(response.statusCode.toString(), name: "Status code");
       loginResponseMessage = LoginResponseMessage.fromJson(json.decode(response.body));
       log(loginResponseMessage.message.toString(), name: "Response message from login");
@@ -85,6 +85,7 @@ class Auth with ChangeNotifier {
       // SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
       if (loginResponseMessage.accessToken != null) {
         SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
+        SharedPrefrenceBuilder.setUserRole(loginResponseMessage.role!);
         setToken(loginResponseMessage.accessToken!);
         SharedPrefrenceBuilder.setExpirationTime(
           DateTime.now().add(const Duration(hours: 1)),
@@ -114,6 +115,28 @@ class Auth with ChangeNotifier {
           return LoginResponseMessage(status: false, message: "Invalid username or password");
         } else if (loginResponseMessage.message == "user does not exist") {
           return LoginResponseMessage(status: false, message: "User does not exist");
+        } else if (loginResponseMessage.message == "tenant with this email does not exist") {
+          try {
+            var adminUri = Uri.parse(adminLoginEndPoint);
+            final adminResponse =
+                await http.post(adminUri, body: {'email': email, 'password': password});
+            LoginResponseMessage adminResponseMessage =
+                LoginResponseMessage.fromJson(json.decode(adminResponse.body));
+
+            if (adminResponseMessage.accessToken != null) {
+              SharedPrefrenceBuilder.setUserToken(adminResponseMessage.accessToken!);
+              SharedPrefrenceBuilder.setUserRole(adminResponseMessage.role!);
+              setToken(adminResponseMessage.accessToken!);
+              SharedPrefrenceBuilder.setExpirationTime(
+                DateTime.now().add(const Duration(hours: 1)),
+              );
+              notifyListeners();
+              return adminResponseMessage;
+            }
+          } catch (e) {
+            log("${Exception(e.toString())}", name: "Admin exception message from login");
+            throw Exception(e.toString());
+          }
         }
         return loginResponseMessage;
       }
@@ -143,17 +166,7 @@ class Auth with ChangeNotifier {
       log(response.body.toString(), name: "Register response");
       RegisterResponse registerResponse = RegisterResponse.fromJson(jsonDecode(response.body));
 
-      if (registerResponse.status = true) {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) => Alert().alert(registerResponse.message.toString()));
-        return registerResponse;
-      } else {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) => Alert().alert(registerResponse.message.toString()));
-        return registerResponse;
-      }
+      return registerResponse;
     } catch (e) {
       // Navigator.pushNamed(context, "/otp");
       log(e.toString(), name: "Exception message from user register");

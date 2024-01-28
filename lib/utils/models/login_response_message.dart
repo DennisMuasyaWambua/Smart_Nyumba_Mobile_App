@@ -16,31 +16,31 @@ class LoginResponseMessage {
     this.role,
     this.expiresIn,
     this.tokenType,
+    this.role,
   });
 
   bool status;
   String message;
-  String?accessToken;
+  String? accessToken;
+  String? expiresIn;
+  String? tokenType;
   String? role;
-  String?expiresIn;
-  String?tokenType;
 
   factory LoginResponseMessage.fromJson(Map<String, dynamic> json) => LoginResponseMessage(
-    status: json["status"],
-    message: json["message"],
-    accessToken: json["access_token"],
-    role: json["role"],
-    expiresIn: json["expires_in"],
-    tokenType: json["token_type"],
-  );
+        status: json["status"],
+        message: json["message"],
+        accessToken: json["access_token"],
+        expiresIn: json["expires_in"],
+        tokenType: json["token_type"],
+        role: json["role"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "status": status,
-    "message": message,
-    "access_token": accessToken,
-    "role":role,
-    "expires_in": expiresIn,
-    "token_type": tokenType,
-  };
+        "status": status,
+        "message": message,
+        "access_token": accessToken,
+        "expires_in": expiresIn,
+        "token_type": tokenType,
+        "role": role,
+      };
 }
-

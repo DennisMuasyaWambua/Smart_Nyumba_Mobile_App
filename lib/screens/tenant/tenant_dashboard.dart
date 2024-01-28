@@ -12,7 +12,8 @@ import '../tenant/tenant_home.dart';
 // import '../constants/constants.dart';
 
 class TenantDashboard extends StatefulWidget {
-  const TenantDashboard({Key? key}) : super(key: key);
+  static const routeName = "/tenant-dashboard";
+  const TenantDashboard({super.key});
 
   @override
   State<TenantDashboard> createState() => _TenantDashboardState();

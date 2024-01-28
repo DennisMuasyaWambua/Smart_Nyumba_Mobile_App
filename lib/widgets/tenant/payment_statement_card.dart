@@ -1,5 +1,6 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_nyumba/screens/tenant/all_transactions_data.dart';
 
 import '../../utils/constants/constants.dart';
 
@@ -22,7 +23,7 @@ class PaymentStatementCard extends StatelessWidget {
         //       // get information from here on all transactions and form the system
         //   }
         // });
-        Navigator.pushNamed(context, '/allServiceChargeTransactions');
+        Navigator.of(context).pushNamed(AllTransactionsData.routeName);
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),

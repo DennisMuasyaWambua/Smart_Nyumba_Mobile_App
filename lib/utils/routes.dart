@@ -5,12 +5,19 @@ import '../screens/authentication/_auth.dart';
 import '../screens/tenant/_tenant.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
-  '/login': (context) => const Login(),
-  '/register': (context) => const Register(),
-  '/otp': (context) => const Otp(),
-  '/tenantsDashboard': (context) => const TenantDashboard(),
-  '/adminDashboard': (context) => const AdminDashboard(),
-  '/allServiceChargeTransactions': (context) => const AllTransactionsData(),
-  '/createNewRole': (context) => const CreateRole(),
-  '/receipt': (context) => const Receipt()
+  Login.routeName: (context) => const Login(),
+  Register.routeName: (context) => const Register(),
+  Otp.routeName: (context) => const Otp(),
+  AccountProfile.routeName: (context) => const AccountProfile(),
+  AllTransactionsData.routeName: (context) => const AllTransactionsData(),
+  RequestForRepairsScreen.routeName : (context) => const RequestForRepairsScreen(),
+  TenantDashboard.routeName: (context) => const TenantDashboard(),
+  TenantHome.routeName: (context) => const TenantHome(),
+  AdminDashboard.routeName: (context) => const AdminDashboard(),
+  AdminHome.routeName: (context) => const AdminHome(),
+  AdminProfile.routeName: (context) => const AdminProfile(),
+  Companies.routeName: (context) => const Companies(),
+  EstateTenants.routeName: (context) => const EstateTenants(),
+  CreateRole.routeName: (context) => const CreateRole(),
+  Receipt.routeName: (context) => const Receipt(),
 };

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_nyumba/utils/providers/shared_preference_builder.dart';
 
 import '../../../utils/constants/constants.dart';
 import '../../../utils/providers/auth_provider.dart';
 import '../../utils/models/user_profile.dart';
+import '../../utils/providers/shared_preference_builder.dart';
+import '../../widgets/auth/logout_button.dart';
 
 class AccountProfile extends StatefulWidget {
+  static const routeName = "/tenant-profile";
   const AccountProfile({super.key});
 
   @override
@@ -201,18 +203,26 @@ class _ProfileState extends State<AccountProfile> {
                       child: Text(
                         "Payment Method: MPESA",
                         style: GoogleFonts.hind(
-                            fontSize: 13, fontWeight: FontWeight.w400, color: Colors.grey),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey,
+                        ),
                       )),
                   Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Mobile No: $phoneNumber",
-                        style: GoogleFonts.hind(
-                            fontSize: 13, fontWeight: FontWeight.w400, color: Colors.grey),
-                      )),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Mobile No: $phoneNumber",
+                      style: GoogleFonts.hind(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            )
+            ),
+            const LogoutButton(),
           ],
         ),
       ),

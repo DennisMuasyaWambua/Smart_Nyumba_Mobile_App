@@ -43,7 +43,7 @@ class SharedPrefrenceBuilder {
     return _preferences!.getString(tokenEpirationTime);
   }
 
-  static void clerInvalidToken() async {
+  static void clearInvalidToken() async {
     await _preferences!.remove(SharedPrefrenceBuilder.userToken);
     await _preferences!.remove(SharedPrefrenceBuilder.tokenEpirationTime);
   }

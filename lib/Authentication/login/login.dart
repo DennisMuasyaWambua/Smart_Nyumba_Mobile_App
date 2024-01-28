@@ -10,8 +10,9 @@ import 'package:smart_nyumba/screens/authentication/register.dart';
 
 import 'package:smart_nyumba/utils/models/user_profile.dart';
 import 'package:smart_nyumba/utils/providers/shared_preference_builder.dart';
+import 'package:smart_nyumba/widgets/button_layout.dart';
 
-import 'package:smart_nyumba/widgets/auth/auth_button.dart';
+
 
 import '../../utils/constants/constants.dart';
 import '../../utils/providers/auth_provider.dart';
@@ -107,7 +108,7 @@ class _LoginState extends State<Login> {
   }
 
   Widget _buttonSubmitField() {
-    return AuthButton(
+    return ButtonLayout(
       onClick: () {
         setState(() {
           email = _emailController.text;
@@ -183,7 +184,6 @@ class _LoginState extends State<Login> {
         });
       },
       text: Text(Constants.login),
-      buttonBgColor: const [Color(0xFFD4AF37), Color(0xFFFFD700)],
 
     );
   }

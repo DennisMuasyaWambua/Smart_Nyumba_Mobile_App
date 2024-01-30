@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => TenantsProfile()),
         ChangeNotifierProvider(create: (context) => Auth()),
         ChangeNotifierProvider(create: (context) => InternetChecker()),
+        ChangeNotifierProvider(create: (context) => AdminController()),
       ],
       child: MaterialApp(
         home: (SharedPrefrenceBuilder.getUserToken != null && isTokenValid)

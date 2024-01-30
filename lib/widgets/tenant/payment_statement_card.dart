@@ -1,7 +1,8 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_nyumba/screens/tenant/all_transactions_data.dart';
 
+import '../../screens/tenant/all_transactions_data.dart';
+import '../../utils/constants/colors.dart';
 import '../../utils/constants/constants.dart';
 
 class PaymentStatementCard extends StatelessWidget {
@@ -43,7 +44,7 @@ class PaymentStatementCard extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment(-0.97, 0.24),
                 end: Alignment(0.97, -0.24),
-                colors: [Color(0xFFD4AF37), Color(0xFFFFD700)],
+                colors: gradYellowGold,
               ),
             ),
             child: Padding(

@@ -3,9 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 // import 'package:google_fonts/google_fonts.dart';
 
-import '../../Providers/auth_provider.dart';
+import '../../utils/providers/_providers.dart';
 
-import '../../utils/providers/shared_preference_builder.dart';
 import '../authentication/account_profile.dart';
 import '../tenant/tenant_home.dart';
 

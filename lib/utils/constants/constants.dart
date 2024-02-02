@@ -57,8 +57,7 @@ class Constants {
   static const String LOGIN_URL = "$AUTHENTICATION_BASE_URL/user-login/";
  
   static const String REGISTER_URL = "$AUTHENTICATION_BASE_URL/user-register/";
-  static const String VERIFY_OTP =
-      "$AUTHENTICATION_BASE_URL/user-register-verification/";
+  static const String VERIFY_OTP ="$AUTHENTICATION_BASE_URL/user-register-verification/";
   static const String RESEND_OTP = "$AUTHENTICATION_BASE_URL/user-resend-otp/";
   static const String USER_PROFILE = "$AUTHENTICATION_BASE_URL/user-profile/";
 

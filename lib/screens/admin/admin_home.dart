@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../utils/providers/_providers.dart';
 import '../../widgets/admin/tenant_summary_card.dart';
+import '../../widgets/admin/companies_summary_card.dart';
 
 import '_admin.dart';
 
@@ -42,19 +43,7 @@ class _AdminHomeState extends State<AdminHome> {
               child: ListView(
                 children: [
                   TenantSummaryCard(tenantProvider: tenantProvider),
-                  ListTile(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(Companies.routeName);
-                    },
-                    title: Text(
-                      'Companies',
-                      style: GoogleFonts.hind(),
-                    ),
-                    trailing: const Icon(
-                      Icons.chevron_right,
-                      color: Colors.black,
-                    ),
-                  ),
+                  const CompaniesSummaryCard(),
                   ListTile(
                     onTap: () {},
                     title: Text(

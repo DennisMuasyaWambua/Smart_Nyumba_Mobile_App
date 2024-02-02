@@ -6,7 +6,6 @@ import '../../utils/providers/_providers.dart';
 import '../../widgets/admin/tenant_summary_card.dart';
 import '../../widgets/admin/companies_summary_card.dart';
 
-import '_admin.dart';
 
 class AdminHome extends StatefulWidget {
   static const routeName = "/admin-home";
@@ -43,7 +42,7 @@ class _AdminHomeState extends State<AdminHome> {
               child: ListView(
                 children: [
                   TenantSummaryCard(tenantProvider: tenantProvider),
-                  const CompaniesSummaryCard(),
+                 const CompaniesSummaryCard(),
                   ListTile(
                     onTap: () {},
                     title: Text(

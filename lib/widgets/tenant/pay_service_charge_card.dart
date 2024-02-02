@@ -5,6 +5,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:smart_nyumba/utils/constants/colors.dart';
 
 import '../../utils/constants/constants.dart';
 import '../../utils/providers/_providers.dart';
@@ -73,7 +74,9 @@ class PayServiceChargeCard extends StatelessWidget {
           style: NeumorphicStyle(
               shape: NeumorphicShape.concave,
               depth: 100,
-              boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(25.0)),
+              boxShape: NeumorphicBoxShape.roundRect(
+                BorderRadius.circular(25.0),
+              ),
               lightSource: LightSource.topLeft,
               intensity: 30),
           child: Container(
@@ -83,33 +86,35 @@ class PayServiceChargeCard extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment(-0.97, 0.24),
                 end: Alignment(0.97, -0.24),
-                colors: [Color(0xFFD4AF37), Color(0xFFFFD700)],
+                colors: gradYellowGold,
               ),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 50),
-              child: Column(children: [
-                const Icon(
-                  Icons.monetization_on,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 5.0, right: 5.0),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      Constants.payServiceCharge,
-                      style: GoogleFonts.hind(
-                          letterSpacing: -0.24,
-                          height: 1.33,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white),
-                    ),
+              child: Column(
+                children: [
+                  const Icon(
+                    Icons.monetization_on,
+                    color: Colors.white,
+                    size: 30,
                   ),
-                )
-              ]),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, left: 5.0, right: 5.0),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        Constants.payServiceCharge,
+                        style: GoogleFonts.hind(
+                            letterSpacing: -0.24,
+                            height: 1.33,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

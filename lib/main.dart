@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 import 'screens/admin/_admin.dart';
 import 'screens/authentication/_auth.dart';
 import 'screens/tenant/tenant_dashboard.dart';
-import 'utils/providers/_providers.dart';
+import 'utils/providers.dart';
+import 'utils/providers/shared_preference_builder.dart';
 import 'utils/routes.dart';
+import 'utils/theme.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -30,14 +32,8 @@ class MyApp extends StatelessWidget {
       !isTokenValid ? SharedPrefrenceBuilder.clearInvalidToken() : null;
     }
 
-
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => Payments()),
-        ChangeNotifierProvider(create: (context) => TenantsProfile()),
-        ChangeNotifierProvider(create: (context) => Auth()),
-        ChangeNotifierProvider(create: (context) => InternetChecker()),
-      ],
+      providers:providers,
       child: MaterialApp(
         home: (SharedPrefrenceBuilder.getUserToken != null && isTokenValid)
             ? SharedPrefrenceBuilder.getUserRole == "tenant"
@@ -46,20 +42,7 @@ class MyApp extends StatelessWidget {
             : const Login(),
         routes: routes,
         initialRoute: '/login',
-        theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-            titleTextStyle: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            ),
-            elevation: 0,
-            backgroundColor: Color(0xfffafafa),
-            iconTheme: IconThemeData(color: Colors.black),
-            actionsIconTheme: IconThemeData(color: Colors.black),
-            centerTitle: true,
-          ),
-        ),
+        theme: lightTheme,
         debugShowCheckedModeBanner: false,
       ),
     );

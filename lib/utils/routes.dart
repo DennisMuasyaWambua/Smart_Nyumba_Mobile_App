@@ -13,6 +13,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   RequestForRepairsScreen.routeName : (context) => const RequestForRepairsScreen(),
   TenantDashboard.routeName: (context) => const TenantDashboard(),
   TenantHome.routeName: (context) => const TenantHome(),
+  MarketPlace.routeName : (context) => const MarketPlace(),
   AdminDashboard.routeName: (context) => const AdminDashboard(),
   AdminHome.routeName: (context) => const AdminHome(),
   AdminProfile.routeName: (context) => const AdminProfile(),
@@ -20,4 +21,5 @@ Map<String, Widget Function(BuildContext)> routes = {
   EstateTenants.routeName: (context) => const EstateTenants(),
   CreateRole.routeName: (context) => const CreateRole(),
   Receipt.routeName: (context) => const Receipt(),
+  TenantDetails.route: (context) => const TenantDetails(),
 };

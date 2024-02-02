@@ -1,15 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import '../../utils/providers/_providers.dart';
+import '../../widgets/admin/tenant_summary_card.dart';
+import '../../widgets/admin/companies_summary_card.dart';
 
 import '_admin.dart';
 
-class AdminHome extends StatelessWidget {
+class AdminHome extends StatefulWidget {
   static const routeName = "/admin-home";
 
   const AdminHome({super.key});
 
   @override
+  State<AdminHome> createState() => _AdminHomeState();
+}
+
+class _AdminHomeState extends State<AdminHome> {
+  late AdminController tenantProvider;
+
+  @override
+  void didChangeDependencies() {
+    tenantProvider = Provider.of<AdminController>(context, listen: false);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    tenantProvider.fetchTenants();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
@@ -23,36 +42,12 @@ class AdminHome extends StatelessWidget {
               height: 500,
               child: ListView(
                 children: [
-                  ListTile(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(Companies.routeName);
-                    },
-                    title: Text(
-                      'Companies',
-                      style: GoogleFonts.hind(),
-                    ),
-                    trailing: const Icon(
-                      Icons.chevron_right,
-                      color: Colors.black,
-                    ),
-                  ),
+                  TenantSummaryCard(tenantProvider: tenantProvider),
+                  const CompaniesSummaryCard(),
                   ListTile(
                     onTap: () {},
                     title: Text(
                       'Payments',
-                      style: GoogleFonts.hind(),
-                    ),
-                    trailing: const Icon(
-                      Icons.chevron_right,
-                      color: Colors.black,
-                    ),
-                  ),
-                  ListTile(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(EstateTenants.routeName);
-                    },
-                    title: Text(
-                      'Tenants',
                       style: GoogleFonts.hind(),
                     ),
                     trailing: const Icon(

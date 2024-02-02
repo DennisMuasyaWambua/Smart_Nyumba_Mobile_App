@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class Constants {
   //regular expressions
   static RegExp emailRegex = RegExp(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
-  static RegExp passwordRegex = RegExp(
-      r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
+  static RegExp passwordRegex =
+      RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
   //Authentication constants
   static const String email = "email";
   static const String firstName = "first name";
@@ -37,7 +37,6 @@ class Constants {
   static const String didntGetCode = "Didn't get code? Resend Code";
   static const String createRole = "Create role";
 
-
   //colors
   static const buttonColor = Color(0xffbc9f6d);
   static const serviceColor = Color(0xfff68070);
@@ -49,21 +48,17 @@ class Constants {
   // URL constants
 
   //authentication related constants
-  static const String BASE_API_URL =
-      "https://smartnyumba-production.up.railway.app/apps/api/v1";
+  static const String BASE_API_URL = "https://smartnyumba-production.up.railway.app/apps/api/v1";
   static const String AUTHENTICATION_BASE_URL = "https://api.smartnyumba.com/apps/api/v1/auth";
-  static const String ADMIN_LOGIN_URL = "https://api.smartnyumba.com/apps/api/v1/auth/admin-login/";
   // static const String AUTHENTICATION_BASE_URL = "https://smartnyumba-production.up.railway.app/apps/api/v1/auth";
   static const String LOGIN_URL = "$AUTHENTICATION_BASE_URL/user-login/";
- 
   static const String REGISTER_URL = "$AUTHENTICATION_BASE_URL/user-register/";
-  static const String VERIFY_OTP ="$AUTHENTICATION_BASE_URL/user-register-verification/";
+  static const String VERIFY_OTP = "$AUTHENTICATION_BASE_URL/user-register-verification/";
   static const String RESEND_OTP = "$AUTHENTICATION_BASE_URL/user-resend-otp/";
   static const String USER_PROFILE = "$AUTHENTICATION_BASE_URL/user-profile/";
 
-  static const String TENANT_LOGOUT_URL = "https://api.smartnyumba.com/apps/api/v1/auth/user-logout/";
-  static const String ADMIN_LOGOUT_URL = "https://api.smartnyumba.com/apps/api/v1/auth/admin-logout/";
-
+  static const String TENANT_LOGOUT_URL =
+      "https://api.smartnyumba.com/apps/api/v1/auth/user-logout/";
 
   //PAYMENT related constants
   static const String PAYMENT_BASE_URL = "https://api.smartnyumba.com/apps/api/v1/tenant-services";
@@ -81,4 +76,12 @@ class Constants {
   static const String SMART_NYUMBA_BLACK = "assets/images/smartnyumbablack.png";
 
   static const String PERSON = "assets/images/person.png";
+
+  // Admin-related
+  static const String ADMIN_LOGIN_URL = "$AUTHENTICATION_BASE_URL/admin-login/";
+  static const String ADMIN_LOGOUT_URL =
+      "https://api.smartnyumba.com/apps/api/v1/auth/admin-logout/";
+      
+  static const String ADMIN_FETCH_TENANTS =
+      "https://api.smartnyumba.com/apps/api/v1/block-landlord/view-all-tenats";
 }

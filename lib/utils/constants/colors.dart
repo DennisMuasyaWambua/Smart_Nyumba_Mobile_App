@@ -7,3 +7,5 @@ const Color lightGold = Color(0xFFFFD700);
 const Color darkGold = Color(0xFFD4AF37);
 const List<Color> gradYellowGold = [darkGold, lightGold];
 const List<Color> gradDarkBlue = [Color(0xFF222831), Color(0xFF222831)];
+const Color darkGreen = Color(0xFF208B23);
+const Color statusAmber = Color(0xFFFACA3B);

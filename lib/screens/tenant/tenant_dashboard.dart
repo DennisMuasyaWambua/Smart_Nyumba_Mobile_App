@@ -1,14 +1,11 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-// import 'package:google_fonts/google_fonts.dart';
-
+import '../../utils/constants/colors.dart';
 import '../../utils/providers/_providers.dart';
-
 import '../authentication/account_profile.dart';
 import '../tenant/tenant_home.dart';
 
-// import '../constants/constants.dart';
 
 class TenantDashboard extends StatefulWidget {
   static const routeName = "/tenant-dashboard";
@@ -40,23 +37,24 @@ class _TenantDashboardState extends State<TenantDashboard> {
         children: pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
-          onTap: (index) {
-            setState(() {
-              myIndex = index;
-            });
-          },
-          currentIndex: myIndex,
-          selectedItemColor: const Color(0xFFD4AF37),
-          items: [
-            BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                    myIndex == 1 ? 'assets/icons/home.svg' : 'assets/icons/home-activated.svg'),
-                label: 'Home'),
-            BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                    myIndex == 0 ? 'assets/icons/user.svg' : 'assets/icons/user-activated.svg'),
-                label: 'Profile'),
-          ]),
+        onTap: (index) {
+          setState(() {
+            myIndex = index;
+          });
+        },
+        currentIndex: myIndex,
+        selectedItemColor: darkGold,
+        items: [
+          BottomNavigationBarItem(
+              activeIcon: SvgPicture.asset('assets/icons/home-activated.svg'),
+              icon: SvgPicture.asset('assets/icons/home.svg'),
+              label: 'Home'),
+          BottomNavigationBarItem(
+              activeIcon: SvgPicture.asset('assets/icons/user-activated.svg'),
+              icon: SvgPicture.asset('assets/icons/user.svg'),
+              label: 'Profile'),
+        ],
+      ),
     );
   }
 

@@ -35,7 +35,9 @@ class _AdminHomeState extends State<AdminHome> {
           child: Column(
             children: [
               TenantSummaryCard(tenantProvider: tenantProvider),
+              const SizedBox(height: 16),
               const CompaniesSummaryCard(),
+              const SizedBox(height: 16),
               const PaymentSummaryCard(),
             ],
           ),

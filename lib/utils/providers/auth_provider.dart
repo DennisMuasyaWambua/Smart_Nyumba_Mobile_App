@@ -142,6 +142,7 @@ class Auth with ChangeNotifier {
       }
     } catch (e) {
       log("${Exception(e.toString())}", name: "Exception message from login");
+      
       throw Exception(e.toString());
     }
   }

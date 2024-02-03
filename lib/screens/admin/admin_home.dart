@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/providers/_providers.dart';
-import '../../widgets/admin/tenant_summary_card.dart';
-import '../../widgets/admin/companies_summary_card.dart';
-
+import '../../widgets/admin/_summary_cards.dart';
 
 class AdminHome extends StatefulWidget {
   static const routeName = "/admin-home";
@@ -33,31 +30,15 @@ class _AdminHomeState extends State<AdminHome> {
         title: const Text('Admin Dashboard'),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              width: MediaQuery.of(context).size.width,
-              height: 500,
-              child: ListView(
-                children: [
-                  TenantSummaryCard(tenantProvider: tenantProvider),
-                 const CompaniesSummaryCard(),
-                  ListTile(
-                    onTap: () {},
-                    title: Text(
-                      'Payments',
-                      style: GoogleFonts.hind(),
-                    ),
-                    trailing: const Icon(
-                      Icons.chevron_right,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20.0),
+          child: Column(
+            children: [
+              TenantSummaryCard(tenantProvider: tenantProvider),
+              const CompaniesSummaryCard(),
+              const PaymentSummaryCard(),
+            ],
+          ),
         ),
       ),
     );

@@ -22,4 +22,5 @@ Map<String, Widget Function(BuildContext)> routes = {
   CreateRole.routeName: (context) => const CreateRole(),
   Receipt.routeName: (context) => const Receipt(),
   TenantDetails.route: (context) => const TenantDetails(),
+  PaymentScreen.routeName: (context) => const PaymentScreen(),
 };

@@ -23,22 +23,51 @@ class AdminProfile extends StatelessWidget {
               height: 500,
               child: Column(
                 children: [
-                  ListTile(
-                    leading: const CircleAvatar(
-                      backgroundImage: AssetImage("assets/images/account_icon.png"),
-                      radius: 30,
-                    ),
-                    title: Text(
-                      'Chairman',
-                      style: GoogleFonts.hind(
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1A1E25),
-                      ),
-                    ),
-                    subtitle: Text(
-                      'smartnyumba@gmail.com',
-                      style: GoogleFonts.hind(
-                        color: const Color(0xFF7D7F88),
+                  Card(
+                    elevation: 2,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 30),
+                      width: MediaQuery.of(context).size.width / 1.3,
+                      child: Column(
+                        children: [
+                          const CircleAvatar(
+                            backgroundImage: AssetImage("assets/images/account_icon.png"),
+                            radius: 34,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            "Chairman",
+                            style: GoogleFonts.hind(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20,
+                              color: const Color(0xFF1A1E25),
+                            ),
+                          ),
+                          Text(
+                            "smartnyumba@gmail.com",
+                            style: GoogleFonts.hind(
+                              color: const Color(0xFF7D7F88),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
+                            "Block Number",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text("12"),
+                          const SizedBox(height: 12),
+                          const Text(
+                            "House Number",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text("4"),
+                        ],
                       ),
                     ),
                   ),

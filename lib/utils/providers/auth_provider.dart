@@ -85,7 +85,11 @@ class Auth with ChangeNotifier {
       // SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
       if (loginResponseMessage.accessToken != null) {
         SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
-        SharedPrefrenceBuilder.setUserRole(loginResponseMessage.role!);
+
+        loginResponseMessage.role != null
+            ? SharedPrefrenceBuilder.setUserRole(loginResponseMessage.role!)
+            : SharedPrefrenceBuilder.setUserRole('tenant');
+
         setToken(loginResponseMessage.accessToken!);
         SharedPrefrenceBuilder.setExpirationTime(
           DateTime.now().add(const Duration(hours: 1)),
@@ -142,7 +146,7 @@ class Auth with ChangeNotifier {
       }
     } catch (e) {
       log("${Exception(e.toString())}", name: "Exception message from login");
-      
+
       throw Exception(e.toString());
     }
   }

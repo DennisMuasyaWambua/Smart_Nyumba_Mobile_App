@@ -1,44 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../../utils/providers/_providers.dart';
 import '../../widgets/admin/_summary_cards.dart';
 
-class AdminHome extends StatefulWidget {
+class AdminHome extends StatelessWidget {
   static const routeName = "/admin-home";
 
   const AdminHome({super.key});
 
   @override
-  State<AdminHome> createState() => _AdminHomeState();
-}
-
-class _AdminHomeState extends State<AdminHome> {
-  late AdminController tenantProvider;
-
-  @override
-  void didChangeDependencies() {
-    tenantProvider = Provider.of<AdminController>(context, listen: false);
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    tenantProvider.fetchTenants();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
       ),
-      body: SingleChildScrollView(
+      body: const SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20.0),
+          padding: EdgeInsets.only(left: 10, right: 10, bottom: 20.0),
           child: Column(
             children: [
-              TenantSummaryCard(tenantProvider: tenantProvider),
-              const SizedBox(height: 16),
-              const CompaniesSummaryCard(),
-              const SizedBox(height: 16),
-              const PaymentSummaryCard(),
+              TenantSummaryCard(),
+              SizedBox(height: 16),
+              CompaniesSummaryCard(),
+              SizedBox(height: 16),
+              PaymentSummaryCard(),
             ],
           ),
         ),

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'screens/admin/_admin.dart';
 import 'screens/authentication/_auth.dart';
-import 'screens/tenant/tenant_dashboard.dart';
+import 'screens/tenant/_tenant.dart';
 import 'utils/providers.dart';
 import 'utils/providers/shared_preference_builder.dart';
 import 'utils/routes.dart';
@@ -41,7 +41,6 @@ class MyApp extends StatelessWidget {
                 : const AdminDashboard()
             : const Login(),
         routes: routes,
-        initialRoute: '/login',
         theme: lightTheme,
         debugShowCheckedModeBanner: false,
       ),

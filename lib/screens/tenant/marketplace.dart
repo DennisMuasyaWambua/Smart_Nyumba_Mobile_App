@@ -2,6 +2,42 @@ import 'package:flutter/material.dart';
 
 import '../../widgets/tenant/marketplace_item_tile.dart';
 
+const List<Map<String, dynamic>> services = [
+  {
+    "category": "Sewing",
+    "item_count": "2",
+    "items": [
+      {
+        "name": "Sharon Sewing Services",
+      },
+      {
+        "name": "John's Tailoring",
+      },
+    ],
+  },
+  {
+    "category": "Baking",
+    "item_count": "1",
+    "items": [
+      {
+        "name": "Terry Cakes and Scones",
+      },
+    ],
+  },
+  {
+    "category": "Child Care",
+    "item_count": "2",
+    "items": [
+      {
+        "name": "OneStop ChildCare",
+      },
+      {
+        "name": "Nanny for the Kids",
+      },
+    ],
+  },
+];
+
 class MarketPlace extends StatelessWidget {
   static const routeName = "/marketplace";
 
@@ -17,61 +53,25 @@ class MarketPlace extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
-            children: [
-              MarketPlaceItemTile(
-                tileTitle: "Sewing",
-                serviceCount: "2",
-                children: [
-                  ListTile(
-                    title: const Text("Sharon Sewing Services"),
-                    trailing: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.phone),
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text("John's Tailoring"),
-                    trailing: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.phone),
-                    ),
-                  ),
-                ],
-              ),
-              MarketPlaceItemTile(
-                tileTitle: "Baking",
-                serviceCount: "1",
-                children: [
-                  ListTile(
-                    title: const Text("Terry Cakes and Scones"),
-                    trailing: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.phone),
-                    ),
-                  ),
-                ],
-              ),
-              MarketPlaceItemTile(
-                tileTitle: "Child Care",
-                serviceCount: "2",
-                children: [
-                  ListTile(
-                    title: const Text("OneStop ChildCare"),
-                    trailing: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.phone),
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text("Nanny for the Kids"),
-                    trailing: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.phone),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+            children: services.map((service) {
+              List itemList = service['items'];
+
+              return MarketPlaceItemTile(
+                tileTitle: service['category'],
+                serviceCount: service['item_count'],
+                children: itemList
+                    .map(
+                      (value) => ListTile(
+                        title: Text(value['name']),
+                        trailing: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.phone),
+                        ),
+                      ),
+                    )
+                    .toList(),
+              );
+            }).toList(),
           ),
         ),
       ),

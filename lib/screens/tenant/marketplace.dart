@@ -1,27 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smart_nyumba/utils/constants/colors.dart';
 
-const services = [
-  {
-    "name": "Sewing Services",
-    "description":
-        "I provide sewing services including cloth repairs, making costumes and creating new garments for all ocassions.",
-    "image_src":
-        "https://s3.envato.com/files/229420162/Colorful%20threads%20for%20needlework13G.jpg",
-  },
-  {
-    "name": "Baking Services",
-    "description":
-        "I bake cakes, pastries and desserts at an affordable price.",
-    "image_src": "https://www.imarcgroup.com/blogs/files/c196a056-e13c-4316-9b6f-a471d5a4a27aphoto-1608198093002-ad4e005484ec.webp",
-  },
-  {
-    "name": "Child Care Services",
-    "description":
-        "I provid child care to parents who are busy and need someone to take car eof their children.",
-    "image_src": "https://dcf.wisconsin.gov/files/images/400/illustration-children-garden.png",
-  },
-];
+import '../../widgets/tenant/marketplace_item_tile.dart';
 
 class MarketPlace extends StatelessWidget {
   static const routeName = "/marketplace";
@@ -38,63 +17,61 @@ class MarketPlace extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
-            children: services
-                .map(
-                  (service) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Card(
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 200,
-                            padding: EdgeInsets.all(12),
-                            decoration: const BoxDecoration(
-                              // color: lightGold,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(8),
-                                topRight: Radius.circular(8),
-                              ),
-                            ),
-                            child: Image.network(
-                              service['image_src']!,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Container(
-                            height: 120,
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 16,
-                              horizontal: 20,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  service['name']!,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  service["description"]!,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+            children: [
+              MarketPlaceItemTile(
+                tileTitle: "Sewing",
+                serviceCount: "2",
+                children: [
+                  ListTile(
+                    title: const Text("Sharon Sewing Services"),
+                    trailing: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.phone),
                     ),
                   ),
-                )
-                .toList(),
+                  ListTile(
+                    title: const Text("John's Tailoring"),
+                    trailing: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.phone),
+                    ),
+                  ),
+                ],
+              ),
+              MarketPlaceItemTile(
+                tileTitle: "Baking",
+                serviceCount: "1",
+                children: [
+                  ListTile(
+                    title: const Text("Terry Cakes and Scones"),
+                    trailing: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.phone),
+                    ),
+                  ),
+                ],
+              ),
+              MarketPlaceItemTile(
+                tileTitle: "Child Care",
+                serviceCount: "2",
+                children: [
+                  ListTile(
+                    title: const Text("OneStop ChildCare"),
+                    trailing: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.phone),
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text("Nanny for the Kids"),
+                    trailing: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.phone),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

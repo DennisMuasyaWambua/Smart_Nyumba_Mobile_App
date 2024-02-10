@@ -114,7 +114,9 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      appBar: AppBar(
+        title: const Text("Payment Statements"),
+      ),
       body: StreamBuilder(
         stream: Provider.of<Payments>(context, listen: false).getAllTransactions(),
         builder: (context, snapshot) {

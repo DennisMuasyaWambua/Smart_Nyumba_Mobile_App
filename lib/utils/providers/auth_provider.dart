@@ -192,11 +192,7 @@ class Auth with ChangeNotifier {
       log(verifyOtp.body, name: "Verified Status from user register");
       SendOtp result = SendOtp.fromJson(jsonDecode(verifyOtp.body));
 
-      if (result.status = true) {
-        return result;
-      } else {
-        return result;
-      }
+      return result;
     } catch (e) {
       log(e.toString(), name: "Exception message from OTP");
       throw Exception(e.toString());

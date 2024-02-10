@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
+import 'package:smart_nyumba/utils/constants/colors.dart';
+import 'package:smart_nyumba/widgets/button_layout.dart';
 
 import '../../utils/constants/constants.dart';
 import '../../utils/providers/auth_provider.dart';
@@ -31,12 +35,16 @@ class _OtpState extends State<Otp> {
     height: 60,
     textStyle: const TextStyle(fontSize: 22, color: Colors.black),
     decoration: BoxDecoration(
-      color: Colors.grey.shade100,
+      color: Colors.grey.shade200,
       borderRadius: BorderRadius.circular(8),
       border: Border.all(color: Colors.transparent),
     ),
   );
   final List<String> otpString = [];
+  String authErrorString = "";
+
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,81 +61,108 @@ class _OtpState extends State<Otp> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Center(
-                    child: Text(
-                      Constants.OtpVerification,
-                      style: GoogleFonts.publicSans(
-                          fontSize: 20, fontWeight: FontWeight.w700, color: Constants.buttonColor),
+                  padding: const EdgeInsets.only(bottom: 0, top: 8.0),
+                  child: Image.asset(Constants.SMART_NYUMBA_BLACK),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 50.0),
+                  child: Text(
+                    "ENTER OTP",
+                    style: TextStyle(
+                      color: royalBlue,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.4,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/images/home.png"),
-                    ),
-                  ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  child: Text("Enter the OTP code sent to your email"),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Pinput(
-                        length: 4,
-                        defaultPinTheme: defaultPinTheme,
-                        focusedPinTheme: defaultPinTheme.copyWith(
-                          decoration: defaultPinTheme.decoration!.copyWith(
-                            border: Border.all(color: Constants.buttonColor),
-                          ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Pinput(
+                      length: 4,
+                      defaultPinTheme: defaultPinTheme,
+                      focusedPinTheme: defaultPinTheme.copyWith(
+                        decoration: defaultPinTheme.decoration!.copyWith(
+                          border: Border.all(color: darkGold),
                         ),
-                        onCompleted: (pin) {
-                          // int ot = pin as int;
-                          var authentication = Auth().sendOtp(mail.toString(), pin);
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          authErrorString = "";
+                        });
+                      },
+                      onCompleted: (pin) {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        // int ot = pin as int;
+                        var authentication = Auth().sendOtp(mail.toString(), pin);
 
-                          authentication.then((value) {
-                            if (value.status = true) {
-                              showDialog(
-                                  context: context,
-                                  builder: (_) => SimpleDialog(
-                                        title: Text(
-                                          "Activated",
-                                          style: GoogleFonts.urbanist(
-                                              color: Constants.buttonColor,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        children: [
-                                          Center(
-                                            child: Text(value.message),
-                                          )
-                                        ],
-                                      ));
-                              Navigator.pushReplacementNamed(context, '/login');
-                            } else {
-                              showDialog(
-                                  context: context,
-                                  builder: (_) => SimpleDialog(
-                                        title: Text(
-                                          "Failed",
-                                          style: GoogleFonts.urbanist(
-                                              color: Constants.buttonColor,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        children: [
-                                          Center(
-                                            child: Text(value.message),
-                                          )
-                                        ],
-                                      ));
-                            }
+                        authentication.then((value) {
+                          setState(() {
+                            isLoading = false;
                           });
-                        },
+
+                          if (value.status == true) {
+                            showDialog(
+                                context: context,
+                                builder: (_) => SimpleDialog(
+                                      title: Text(
+                                        "Activated",
+                                        style: GoogleFonts.urbanist(
+                                            color: Constants.buttonColor,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      children: [
+                                        Center(
+                                          child: Text(value.message),
+                                        )
+                                      ],
+                                    ));
+                            Navigator.pushReplacementNamed(context, '/login');
+                          } else {
+                            setState(() {
+                              authErrorString = "Invalid code provided";
+                            });
+                          }
+                        });
+                      },
+                    )
+                  ],
+                ),
+                const SizedBox(height: 20),
+                isLoading
+                    ? const SizedBox(
+                        height: 18,
+                        width: 18,
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                          strokeWidth: 2,
+                        ),
                       )
-                    ],
+                    : Text(
+                        authErrorString,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                const SizedBox(height: 20),
+                ButtonLayout(
+                  borderRadius: 6,
+                  width: 248,
+                  height: 40,
+                  text: const Text(
+                    "Resend Code",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
                   ),
+                  onClick: () {},
                 ),
               ],
             ),

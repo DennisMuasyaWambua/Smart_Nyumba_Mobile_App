@@ -32,8 +32,18 @@ class MarketPlaceItemTile extends StatelessWidget {
                 iconColor: Colors.black,
               ),
               child: ExpansionTile(
-                title: Text(tileTitle),
-                trailing: Text(serviceCount),
+                title: Text(
+                  tileTitle,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                trailing: Text(
+                  serviceCount,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
                 children: children,
               ),
             ),

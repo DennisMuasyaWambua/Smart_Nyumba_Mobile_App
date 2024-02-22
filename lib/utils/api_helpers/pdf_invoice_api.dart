@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf/widgets.dart';
 
 class PdfApi with ChangeNotifier {
   late String _file;
@@ -37,7 +35,7 @@ class PdfApi with ChangeNotifier {
     }
   }
 
-  static Future<File> pdfGeneration(String estateName, datePaid, name, amount, purpose) async {
+  static pw.Document pdfGeneration(String estateName, datePaid, name, amount, purpose) {
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -48,7 +46,8 @@ class PdfApi with ChangeNotifier {
         },
       ),
     );
-    return PdfApi.saveDocument(name: "Service-charge-receipt-${DateTime.now()}", pdf: pdf);
+    return pdf;
+    // return PdfApi.saveDocument(name: "Service-charge-receipt-${DateTime.now()}", pdf: pdf);
   }
 
   static pw.Widget receipt(String estateName, datePaid, name, amount, purpose) => pw.Column(
@@ -242,23 +241,6 @@ class PdfApi with ChangeNotifier {
           )
         ],
       );
-
-  static Future<File> saveDocument({
-    required String name,
-    required Document pdf,
-  }) async {
-    // final bytes = await pdf.save();
-
-    Directory dir = await getApplicationDocumentsDirectory();
-    debugPrint(dir.path);
-    log("${dir.parent.parent.parent.parent.parent.parent.path}storage/self/primary/Download",
-        name: "PATH");
-    File file = File("${dir.path}/$name");
-
-    await file.writeAsBytes(await pdf.save());
-
-    return file;
-  }
 
   static Future openFile(File file) async {
     final url = file.path;

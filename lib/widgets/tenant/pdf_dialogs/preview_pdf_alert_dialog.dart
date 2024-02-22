@@ -1,15 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
 import '../../../utils/constants/colors.dart';
 import 'download_pdf_alert_dialog.dart';
 
 class PreviewPDFAlertDialog extends StatelessWidget {
-  final File file;
+  final pw.Document document;
   final DateTime datePaid;
-  const PreviewPDFAlertDialog({super.key, required this.file, required this.datePaid});
+  const PreviewPDFAlertDialog({super.key, required this.document, required this.datePaid});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class PreviewPDFAlertDialog extends StatelessWidget {
               TextButton(
                 onPressed: () => showDialog(
                   context: context,
-                  builder: (_) => DownloadPDFAlertDialog(date: datePaid),
+                  builder: (_) => DownloadPDFAlertDialog(date: datePaid, document: document),
                 ),
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
@@ -42,7 +41,7 @@ class PreviewPDFAlertDialog extends StatelessWidget {
                 ),
               ),
             ],
-            build: (format) => file.readAsBytesSync(),
+            build: (format) => document.save(),
           ),
         ),
       ),

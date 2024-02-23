@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     late DateTime? tokenExpirationDate;
     late bool isTokenValid = false;
 
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
     }
 
     return MultiProvider(
-      providers:providers,
+      providers: providers,
       child: MaterialApp(
         home: (SharedPrefrenceBuilder.getUserToken != null && isTokenValid)
             ? SharedPrefrenceBuilder.getUserRole == "tenant"

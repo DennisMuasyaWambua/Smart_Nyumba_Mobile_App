@@ -1,16 +1,22 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:smart_nyumba/screens/tenant/all_transactions_data.dart';
-import 'package:smart_nyumba/utils/api_helpers/pdf_invoice_api.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 import '../../../utils/constants/colors.dart';
 
 class DownloadPDFAlertDialog extends StatefulWidget {
+  final pw.Document document;
   final DateTime date;
-  const DownloadPDFAlertDialog({super.key, required this.date});
+
+  const DownloadPDFAlertDialog({
+    super.key,
+    required this.date,
+    required this.document,
+  });
 
   @override
   State<DownloadPDFAlertDialog> createState() => _DownloadPDFAlertDialogState();
@@ -36,6 +42,23 @@ class _DownloadPDFAlertDialogState extends State<DownloadPDFAlertDialog> {
   void dispose() {
     pdfNameController.dispose();
     super.dispose();
+  }
+
+  static Future<File> saveDocument({
+    required String name,
+    required pw.Document pdf,
+  }) async {
+    // final bytes = await pdf.save();
+
+    Directory dir = await getApplicationDocumentsDirectory();
+    debugPrint(dir.path);
+    log("${dir.parent.parent.parent.parent.parent.parent.path}storage/self/primary/Download",
+        name: "PATH");
+    File file = File("${dir.path}/$name");
+
+    await file.writeAsBytes(await pdf.save());
+
+    return file;
   }
 
   @override
@@ -75,15 +98,7 @@ class _DownloadPDFAlertDialogState extends State<DownloadPDFAlertDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    //saving the pdf to the device
-                    // PdfApi.saveDocument(name:pdfNameController.text, pdf:  );
-                    // Getting the index of the current card
-                    // Document pdf = Provider.of<PdfApi>(context).index;
-                    // PdfApi.saveDocument(
-                    //     name: pdfNameController.text,
-                    //     pdf: Provider.of<PdfApi>(context).index);
-                  },
+                  onPressed: () => saveDocument(name: pdfNameController.text, pdf: widget.document),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 32,

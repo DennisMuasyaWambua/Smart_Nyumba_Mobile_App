@@ -246,7 +246,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                               log(pdfFile.toString(), name: "PDF FILE PATH");
                               previewPDF(pdfFile, transaction.datePaid!);
                               // save file object using provider
-                              PdfApi().setIndex(pdfFile);
+                              // PdfApi().setIndex(pdfFile);
 
                             },
                           ),

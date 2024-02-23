@@ -14,11 +14,18 @@ class PdfApi with ChangeNotifier {
   late String _file;
   late Uint8List logobytes;
   late PdfImage logoImage;
+  late File _index;
   String get filePath => _file;
   void setFile(String file) {
     _file = file;
     notifyListeners();
   }
+
+  void setIndex(File index) {
+    _index = index;
+    notifyListeners();
+  }
+  File get index=>_index;
 
   getLogo() async {
     final pdf = pw.Document();
@@ -37,21 +44,27 @@ class PdfApi with ChangeNotifier {
     }
   }
 
-  static Future<File> pdfGeneration(String estateName, datePaid, name, amount, purpose) async {
+  static Future<File> pdfGeneration(
+      String estateName, datePaid, name, amount, purpose) async {
     final pdf = pw.Document();
 
     pdf.addPage(
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
         build: (pw.Context context) {
-          return <pw.Widget>[receipt(estateName, datePaid, name, amount, purpose)];
+          return <pw.Widget>[
+            receipt(estateName, datePaid, name, amount, purpose)
+          ];
         },
       ),
     );
-    return PdfApi.saveDocument(name: "Service-charge-receipt-${DateTime.now()}", pdf: pdf);
+    return PdfApi.saveDocument(
+        name: "Service-charge-receipt-${DateTime.now()}", pdf: pdf);
   }
 
-  static pw.Widget receipt(String estateName, datePaid, name, amount, purpose) => pw.Column(
+  static pw.Widget receipt(
+          String estateName, datePaid, name, amount, purpose) =>
+      pw.Column(
         mainAxisSize: pw.MainAxisSize.min,
         children: [
           pw.Center(
@@ -236,7 +249,8 @@ class PdfApi with ChangeNotifier {
           pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
             children: [
-              pw.Text("Compiled on: ${DateFormat.yMMMd().format(DateTime.now())} at ${DateFormat.jm().format(DateTime.now())}"),
+              pw.Text(
+                  "Compiled on: ${DateFormat.yMMMd().format(DateTime.now())} at ${DateFormat.jm().format(DateTime.now())}"),
               pw.Text("Prepared by: Smart Nyumba"),
             ],
           )
@@ -259,6 +273,7 @@ class PdfApi with ChangeNotifier {
 
     return file;
   }
+  
 
   static Future openFile(File file) async {
     final url = file.path;

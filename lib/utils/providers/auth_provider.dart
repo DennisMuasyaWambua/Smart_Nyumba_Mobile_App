@@ -64,7 +64,8 @@ class Auth with ChangeNotifier {
   late LoginResponseMessage loginResponseMessage;
 
   // log in method
-  Future<LoginResponseMessage> login(String email, password, BuildContext context) async {
+  Future<LoginResponseMessage> login(
+      String email, password, BuildContext context) async {
     String loginEndpoint = Constants.LOGIN_URL;
     String adminLoginEndPoint = Constants.ADMIN_LOGIN_URL;
     // log(loginEndpoint.toString(), name: "LOGIN URL");
@@ -73,13 +74,16 @@ class Auth with ChangeNotifier {
 
     try {
       var uri = Uri.parse(loginEndpoint);
-      final response = await http.post(uri, body: {'email': email, 'password': password});
+      final response =
+          await http.post(uri, body: {'email': email, 'password': password});
       // log(uri.toString(), name: "LOGIN URL");
       // debugPrint(response.body);
       log(response.body.toString(), name: " RESPONSE");
       // log(response.statusCode.toString(), name: "Status code");
-      loginResponseMessage = LoginResponseMessage.fromJson(json.decode(response.body));
-      log(loginResponseMessage.message.toString(), name: "Response message from login");
+      loginResponseMessage =
+          LoginResponseMessage.fromJson(json.decode(response.body));
+      log(loginResponseMessage.message.toString(),
+          name: "Response message from login");
       // Saving the token from logging in
 
       // SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
@@ -89,6 +93,7 @@ class Auth with ChangeNotifier {
         loginResponseMessage.role != null
             ? SharedPrefrenceBuilder.setUserRole(loginResponseMessage.role!)
             : SharedPrefrenceBuilder.setUserRole('tenant');
+        SharedPrefrenceBuilder.setUserEmail(email);
 
         setToken(loginResponseMessage.accessToken!);
         SharedPrefrenceBuilder.setExpirationTime(
@@ -114,21 +119,27 @@ class Auth with ChangeNotifier {
         //         Alert().alert(loginResponseMessage.message.toString()));
         // print(loginResponseMessage.message);
         if (loginResponseMessage.message == "Invalid data provided") {
-          return LoginResponseMessage(status: false, message: "Enter a valid email address");
-        } else if (loginResponseMessage.message == "Please provide correct username or password") {
-          return LoginResponseMessage(status: false, message: "Invalid username or password");
+          return LoginResponseMessage(
+              status: false, message: "Enter a valid email address");
+        } else if (loginResponseMessage.message ==
+            "Please provide correct username or password") {
+          return LoginResponseMessage(
+              status: false, message: "Invalid username or password");
         } else if (loginResponseMessage.message == "user does not exist") {
-          return LoginResponseMessage(status: false, message: "User does not exist");
-        } else if (loginResponseMessage.message == "tenant with this email does not exist") {
+          return LoginResponseMessage(
+              status: false, message: "User does not exist");
+        } else if (loginResponseMessage.message ==
+            "tenant with this email does not exist") {
           try {
             var adminUri = Uri.parse(adminLoginEndPoint);
-            final adminResponse =
-                await http.post(adminUri, body: {'email': email, 'password': password});
+            final adminResponse = await http
+                .post(adminUri, body: {'email': email, 'password': password});
             LoginResponseMessage adminResponseMessage =
                 LoginResponseMessage.fromJson(json.decode(adminResponse.body));
 
             if (adminResponseMessage.accessToken != null) {
-              SharedPrefrenceBuilder.setUserToken(adminResponseMessage.accessToken!);
+              SharedPrefrenceBuilder.setUserToken(
+                  adminResponseMessage.accessToken!);
               SharedPrefrenceBuilder.setUserRole(adminResponseMessage.role!);
               setToken(adminResponseMessage.accessToken!);
               SharedPrefrenceBuilder.setExpirationTime(
@@ -138,7 +149,8 @@ class Auth with ChangeNotifier {
               return adminResponseMessage;
             }
           } catch (e) {
-            log("${Exception(e.toString())}", name: "Admin exception message from login");
+            log("${Exception(e.toString())}",
+                name: "Admin exception message from login");
             throw Exception(e.toString());
           }
         }
@@ -152,8 +164,16 @@ class Auth with ChangeNotifier {
   }
 
   // register method
-  Future<RegisterResponse> register(String email, firstName, lastName, idNumber, blockNumber,
-      houseNumber, mobileNumber, password, BuildContext context) async {
+  Future<RegisterResponse> register(
+      String email,
+      firstName,
+      lastName,
+      idNumber,
+      blockNumber,
+      houseNumber,
+      mobileNumber,
+      password,
+      BuildContext context) async {
     String registerEndpoint = Constants.REGISTER_URL;
     try {
       Uri register = Uri.parse(registerEndpoint);
@@ -169,7 +189,8 @@ class Auth with ChangeNotifier {
       });
       log(response.statusCode.toString(), name: "Register status code");
       log(response.body.toString(), name: "Register response");
-      RegisterResponse registerResponse = RegisterResponse.fromJson(jsonDecode(response.body));
+      RegisterResponse registerResponse =
+          RegisterResponse.fromJson(jsonDecode(response.body));
 
       return registerResponse;
     } catch (e) {
@@ -187,7 +208,8 @@ class Auth with ChangeNotifier {
       String otpVerificationUrl = Constants.VERIFY_OTP;
       Uri otpVerification = Uri.parse(otpVerificationUrl);
 
-      final verifyOtp = await http.post(otpVerification, body: {"email": email, "otp": otp});
+      final verifyOtp =
+          await http.post(otpVerification, body: {"email": email, "otp": otp});
 
       log(verifyOtp.body, name: "Verified Status from user register");
       SendOtp result = SendOtp.fromJson(jsonDecode(verifyOtp.body));

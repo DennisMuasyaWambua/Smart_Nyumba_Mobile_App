@@ -16,23 +16,19 @@ class TenantsProfile with ChangeNotifier {
   Future<Profile> getUserProfile(String token) async {
     //user profile endpoint
     String profileEndpoint = Constants.TENANTS_PROFILE;
+    log(profileEndpoint.toString(), name: "TENANTS PROFILE URL");
 
-    try {
-      // headers
-      Map<String, String> headers = {
-        "Authorization": "Bearer $token",
-      };
-      var response =
-          await http.get(Uri.parse(profileEndpoint), headers: headers);
-      log(response.body.toString(), name: "USER profile");
+    // headers
+    Map<String, String> headers = {
+      "Authorization": "Bearer $token",
+    };
+    var response = await http.get(Uri.parse(profileEndpoint), headers: headers);
+    log(response.body.toString(), name: "USER profile");
 
-      UserProfile data = UserProfile.fromJson(json.decode(response.body));
-      Profile appUser = data.profile as Profile;
-      log(data.profile.toString(), name: "USER PROFILE");
-      notifyListeners();
-      return appUser;
-    } catch (e) {
-      throw e.toString();
-    }
+    UserProfile data = UserProfile.fromJson(jsonDecode(response.body));
+    Profile appUser = data.profile as Profile;
+    log(data.profile.toString(), name: "USER PROFILE");
+    notifyListeners();
+    return appUser;
   }
 }

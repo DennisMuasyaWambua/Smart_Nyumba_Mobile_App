@@ -24,49 +24,7 @@ class PayServiceChargeCard extends StatelessWidget {
           context: context,
           builder: (context) => const PayServiceChargeAlertDialog(),
         );
-        var token = SharedPrefrenceBuilder.getUserToken;
-
-        log(token.toString(), name: "TOKEN BEING SHARED WITH PROVIDER STATE MANAGER");
-        var user = Provider.of<TenantsProfile>(context, listen: false).getUserProfile(token!);
-
-        user.then((value) {
-          log(value.email.toString(), name: "THIS IS THE USERS EMAIL");
-          var mobile = value.user!.mobileNumber.toString();
-
-          String amt = '1';
-          String serviceName = "Waste";
-          var pay = Provider.of<Payments>(context, listen: false)
-              .payServiceCharge(mobile, amt, serviceName);
-
-          pay.then((value) {
-            log(value.toJson().toString(), name: "PAYMENT RESULT");
-          });
-        });
-
-        Timer.periodic(const Duration(seconds: 3), (timer) {
-          if (hasUserPaid == 0) {
-            var check = Provider.of<Payments>(context, listen: false).checkPaymentStatus();
-            check.then((value) {
-              if (value == 1) {
-                hasUserPaid = value!;
-                log("$value payment was successful", name: "PAYMENT SUCCESS");
-                timer.cancel();
-              } else {
-                log("$value payment failed", name: "PAYMENT FAILED");
-                timer.cancel();
-              }
-              log(value.toString(), name: "FROM CHECKING THE PAYMENT RESULT");
-            });
-            timer.cancel();
-          } else {
-            QuickAlert.show(
-              context: context,
-              type: QuickAlertType.error,
-            );
-            timer.cancel();
-          }
-          timer.cancel();
-        });
+        
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 0.5, right: 5.0),

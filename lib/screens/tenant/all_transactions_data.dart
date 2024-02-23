@@ -35,7 +35,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
   @override
   void initState() {
     super.initState();
-    final account = Auth().getProfile(SharedPrefrenceBuilder.getUserToken!, context);
+    final account =
+        Auth().getProfile(SharedPrefrenceBuilder.getUserToken!, context);
     account.then((value) {
       setState(() {
         name = value.profile!.user!.firstName!;
@@ -46,7 +47,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
 
   @override
   void didChangeDependencies() {
-    final DateTime tokenExpirationDate = DateTime.parse(SharedPrefrenceBuilder.getExpirationTime!);
+    final DateTime tokenExpirationDate =
+        DateTime.parse(SharedPrefrenceBuilder.getExpirationTime!);
     final bool isTokenValid = tokenExpirationDate.isAfter(DateTime.now());
     if (!isTokenValid) {
       SharedPrefrenceBuilder.clearInvalidToken();
@@ -98,7 +100,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
     log(documentPath, name: "THIS IS THE DOCUMENT PATH");
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     final pdfFile = File("$documentPath/$index-receipt-$timestamp.pdf");
-    log(documentPath + '/$index-receipt-$timestamp.pdf'.toString(), name: "DOCUMENT PATH");
+    log(documentPath + '/$index-receipt-$timestamp.pdf'.toString(),
+        name: "DOCUMENT PATH");
 
     file.writeAsBytesSync(await pdf.save());
     setState(() {
@@ -108,7 +111,9 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
 
   previewPDF(File pdfFile, DateTime datePaid) {
     showDialog(
-        context: context, builder: (_) => PreviewPDFAlertDialog(file: pdfFile, datePaid: datePaid));
+        context: context,
+        builder: (_) =>
+            PreviewPDFAlertDialog(file: pdfFile, datePaid: datePaid));
   }
 
   @override
@@ -118,7 +123,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
         title: const Text("Payment Statements"),
       ),
       body: StreamBuilder(
-        stream: Provider.of<Payments>(context, listen: false).getAllTransactions(),
+        stream:
+            Provider.of<Payments>(context, listen: false).getAllTransactions(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -136,7 +142,9 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                       child: Text(
                         'Service Charge',
                         style: GoogleFonts.urbanist(
-                            fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black),
                       ),
                     ),
                   ),
@@ -159,7 +167,9 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                       ),
                       child: Column(
                         children: [
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.10),
                           Text(
                             "KES: 0",
                             style: GoogleFonts.hind(
@@ -169,7 +179,9 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                                 height: 0.05,
                                 letterSpacing: -0.34),
                           ),
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.07),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.07),
                           Text(
                             "Available Balance",
                             style: GoogleFonts.hind(
@@ -186,7 +198,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
 
                   SizedBox(height: MediaQuery.of(context).size.height * 0.08),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0, vertical: 10),
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Text(
@@ -213,7 +226,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                       itemCount: paymentTransactions!.length,
                       itemBuilder: (context, index) {
                         final transaction = paymentTransactions[index];
-                        final date = DateFormat.yMMMd().format(transaction.datePaid!);
+                        final date =
+                            DateFormat.yMMMd().format(transaction.datePaid!);
 
                         return Card(
                           child: ListTile(
@@ -221,7 +235,11 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                             subtitle: Text("${transaction.paymentMode}"),
                             trailing: Text(date),
                             onTap: () async {
-                              final String date = DateFormat.yMMMd().format(transaction.datePaid!);
+                              final String date = DateFormat.yMMMd()
+                                  .format(transaction.datePaid!);
+                              // contain the index of the card
+                              
+                              
 
                               // receipt = Invoice(
                               //     name: name,
@@ -232,10 +250,17 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
 
                               // log(receipt.name.toString(), name: "RECEIPT OBJECT");
 
-                              final pdfFile = await PdfApi.pdfGeneration('Akilla 2', date, name,
-                                  paymentTransactions[index].amount.toString(), "Service Charge");
+                              final pdfFile = await PdfApi.pdfGeneration(
+                                  'Akilla 2',
+                                  date,
+                                  name,
+                                  paymentTransactions[index].amount.toString(),
+                                  "Service Charge");
                               log(pdfFile.toString(), name: "PDF FILE PATH");
                               previewPDF(pdfFile, transaction.datePaid!);
+                              // save file object using provider
+                              PdfApi().setIndex(pdfFile);
+
                             },
                           ),
                         );

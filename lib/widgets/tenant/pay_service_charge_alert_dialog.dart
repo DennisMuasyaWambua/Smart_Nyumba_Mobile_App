@@ -1,14 +1,24 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:smart_nyumba/utils/providers/payment_provider.dart';
+import 'package:smart_nyumba/utils/providers/shared_preference_builder.dart';
+import 'package:smart_nyumba/utils/providers/tenants_profile_provider.dart';
 import 'package:smart_nyumba/widgets/button_layout.dart';
 
 class PayServiceChargeAlertDialog extends StatefulWidget {
   const PayServiceChargeAlertDialog({super.key});
 
   @override
-  State<PayServiceChargeAlertDialog> createState() => _PayServiceChargeAlertDialogState();
+  State<PayServiceChargeAlertDialog> createState() =>
+      _PayServiceChargeAlertDialogState();
 }
 
-class _PayServiceChargeAlertDialogState extends State<PayServiceChargeAlertDialog> {
+class _PayServiceChargeAlertDialogState
+    extends State<PayServiceChargeAlertDialog> {
   late TextEditingController controller;
 
   @override
@@ -86,7 +96,53 @@ class _PayServiceChargeAlertDialogState extends State<PayServiceChargeAlertDialo
                 'Pay',
                 style: TextStyle(color: Colors.white),
               ),
-              onClick: () {},
+              onClick: () {
+                var token = SharedPrefrenceBuilder.getUserToken;
+
+                log(token.toString(),
+                    name: "TOKEN BEING SHARED WITH PROVIDER STATE MANAGER");
+                var user = Provider.of<TenantsProfile>(context, listen: false)
+                    .getUserProfile(token!);
+
+                user.then((value) {
+                  log(value.email.toString(), name: "THIS IS THE USERS EMAIL");
+                  var mobile = value.user!.mobileNumber.toString();
+                  if (controller.text.isNotEmpty) {
+                    mobile = controller.text.toString();
+                  }
+
+                  String amt = value.propertyBlock!.serviceCharge.toString() ;
+                  String serviceName = "Service charge";
+                  var pay = Provider.of<Payments>(context, listen: false)
+                      .payServiceCharge(mobile, amt, serviceName);
+
+                  pay.then((value) {
+                    log(value.toJson().toString(), name: "PAYMENT RESULT");
+                  });
+                });
+
+                Timer.periodic(const Duration(seconds: 10), (timer) {
+                  var check = Provider.of<Payments>(context, listen: false)
+                      .checkPaymentStatus();
+                  check.then((value) {
+                    if (value == 0) {
+                      log("$value payment was successful",
+                          name: "PAYMENT SUCCESS");
+                      timer.cancel();
+                    } else {
+                      
+                      timer.cancel();
+                      log("$value payment failed", name: "PAYMENT FAILED");
+                      timer.cancel();
+                    }
+                    log(value.toString(),
+                        name: "FROM CHECKING THE PAYMENT RESULT");
+                  });
+                  timer.cancel();
+
+                  timer.cancel();
+                });
+              },
             ),
           ],
         ),

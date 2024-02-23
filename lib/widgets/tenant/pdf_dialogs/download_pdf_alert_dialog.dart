@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_nyumba/screens/tenant/all_transactions_data.dart';
+import 'package:smart_nyumba/utils/api_helpers/pdf_invoice_api.dart';
 
 import '../../../utils/constants/colors.dart';
 
@@ -22,7 +27,8 @@ class _DownloadPDFAlertDialogState extends State<DownloadPDFAlertDialog> {
 
   @override
   void didChangeDependencies() {
-    pdfNameController.text = "Service Charge Receipt - ${DateFormat.yMMMd().format(widget.date)}";
+    pdfNameController.text =
+        "Service Charge Receipt - ${DateFormat.yMMMd().format(widget.date)}";
     super.didChangeDependencies();
   }
 
@@ -69,7 +75,15 @@ class _DownloadPDFAlertDialogState extends State<DownloadPDFAlertDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    //saving the pdf to the device
+                    // PdfApi.saveDocument(name:pdfNameController.text, pdf:  );
+                    // Getting the index of the current card
+                    // Document pdf = Provider.of<PdfApi>(context).index;
+                    // PdfApi.saveDocument(
+                    //     name: pdfNameController.text,
+                    //     pdf: Provider.of<PdfApi>(context).index);
+                  },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 32,

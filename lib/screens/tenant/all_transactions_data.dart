@@ -91,24 +91,11 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
     );
   }
 
-  // savePdf(int index) async {
-  //   final documentDirectory = await getExternalStorageDirectory();
-  //   String documentPath =
-  //       "${documentDirectory!.parent.parent.parent.parent.parent.parent.path}/self/primary/documents";
-  //   log(documentPath, name: "THIS IS THE DOCUMENT PATH");
-  //   int timestamp = DateTime.now().millisecondsSinceEpoch;
-  //   final pdfFile = File("$documentPath/$index-receipt-$timestamp.pdf");
-  //   log(documentPath + '/$index-receipt-$timestamp.pdf'.toString(), name: "DOCUMENT PATH");
-
-  //   file.writeAsBytesSync(await pdf.save());
-  //   setState(() {
-  //     file = pdfFile;
-  //   });
-  // }
-
   previewPDF(pw.Document pdfDoc, DateTime datePaid) {
     showDialog(
-        context: context, builder: (_) => PreviewPDFAlertDialog(document: pdfDoc, datePaid: datePaid));
+        context: context,
+        builder: (_) =>
+            PreviewPDFAlertDialog(document: pdfDoc, datePaid: datePaid));
   }
 
   @override
@@ -127,6 +114,10 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
             );
           } else if (snapshot.hasData) {
             List<Transaction>? paymentTransactions = snapshot.data;
+            var balance = double.parse(
+                    paymentTransactions![0].annualServiceCharge.toString()) -
+                paymentTransactions.length;
+            log(balance.toString(), name: "BALANCE");
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -166,7 +157,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                               height:
                                   MediaQuery.of(context).size.height * 0.10),
                           Text(
-                            "KES: 0",
+                            "KES: $balance",
                             style: GoogleFonts.hind(
                                 color: Colors.white,
                                 fontSize: 21,
@@ -218,7 +209,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                       ),
                     ),
                     child: ListView.builder(
-                      itemCount: paymentTransactions!.length,
+                      itemCount: paymentTransactions.length,
                       itemBuilder: (context, index) {
                         final transaction = paymentTransactions[index];
                         final date =
@@ -230,7 +221,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                             subtitle: Text("${transaction.paymentMode}"),
                             trailing: Text(date),
                             onTap: () {
-                              final String date = DateFormat.yMMMd().format(transaction.datePaid!);
+                              final String date = DateFormat.yMMMd()
+                                  .format(transaction.datePaid!);
 
                               // receipt = Invoice(
                               //     name: name,
@@ -241,13 +233,16 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
 
                               // log(receipt.name.toString(), name: "RECEIPT OBJECT");
 
-                              final pdfFile = PdfApi.pdfGeneration('Akilla 2', date, name,
-                                  paymentTransactions[index].amount.toString(), "Service Charge");
+                              final pdfFile = PdfApi.pdfGeneration(
+                                  'Akilla 2',
+                                  date,
+                                  name,
+                                  paymentTransactions[index].amount.toString(),
+                                  "Service Charge");
                               log(pdfFile.toString(), name: "PDF FILE PATH");
                               previewPDF(pdfFile, transaction.datePaid!);
                               // save file object using provider
                               // PdfApi().setIndex(pdfFile);
-
                             },
                           ),
                         );

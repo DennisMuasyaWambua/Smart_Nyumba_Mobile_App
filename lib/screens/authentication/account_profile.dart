@@ -17,6 +17,7 @@ class AccountProfile extends StatefulWidget {
 
 class _ProfileState extends State<AccountProfile> {
   String email = ' ';
+  String mail = ' ';
   String name = ' ';
   int blockNumber = 0;
   String houseNumber = ' ';
@@ -46,6 +47,7 @@ class _ProfileState extends State<AccountProfile> {
     account.then((value) async {
       setState(() {
         email = value.profile!.user!.email!;
+        mail = email;
         name = value.profile!.user!.firstName!;
         blockNumber = value.profile!.propertyBlock!.block!;
         houseNumber = value.profile!.propertyBlock!.houseNumber!;
@@ -147,28 +149,36 @@ class _ProfileState extends State<AccountProfile> {
                       child: Text(
                         "Name: $name",
                         style: GoogleFonts.hind(
-                            fontSize: 13, fontWeight: FontWeight.w400, color: Colors.grey),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey),
                       )),
                   Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         "Email: $email",
                         style: GoogleFonts.hind(
-                            fontSize: 13, fontWeight: FontWeight.w400, color: Colors.grey),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey),
                       )),
                   Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         "Block number: $blockNumber",
                         style: GoogleFonts.hind(
-                            fontSize: 13, fontWeight: FontWeight.w400, color: Colors.grey),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey),
                       )),
                   Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         "House number: $houseNumber",
                         style: GoogleFonts.hind(
-                            fontSize: 13, fontWeight: FontWeight.w400, color: Colors.grey),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey),
                       ))
                 ],
               ),
@@ -222,7 +232,10 @@ class _ProfileState extends State<AccountProfile> {
                 ],
               ),
             ),
-            const LogoutButton(),
+             LogoutButton(
+              
+              email:mail ,
+            ),
           ],
         ),
       ),

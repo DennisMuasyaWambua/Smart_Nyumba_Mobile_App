@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:smart_nyumba/utils/providers/_providers.dart';
+import 'package:smart_nyumba/utils/providers/auth_provider.dart';
 
 import '../button_layout.dart';
 
 class LogoutButton extends StatelessWidget {
-  const LogoutButton({super.key});
+  final email ;
+  const LogoutButton({super.key,required this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +30,15 @@ class LogoutButton extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          onClick: () {},
+          onClick: () {
+            // send a request to logout
+            log(email.toString(),name: "LOGOUT EMAIL",);
+
+            var out = Auth().logout(email);
+            out.then((value) {
+              log(value.toString(), name: "LOGOUT MESSAGE");
+            });
+          },
         ),
       ],
     );

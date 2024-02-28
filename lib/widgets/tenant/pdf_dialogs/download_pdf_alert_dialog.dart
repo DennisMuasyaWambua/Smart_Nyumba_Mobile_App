@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../utils/constants/colors.dart';
 
@@ -44,19 +47,75 @@ class _DownloadPDFAlertDialogState extends State<DownloadPDFAlertDialog> {
     super.dispose();
   }
 
-  static Future<File> saveDocument({
+  static Future<bool> _CheckPermissions(Permission permission) async {
+    AndroidDeviceInfo build = await DeviceInfoPlugin().androidInfo;
+    if (build.version.sdkInt >= 30) {
+      var re = await Permission.manageExternalStorage.request();
+      if (re.isGranted) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (await permission.isGranted) {
+        return true;
+      } else {
+        var result = await permission.request();
+        if (result.isGranted) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+  }
+
+  Future<File> saveDocument({
     required String name,
     required pw.Document pdf,
   }) async {
     // final bytes = await pdf.save();
-
+    // checking permissions and granting them if not granted
+    if (await _CheckPermissions(Permission.storage) == true) {
+      log("Permission Granted", name: "PERMISSION GRANTED");
+    } else {
+      log("Permission Denied", name: "PERMISSION DENIED");
+    }
+    var newName = name.replaceAll(" ", "_");
     Directory dir = await getApplicationDocumentsDirectory();
     debugPrint(dir.path);
+    log(dir.parent.parent.parent.path, name: "APPS DOCUMENT DIRECTORY");
     log("${dir.parent.parent.parent.parent.parent.parent.path}storage/self/primary/Download",
         name: "PATH");
-    File file = File("${dir.path}/$name");
+    var downloadsPath =
+        "${dir.parent.parent.parent.parent.parent.parent.path}storage/self/primary/Download";
+    File file = File("$downloadsPath/$newName.pdf");
+    log(file.toString(), name: "FILE LOCATION");
 
-    await file.writeAsBytes(await pdf.save());
+    try {
+      await file.writeAsBytes(await pdf.save());
+      log("Documment was successfully saved",
+          name: "DOCUMENT DOWNLOAD SUCCESS");
+    } catch (e) {
+      log("Error saving pdf: $e");
+    }
+
+    // checking if the file exists
+    bool fileExists = await file.exists();
+    if (fileExists) {
+      log("The file exists", name: "FILE EXISTS");
+      showDialog(
+          context: context,
+          builder: ((_) => AlertDialog(
+                content: Container(width:300,height:100,child: Center(child: Text("success"))),
+              )));
+      Future.delayed(Duration(seconds: 3), () {
+          Navigator.of(context).pop();
+      });
+      
+    } else {
+      log("the file does not exists", name: "NO SUCH FILE");
+    }
 
     return file;
   }
@@ -92,13 +151,12 @@ class _DownloadPDFAlertDialogState extends State<DownloadPDFAlertDialog> {
             ),
           ),
           const Text("Save to"),
-          Padding(
-            padding: const EdgeInsets.only(top: 12.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () => saveDocument(name: pdfNameController.text, pdf: widget.document),
+          Row(
+            children: [
+              Center(
+                child: ElevatedButton(
+                  onPressed: () => saveDocument(
+                      name: pdfNameController.text, pdf: widget.document),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 32,
@@ -113,20 +171,21 @@ class _DownloadPDFAlertDialogState extends State<DownloadPDFAlertDialog> {
                     ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: lightGold,
-                  ),
-                  child: const Text(
-                    "Google Drive",
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+              // SizedBox(width: 10.0,),
+              // ElevatedButton(
+              //   onPressed: () {},
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: lightGold,
+              //   ),
+              //   child: const Text(
+              //     "Drive",
+              //     style: TextStyle(
+              //       color: Colors.black,
+              //     ),
+              //   ),
+              // ),
+            ],
           )
         ],
       ),

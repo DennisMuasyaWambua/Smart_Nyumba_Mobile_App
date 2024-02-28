@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quickalert/quickalert.dart';
 import 'package:smart_nyumba/utils/providers/payment_provider.dart';
 import 'package:smart_nyumba/utils/providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/utils/providers/tenants_profile_provider.dart';

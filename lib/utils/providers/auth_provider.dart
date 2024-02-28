@@ -87,7 +87,7 @@ class Auth with ChangeNotifier {
       // Saving the token from logging in
 
       // SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
-      if (loginResponseMessage.accessToken != null) {
+      if (loginResponseMessage.message == "Login Successful") {
         SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
 
         loginResponseMessage.role != null
@@ -99,37 +99,11 @@ class Auth with ChangeNotifier {
         SharedPrefrenceBuilder.setExpirationTime(
           DateTime.now().add(const Duration(hours: 1)),
         );
-        // log(SharedPrefrenceBuilder.getExpirationTime!, name: "Token Expiration Time");
-        // log(loginResponseMessage.status.toString(), name: "Status");
-        // showDialog(
-        //   context: context,
-        //   builder: (BuildContext context) => Alert().alert(
-        //     loginResponseMessage.message.toString(),
-        //   ),
-        // );
-        // log(loginResponseMessage.message.toString(), name: "Success message");
+        
         notifyListeners();
         return loginResponseMessage;
-      } else {
-        // log(loginResponseMessage.status.toString(), name: "Status");
-        // log(loginResponseMessage.message.toString(), name: "Error message");
-        // showDialog(
-        //     context: context,
-        //     builder: (BuildContext context) =>
-        //         Alert().alert(loginResponseMessage.message.toString()));
-        // print(loginResponseMessage.message);
-        if (loginResponseMessage.message == "Invalid data provided") {
-          return LoginResponseMessage(
-              status: false, message: "Enter a valid email address");
-        } else if (loginResponseMessage.message ==
-            "Please provide correct username or password") {
-          return LoginResponseMessage(
-              status: false, message: "Invalid username or password");
-        } else if (loginResponseMessage.message == "user does not exist") {
-          return LoginResponseMessage(
-              status: false, message: "User does not exist");
-        } else if (loginResponseMessage.message ==
-            "tenant with this email does not exist") {
+      } else{
+      
           try {
             var adminUri = Uri.parse(adminLoginEndPoint);
             final adminResponse = await http
@@ -153,13 +127,26 @@ class Auth with ChangeNotifier {
                 name: "Admin exception message from login");
             throw Exception(e.toString());
           }
-        }
+        
         return loginResponseMessage;
       }
     } catch (e) {
       log("${Exception(e.toString())}", name: "Exception message from login");
 
       throw Exception(e.toString());
+    }
+  }
+
+  // logout url
+   logout(String email) async {
+    try {
+      String logoutUrl = Constants.LOGIN_URL;
+
+      var logut = await http.post(Uri.parse(logoutUrl), body: {"email": email});
+      log(logut.body.toString(), name: "LOGOUT");
+      return logut.toString();
+    } catch (e) {
+      return e;
     }
   }
 

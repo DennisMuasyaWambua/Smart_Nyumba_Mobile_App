@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../widgets/auth/logout_button.dart';
 
 class AdminProfile extends StatelessWidget {
   static const routeName = "/admin-profile";
@@ -71,7 +70,7 @@ class AdminProfile extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const LogoutButton(),
+                  // const LogoutButton(email: ,),
                 ],
               ),
             ),

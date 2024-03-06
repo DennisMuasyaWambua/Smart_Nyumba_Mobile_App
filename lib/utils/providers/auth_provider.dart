@@ -87,7 +87,7 @@ class Auth with ChangeNotifier {
       // Saving the token from logging in
 
       // SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
-      if (loginResponseMessage.message == "Login Successful") {
+      if (loginResponseMessage.accessToken != null) {
         SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
 
         loginResponseMessage.role != null
@@ -103,8 +103,8 @@ class Auth with ChangeNotifier {
         notifyListeners();
         return loginResponseMessage;
       } else{
+        
       
-          try {
             var adminUri = Uri.parse(adminLoginEndPoint);
             final adminResponse = await http
                 .post(adminUri, body: {'email': email, 'password': password});
@@ -122,13 +122,9 @@ class Auth with ChangeNotifier {
               notifyListeners();
               return adminResponseMessage;
             }
-          } catch (e) {
-            log("${Exception(e.toString())}",
-                name: "Admin exception message from login");
-            throw Exception(e.toString());
-          }
+          
+        return adminResponseMessage;
         
-        return loginResponseMessage;
       }
     } catch (e) {
       log("${Exception(e.toString())}", name: "Exception message from login");

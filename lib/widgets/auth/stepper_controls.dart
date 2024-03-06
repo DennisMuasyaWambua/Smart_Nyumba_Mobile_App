@@ -156,13 +156,14 @@ class _StepperControlsState extends State<StepperControls> {
                                           );
                                         });
 
-                                    Navigator.of(context).pushReplacementNamed(Otp.routeName);
+                                    
                                   } else {
                                     setState(() {
                                       isLoading = false;
                                       authErrorString = value.message;
                                     });
                                   }
+                                  Navigator.of(context).pushReplacementNamed(Otp.routeName);
                                 });
                               },
                         child: Text(widget.currentStep != 2 ? "CONTINUE" : "SIGN UP"),

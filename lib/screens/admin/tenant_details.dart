@@ -70,7 +70,16 @@ class TenantDetails extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Text(tenantDetails.first['PropertyBlock'].toString()),
+                          Text(tenantDetails.first['PropertyBlock']['block']['block_number'].toString()),
+                          const SizedBox(height: 16),
+                          const Text(
+                            "House number",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(tenantDetails.first['PropertyBlock']['house_number'].toString()),
                           const SizedBox(height: 16),
                           const Text(
                             "ID Number",

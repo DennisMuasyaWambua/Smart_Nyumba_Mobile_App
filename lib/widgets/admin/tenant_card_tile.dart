@@ -31,7 +31,12 @@ class TenantCardTile extends StatelessWidget {
           ),
         ),
         title: Text(tenant['name']),
-        subtitle: Text("Property Block No: ${tenant['PropertyBlock'].toString()}"),
+        subtitle: Column(
+          children: [
+            Text("Block No: ${tenant['PropertyBlock']['block']['block_number'].toString()}"),
+             Text("House Number: ${tenant['PropertyBlock']['house_number'].toString()}")
+          ],
+        ),
         trailing: tenant['is_active'] == 0
             ? const StatusIndicator(color: statusAmber)
             : const StatusIndicator(color: darkGreen),

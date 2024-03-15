@@ -90,7 +90,7 @@ class TenantSummaryCard extends StatelessWidget {
                                             color: Colors.black,
                                           ),
                                         ),
-                                        const SizedBox(height: 10),
+                                        const SizedBox(height: 5),
                                         const Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
@@ -141,7 +141,7 @@ class TenantSummaryCard extends StatelessWidget {
                                             color: Colors.black,
                                           ),
                                         ),
-                                        const SizedBox(height: 10),
+                                        const SizedBox(height: 3),
                                         const Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [

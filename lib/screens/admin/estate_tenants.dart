@@ -2,8 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_nyumba/utils/providers/get_all_tenants.dart';
-
 import '../../utils/providers/_providers.dart';
 import '../../widgets/admin/tenant_card_tile.dart';
 

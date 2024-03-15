@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_nyumba/utils/providers/get_all_tenants.dart';
 
 import '../../utils/providers/_providers.dart';
 import '../../widgets/admin/tenant_card_tile.dart';
@@ -14,6 +17,14 @@ class EstateTenants extends StatefulWidget {
 
 class _EstateTenantsState extends State<EstateTenants> {
   late AdminController tenantProvider;
+  var allTenants;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // allTenants = Provider.of<Tenancy>(context, listen: false).getAllTenants();
+  }
 
   @override
   void didChangeDependencies() {
@@ -23,14 +34,18 @@ class _EstateTenantsState extends State<EstateTenants> {
 
   @override
   Widget build(BuildContext context) {
-    List<bool?> valuesToShow = ModalRoute.of(context)!.settings.arguments as List<bool?>;
+    List<bool?> valuesToShow =
+        ModalRoute.of(context)!.settings.arguments as List<bool?>;
     List<dynamic> allTenants = tenantProvider.tenantData;
-    List<dynamic> pendingStatusTenants =
-        tenantProvider.tenantData.where((element) => element['is_active'] == 0).toList();
-    List<dynamic> activeStatusTenants =
-        tenantProvider.tenantData.where((element) => element['is_active'] == 1).toList();
+    log(allTenants.toList().toString(), name: "All Tenants");
+    List<dynamic> pendingStatusTenants = tenantProvider.tenantData
+        .where((element) => element['is_active'] == 0)
+        .toList();
+    List<dynamic> activeStatusTenants = tenantProvider.tenantData
+        .where((element) => element['is_active'] == 1)
+        .toList();
 
-    List<dynamic> renderedList = [];
+    List<dynamic> renderedList = allTenants;
 
     switch (valuesToShow.first) {
       case false:
@@ -53,7 +68,9 @@ class _EstateTenantsState extends State<EstateTenants> {
           child: Column(
             children: [
               Column(
-                children: renderedList.map((tenant) => TenantCardTile(tenant: tenant)).toList(),
+                children: renderedList
+                    .map((tenant) => TenantCardTile(tenant: tenant))
+                    .toList(),
               ),
             ],
           ),

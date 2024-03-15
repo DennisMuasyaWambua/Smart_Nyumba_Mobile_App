@@ -80,6 +80,9 @@ class Constants {
   // Account related constants
   static const String TENANTS_PROFILE = "$BASE_API_URL/auth/user-profile/";
 
+  static const String ALL_TENANTS_URL =
+      "$BASE_API_URL/block-landlord/view-all-tenats/";
+
   // image url constants
   static const String SMART_NYUMBA_BLACK = "assets/images/smartnyumbablack.png";
 

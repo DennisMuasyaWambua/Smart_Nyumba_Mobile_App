@@ -19,9 +19,12 @@ class AdminController with ChangeNotifier {
     try {
       var uri = Uri.parse(tenantEndpoint);
       final response = await http.get(uri, headers: headers);
+      // log(response.body.toString(), name: "ADMIN CONTROLLER");
 
       _rawTenantsData = json.decode(response.body);
-      _rawTenantsData ?? (tenantData = _rawTenantsData!["tenant"]);
+      _rawTenantsData != null ? (tenantData = _rawTenantsData!["tenant"]):null;
+
+      log(_rawTenantsData!["tenant"].toString(), name: "ADMIN DATA");
 
       // Keys in tenantData are: id, email, name, id_number, is_active, user, PropertyBlock
 

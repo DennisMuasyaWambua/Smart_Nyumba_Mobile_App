@@ -82,7 +82,7 @@ class PaymentSummaryCard extends StatelessWidget {
                                       color: Colors.black,
                                     ),
                                   ),
-                                  SizedBox(height: 10),
+                                  SizedBox(height: 5),
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -130,7 +130,7 @@ class PaymentSummaryCard extends StatelessWidget {
                                       color: Colors.black,
                                     ),
                                   ),
-                                  SizedBox(height: 10),
+                                  SizedBox(height: 3),
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [

@@ -95,4 +95,5 @@ class Constants {
 
   static const String ADMIN_FETCH_TENANTS =
       "https://api.smartnyumba.com/apps/api/v1/block-landlord/view-all-tenats";
+  static const String ALL_PAYMENTS = "$BASE_API_URL/admin/all-tenant-payments/";
 }

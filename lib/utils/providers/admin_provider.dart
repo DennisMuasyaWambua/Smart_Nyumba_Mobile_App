@@ -10,11 +10,12 @@ class AdminController with ChangeNotifier {
   late Map<String, dynamic>? _rawTenantsData;
   List<dynamic> tenantData = [];
 
-  void fetchTenants() async {
+   fetchTenants() async {
     String tenantEndpoint = Constants.ADMIN_FETCH_TENANTS;
     Map<String, String> headers = {
       "Authorization": "Bearer ${SharedPrefrenceBuilder.getUserToken}",
     };
+    log(SharedPrefrenceBuilder.getUserToken.toString(), name: "ADMIN_TOKEN");
 
     try {
       var uri = Uri.parse(tenantEndpoint);
@@ -22,7 +23,9 @@ class AdminController with ChangeNotifier {
       // log(response.body.toString(), name: "ADMIN CONTROLLER");
 
       _rawTenantsData = json.decode(response.body);
-      _rawTenantsData != null ? (tenantData = _rawTenantsData!["tenant"]):null;
+      _rawTenantsData != null
+          ? (tenantData = _rawTenantsData!["tenant"])
+          : null;
 
       log(_rawTenantsData!["tenant"].toString(), name: "ADMIN DATA");
 

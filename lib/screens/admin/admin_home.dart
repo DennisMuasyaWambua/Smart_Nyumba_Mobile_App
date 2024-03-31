@@ -1,12 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_nyumba/utils/models/all_transactions.dart';
+import 'package:smart_nyumba/utils/providers/admin_provider.dart';
 import '../../widgets/admin/_summary_cards.dart';
 
-class AdminHome extends StatelessWidget {
+class AdminHome extends StatefulWidget {
   static const routeName = "/admin-home";
 
   const AdminHome({super.key});
-  
-  
+
+  @override
+  State<AdminHome> createState() => _AdminHomeState();
+}
+
+class _AdminHomeState extends State<AdminHome> {
+  late AdminController tenantProvider;
+  late AllTransactions adminProvider;
+  @override
+  void didChangeDependencies() {
+    Provider.of<AdminController>(context, listen: false);
+    tenantProvider = Provider.of<AdminController>(context, listen: false);
+    tenantProvider.fetchTenants();
+    
+
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {

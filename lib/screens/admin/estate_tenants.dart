@@ -32,6 +32,7 @@ class _EstateTenantsState extends State<EstateTenants> {
 
   @override
   Widget build(BuildContext context) {
+    
     List<bool?> valuesToShow =
         ModalRoute.of(context)!.settings.arguments as List<bool?>;
     List<dynamic> allTenants = tenantProvider.tenantData;

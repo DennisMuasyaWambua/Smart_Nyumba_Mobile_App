@@ -1,8 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_nyumba/utils/providers/all_transactions.dart';
 
 import '../../utils/constants/colors.dart';
-import '../../utils/providers/_providers.dart';
 import '../../widgets/status_indicator.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -14,22 +16,30 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  late AdminController tenantProvider;
+  late AllTransactions tenantProvider;
+  
 
   @override
   void didChangeDependencies() {
-    tenantProvider = Provider.of<AdminController>(context, listen: false);
+    Provider.of<AllTransactions>(context, listen: false).fetchEstatePayments();
+    tenantProvider = Provider.of<AllTransactions>(context, listen: false);
+    tenantProvider.fetchEstatePayments();
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<bool?> valuesToShow = ModalRoute.of(context)!.settings.arguments as List<bool?>;
+    log(tenantProvider.tenantData.toString(), name: "TENANT PROVIDER DATA");
+    List<bool?> valuesToShow =
+        ModalRoute.of(context)!.settings.arguments as List<bool?>;
     List<dynamic> allTenants = tenantProvider.tenantData;
-    List<dynamic> pendingStatusTenants =
-        tenantProvider.tenantData.where((element) => element['is_active'] == 0).toList();
-    List<dynamic> activeStatusTenants =
-        tenantProvider.tenantData.where((element) => element['is_active'] == 1).toList();
+    log(allTenants.toString(), name: "ALL TENANTS LIST");
+    List<dynamic> pendingStatusTenants = tenantProvider.tenantData
+        .where((element) => element['user']['is_active'] == 0)
+        .toList();
+    List<dynamic> activeStatusTenants = tenantProvider.tenantData
+        .where((element) => element['user']['is_active'] == 1)
+        .toList();
 
     List<dynamic> renderedList = [];
 
@@ -67,9 +77,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           color: lightGrey,
                         ),
                       ),
-                      title: Text(tenant['name']),
-                      subtitle: Text("Property Block No: ${tenant['PropertyBlock'].toString()}"),
-                      trailing: tenant['is_active'] == 0
+                      title: Text(tenant['user']['first_name']),
+                      subtitle: Column(
+                        children: [
+                          Text("Service charge paid: ${tenant['amount']}"),
+                          Text("Mode of payment: ${tenant['payment_mode']}"),
+                          Text("Date paid: ${tenant['date_paid']}"),
+                        
+                         
+                        ],
+                      ),
+                      trailing: tenant['user']['is_active'] == 0
                           ? const StatusIndicator(color: statusAmber)
                           : const StatusIndicator(color: darkGreen),
                     ),

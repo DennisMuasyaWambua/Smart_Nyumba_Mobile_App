@@ -48,12 +48,18 @@ dependencies:
   pinput: ^3.0.1
   quickalert: ^1.0.1
   flutter_launcher_icons: ^0.13.1
-  data_table_2: ^2.5.8
   pdf: ^3.10.6
   path_provider: ^2.1.1
-  pdf_viewer_plugin: ^2.0.1
   open_file: ^3.3.2
-  permission_handler: ^11.1.0
+  http: ^1.1.0
+  permission_handler: ^11.3.0
+  flutter_svg: ^2.0.9
+  intl: ^0.19.0
+  printing: ^5.11.1
+  dropdown_button2: ^2.3.9
+  internet_connection_checker: ^1.0.0+1
+  device_info_plus: ^9.1.2
+
 
 dev_dependencies:
   flutter_test:
@@ -67,7 +73,8 @@ dev_dependencies:
   flutter_lints: ^2.0.0
 
 flutter_icons:
-  image_path: "assets/images/smartnyumbablack.png"
+  image_path: "assets/images/launcher_icon.png"
+  adaptive_icon_background: "#FFFFFF"
   android: "launcher_icon"
   ios: true
 
@@ -91,10 +98,15 @@ flutter:
     - assets/images/logo.png
     - assets/images/mansion.jpg
     - assets/images/home.png
+    - assets/images/launcher_icon.png
     - assets/images/smartnyumba.svg
     - assets/images/smartnyumbablack.png
     - assets/images/person.png
     - assets/images/account_icon.png
+    - assets/icons/home.svg
+    - assets/icons/home-activated.svg
+    - assets/icons/user.svg
+    - assets/icons/user-activated.svg
     - .env
 
 

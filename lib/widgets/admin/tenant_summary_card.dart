@@ -1,22 +1,59 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_nyumba/utils/models/all_tenants.dart';
 
 import '../../screens/admin/_admin.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/providers/admin_provider.dart';
 import '../status_indicator.dart';
 
-class TenantSummaryCard extends StatelessWidget {
+class TenantSummaryCard extends StatefulWidget {
   const TenantSummaryCard({super.key});
 
   @override
+  State<TenantSummaryCard> createState() => _TenantSummaryCardState();
+}
+
+class _TenantSummaryCardState extends State<TenantSummaryCard> {
+  List occupants = [];
+  Tenant? occupant;
+  int active = 0;
+  int inactive = 0;
+  getTenants() {
+    var tenant = AdminController().getTenants();
+
+    tenant.then((value) {
+      setState(() {
+        occupants = value;
+      });
+
+  
+
+      log(active.toString(), name: "ACTIVE");
+      log(inactive.toString(), name: "INACTIVE");
+      log(value.length.toString(), name: "TENANTS LENGTH");
+      log(value[0].toJson().toString(), name: "TENANTS Content");
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getTenants();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    AdminController tenantProvider = Provider.of<AdminController>(context, listen: false);
+    AdminController tenantProvider =
+        Provider.of<AdminController>(context, listen: false);
     tenantProvider.fetchTenants();
-    
+
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed(EstateTenants.routeName, arguments: [null]),
+      onTap: () => Navigator.of(context)
+          .pushNamed(EstateTenants.routeName, arguments: [null]),
       child: Card(
         elevation: 4,
         child: Padding(
@@ -41,7 +78,8 @@ class TenantSummaryCard extends StatelessWidget {
               ),
               SizedBox(
                 height: 150,
-                child: tenantProvider.tenantData.isNotEmpty
+                child: tenantProvider.tenantData.isNotEmpty ||
+                        occupants.isNotEmpty
                     ? Row(
                         children: [
                           Expanded(
@@ -49,7 +87,7 @@ class TenantSummaryCard extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  tenantProvider.tenantData.length.toString(),
+                                  occupants.length.toString(),
                                   style: const TextStyle(fontSize: 32),
                                 ),
                                 const SizedBox(height: 10),
@@ -62,14 +100,17 @@ class TenantSummaryCard extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 TextButton(
-                                  onPressed: () => Navigator.of(context).pushNamed(
+                                  onPressed: () =>
+                                      Navigator.of(context).pushNamed(
                                     EstateTenants.routeName,
                                     arguments: [false],
                                   ),
                                   style: ButtonStyle(
-                                    overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                                    overlayColor: MaterialStateProperty
+                                        .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
-                                        if (states.contains(MaterialState.pressed)) {
+                                        if (states
+                                            .contains(MaterialState.pressed)) {
                                           return Colors.transparent;
                                         }
                                         return null;
@@ -82,7 +123,8 @@ class TenantSummaryCard extends StatelessWidget {
                                       children: [
                                         Text(
                                           tenantProvider.tenantData
-                                              .where((element) => element['is_active'] == 0)
+                                              .where((element) =>
+                                                  element['is_active'] == 0)
                                               .length
                                               .toString(),
                                           style: const TextStyle(
@@ -113,14 +155,17 @@ class TenantSummaryCard extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 2),
                                 TextButton(
-                                  onPressed: () => Navigator.of(context).pushNamed(
+                                  onPressed: () =>
+                                      Navigator.of(context).pushNamed(
                                     EstateTenants.routeName,
                                     arguments: [true],
                                   ),
                                   style: ButtonStyle(
-                                    overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                                    overlayColor: MaterialStateProperty
+                                        .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
-                                        if (states.contains(MaterialState.pressed)) {
+                                        if (states
+                                            .contains(MaterialState.pressed)) {
                                           return Colors.transparent;
                                         }
                                         return null;
@@ -133,7 +178,8 @@ class TenantSummaryCard extends StatelessWidget {
                                       children: [
                                         Text(
                                           tenantProvider.tenantData
-                                              .where((element) => element['is_active'] == 1)
+                                              .where((element) =>
+                                                  element['is_active'] == 1)
                                               .length
                                               .toString(),
                                           style: const TextStyle(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:provider/provider.dart';
+import 'package:smart_nyumba/utils/providers/auth_provider.dart';
+import 'package:smart_nyumba/widgets/auth/_auth_widgets.dart';
 
 class AdminProfile extends StatelessWidget {
   static const routeName = "/admin-profile";
@@ -9,6 +11,7 @@ class AdminProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var email = Provider.of<Auth>(context, listen: false).email;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Profile'),
@@ -30,7 +33,8 @@ class AdminProfile extends StatelessWidget {
                       child: Column(
                         children: [
                           const CircleAvatar(
-                            backgroundImage: AssetImage("assets/images/account_icon.png"),
+                            backgroundImage:
+                                AssetImage("assets/images/account_icon.png"),
                             radius: 34,
                           ),
                           const SizedBox(height: 12),
@@ -66,6 +70,8 @@ class AdminProfile extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           const Text("4"),
+                          const SizedBox(height: 4),
+                          LogoutButton(email: email)
                         ],
                       ),
                     ),

@@ -28,4 +28,17 @@ class AllTransactions with ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future getServiceChargePayments() async {
+    String allPayments = Constants.ALL_PAYMENTS;
+
+    Map<String, String> headers = {
+      "Authorization": "Bearer ${SharedPrefrenceBuilder.getUserToken}",
+    };
+
+    var allPaymentsUri = Uri.parse(allPayments);
+    final response = await http.get(allPaymentsUri, headers: headers);
+
+    log(response.body, name: "PAYMENTS FUTURE");
+  }
 }

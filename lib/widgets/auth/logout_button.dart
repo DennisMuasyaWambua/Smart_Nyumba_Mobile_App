@@ -1,14 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:smart_nyumba/screens/authentication/_auth.dart';
 import 'package:smart_nyumba/utils/providers/_providers.dart';
 import 'package:smart_nyumba/utils/providers/auth_provider.dart';
 
 import '../button_layout.dart';
 
 class LogoutButton extends StatelessWidget {
-  final email ;
-  const LogoutButton({super.key,required this.email});
+  final email;
+  const LogoutButton({super.key, required this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +33,16 @@ class LogoutButton extends StatelessWidget {
           ),
           onClick: () {
             // send a request to logout
-            log(email.toString(),name: "LOGOUT EMAIL",);
+            log(
+              email.toString(),
+              name: "LOGOUT EMAIL",
+            );
 
             var out = Auth().logout(email);
             out.then((value) {
-              log(value.toString(), name: "LOGOUT MESSAGE");
+              if (value.toString() == 'true') {
+                Navigator.of(context).pushReplacementNamed(Login.routeName);
+              }
             });
           },
         ),

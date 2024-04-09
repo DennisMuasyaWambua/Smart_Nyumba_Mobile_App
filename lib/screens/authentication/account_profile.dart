@@ -107,7 +107,7 @@ class _ProfileState extends State<AccountProfile> {
                 fontWeight: FontWeight.w400,
                 height: 0.06,
                 letterSpacing: 0.32,
-              ),
+              ),  
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.05,

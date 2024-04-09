@@ -17,13 +17,13 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   late AllTransactions tenantProvider;
-  
 
   @override
   void didChangeDependencies() {
     Provider.of<AllTransactions>(context, listen: false).fetchEstatePayments();
     tenantProvider = Provider.of<AllTransactions>(context, listen: false);
     tenantProvider.fetchEstatePayments();
+    AllTransactions().getServiceChargePayments();
     super.didChangeDependencies();
   }
 
@@ -83,8 +83,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           Text("Service charge paid: ${tenant['amount']}"),
                           Text("Mode of payment: ${tenant['payment_mode']}"),
                           Text("Date paid: ${tenant['date_paid']}"),
-                        
-                         
                         ],
                       ),
                       trailing: tenant['user']['is_active'] == 0

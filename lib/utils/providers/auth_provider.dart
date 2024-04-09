@@ -78,6 +78,7 @@ class Auth with ChangeNotifier {
           await http.post(uri, body: {'email': email, 'password': password});
       // log(uri.toString(), name: "LOGIN URL");
       // debugPrint(response.body);
+
       log(response.body.toString(), name: " RESPONSE");
       // log(response.statusCode.toString(), name: "Status code");
       loginResponseMessage =
@@ -99,32 +100,29 @@ class Auth with ChangeNotifier {
         SharedPrefrenceBuilder.setExpirationTime(
           DateTime.now().add(const Duration(hours: 1)),
         );
-        
+
         notifyListeners();
         return loginResponseMessage;
-      } else{
-        
-      
-            var adminUri = Uri.parse(adminLoginEndPoint);
-            final adminResponse = await http
-                .post(adminUri, body: {'email': email, 'password': password});
-            LoginResponseMessage adminResponseMessage =
-                LoginResponseMessage.fromJson(json.decode(adminResponse.body));
+      } else {
+        var adminUri = Uri.parse(adminLoginEndPoint);
+        final adminResponse = await http
+            .post(adminUri, body: {'email': email, 'password': password});
+        LoginResponseMessage adminResponseMessage =
+            LoginResponseMessage.fromJson(json.decode(adminResponse.body));
 
-            if (adminResponseMessage.accessToken != null) {
-              SharedPrefrenceBuilder.setUserToken(
-                  adminResponseMessage.accessToken!);
-              SharedPrefrenceBuilder.setUserRole(adminResponseMessage.role!);
-              setToken(adminResponseMessage.accessToken!);
-              SharedPrefrenceBuilder.setExpirationTime(
-                DateTime.now().add(const Duration(hours: 1)),
-              );
-              notifyListeners();
-              return adminResponseMessage;
-            }
-          
+        if (adminResponseMessage.accessToken != null) {
+          SharedPrefrenceBuilder.setUserToken(
+              adminResponseMessage.accessToken!);
+          SharedPrefrenceBuilder.setUserRole(adminResponseMessage.role!);
+          setToken(adminResponseMessage.accessToken!);
+          SharedPrefrenceBuilder.setExpirationTime(
+            DateTime.now().add(const Duration(hours: 1)),
+          );
+          notifyListeners();
+          return adminResponseMessage;
+        }
+
         return adminResponseMessage;
-        
       }
     } catch (e) {
       log("${Exception(e.toString())}", name: "Exception message from login");
@@ -134,13 +132,34 @@ class Auth with ChangeNotifier {
   }
 
   // logout url
-   logout(String email) async {
+  logout(String email) async {
+    bool isLoggedout = false;
+    Map<String, String> headers = {
+      "Authorization": "Bearer ${SharedPrefrenceBuilder.getUserToken}",
+    };
     try {
-      String logoutUrl = Constants.LOGIN_URL;
+      String logoutUrl = Constants.LOGOUT_URL;
 
-      var logut = await http.post(Uri.parse(logoutUrl), body: {"email": email});
-      log(logut.body.toString(), name: "LOGOUT");
-      return logut.toString();
+      var logout = await http
+          .post(headers: headers, Uri.parse(logoutUrl), body: {"email": email});
+      log(logout.body.toString(), name: "LOGOUT");
+      if (logout.statusCode == 200) {
+        isLoggedout = true;
+      }
+
+      if (logout.statusCode != 200) {
+        String adminLogoutUrl = Constants.ADMIN_LOGOUT_URL;
+        var adminLogout = await http.post(
+            headers: headers,
+            Uri.parse(adminLogoutUrl),
+            body: {"email": email});
+        log(adminLogout.body.toString(), name: "ADMIN LOGOUT");
+        if (adminLogout.statusCode == 200) {
+          isLoggedout = true;
+        }
+        return isLoggedout;
+      }
+      return isLoggedout;
     } catch (e) {
       return e;
     }

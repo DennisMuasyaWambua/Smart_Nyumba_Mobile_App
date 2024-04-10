@@ -111,6 +111,7 @@ class Auth with ChangeNotifier {
             LoginResponseMessage.fromJson(json.decode(adminResponse.body));
 
         if (adminResponseMessage.accessToken != null) {
+          SharedPrefrenceBuilder.setUserEmail(email);
           SharedPrefrenceBuilder.setUserToken(
               adminResponseMessage.accessToken!);
           SharedPrefrenceBuilder.setUserRole(adminResponseMessage.role!);
@@ -145,6 +146,7 @@ class Auth with ChangeNotifier {
       log(logout.body.toString(), name: "LOGOUT");
       if (logout.statusCode == 200) {
         isLoggedout = true;
+        SharedPrefrenceBuilder.removePreferences('email');
       }
 
       if (logout.statusCode != 200) {
@@ -156,6 +158,7 @@ class Auth with ChangeNotifier {
         log(adminLogout.body.toString(), name: "ADMIN LOGOUT");
         if (adminLogout.statusCode == 200) {
           isLoggedout = true;
+          SharedPrefrenceBuilder.removePreferences('email');
         }
         return isLoggedout;
       }

@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:smart_nyumba/utils/providers/auth_provider.dart';
-import 'package:smart_nyumba/widgets/auth/_auth_widgets.dart';
+import 'package:smart_nyumba/utils/providers/shared_preference_builder.dart';
+import 'package:smart_nyumba/widgets/auth/logout_button.dart';
 
-class AdminProfile extends StatelessWidget {
+class AdminProfile extends StatefulWidget {
   static const routeName = "/admin-profile";
 
   const AdminProfile({super.key});
 
   @override
+  State<AdminProfile> createState() => _AdminProfileState();
+}
+
+class _AdminProfileState extends State<AdminProfile> {
+  String? email;
+
+  @override
+  void initState() {
+    super.initState();
+    email = SharedPrefrenceBuilder.getUserEmail;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var email = Provider.of<Auth>(context, listen: false).email;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Profile'),

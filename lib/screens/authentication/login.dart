@@ -129,7 +129,8 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                       onClick: () {
-                        if (_emailController.text == "" || _passwordController.text == "") {
+                        if (_emailController.text == "" ||
+                            _passwordController.text == "") {
                           setState(() {
                             authErrorString = "Empty fields";
                           });
@@ -145,9 +146,11 @@ class _LoginState extends State<Login> {
                         debugPrint("$email, $password");
 
                         log(email.toString(), name: "EMAIL PARAMETER AT LOGIN");
-                        log(password.toString(), name: "PASSWORD PARAMETER AT LOGIN");
+                        log(password.toString(),
+                            name: "PASSWORD PARAMETER AT LOGIN");
 
-                        if (!Provider.of<InternetChecker>(context, listen: false)
+                        if (!Provider.of<InternetChecker>(context,
+                                listen: false)
                             .isInternetActive) {
                           setState(() {
                             isLoading = false;
@@ -163,13 +166,13 @@ class _LoginState extends State<Login> {
                           setState(() {
                             isLoading = false;
                           });
-
+                          
                           value.message == "Login Successful"
                               ? value.role == "tenant"
-                                  ? Navigator.of(context)
-                                      .pushReplacementNamed(TenantDashboard.routeName)
-                                  : Navigator.of(context)
-                                      .pushReplacementNamed(AdminDashboard.routeName)
+                                  ? Navigator.of(context).pushReplacementNamed(
+                                      TenantDashboard.routeName)
+                                  : Navigator.of(context).pushReplacementNamed(
+                                      AdminDashboard.routeName)
                               : setState(() {
                                   authErrorString = value.message;
                                 });
@@ -181,7 +184,8 @@ class _LoginState extends State<Login> {
                         padding: const EdgeInsets.only(top: 20, bottom: 20),
                         child: TextButton(
                           onPressed: () {
-                            Navigator.of(context).pushReplacementNamed(Register.routeName);
+                            Navigator.of(context)
+                                .pushReplacementNamed(Register.routeName);
                           },
                           child: const Text(
                             'Don’t have an account? Register',

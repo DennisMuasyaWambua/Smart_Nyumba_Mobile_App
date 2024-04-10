@@ -17,9 +17,11 @@ class AdminDashboard extends StatefulWidget {
 class _AdminDashboardState extends State<AdminDashboard> {
   int myIndex = 0;
   List<Widget> pages = [const AdminHome(), const AdminProfile()];
+  
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       body: IndexedStack(
         index: myIndex,
@@ -39,7 +41,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 icon: SvgPicture.asset('assets/icons/home.svg'),
                 label: 'Home'),
             BottomNavigationBarItem(
-              activeIcon: SvgPicture.asset('assets/icons/user-activated.svg'),
+                activeIcon: SvgPicture.asset('assets/icons/user-activated.svg'),
                 icon: SvgPicture.asset('assets/icons/user.svg'),
                 label: 'Profile'),
           ]),

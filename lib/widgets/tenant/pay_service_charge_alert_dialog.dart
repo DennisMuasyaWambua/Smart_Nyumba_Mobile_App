@@ -96,6 +96,17 @@ class _PayServiceChargeAlertDialogState
                 style: TextStyle(color: Colors.white),
               ),
               onClick: () {
+                
+                  showDialog(
+                      context: context,
+                      builder: (context) => const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.amber,
+                            ),
+                          ));
+                  
+                
+
                 var token = SharedPrefrenceBuilder.getUserToken;
 
                 log(token.toString(),
@@ -110,7 +121,7 @@ class _PayServiceChargeAlertDialogState
                     mobile = controller.text.toString();
                   }
 
-                  String amt = value.propertyBlock!.serviceCharge.toString() ;
+                  String amt = value.propertyBlock!.serviceCharge.toString();
                   String serviceName = "Service charge";
                   var pay = Provider.of<Payments>(context, listen: false)
                       .payServiceCharge(mobile, amt, serviceName);
@@ -129,7 +140,6 @@ class _PayServiceChargeAlertDialogState
                           name: "PAYMENT SUCCESS");
                       timer.cancel();
                     } else {
-                      
                       timer.cancel();
                       log("$value payment failed", name: "PAYMENT FAILED");
                       timer.cancel();

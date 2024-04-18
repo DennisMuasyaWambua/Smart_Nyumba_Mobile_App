@@ -109,7 +109,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
         stream:
             Provider.of<Payments>(context, listen: false).getAllTransactions(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+                   if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(color: Color(0xFFFFD700)),
             );
@@ -269,6 +269,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
           }
         },
       ),
-    );
+        
+      );
+   
   }
 }

@@ -8,6 +8,7 @@ import 'package:smart_nyumba/utils/providers/auth_provider.dart';
 import '../button_layout.dart';
 
 class LogoutButton extends StatelessWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final email;
   const LogoutButton({super.key, required this.email});
 

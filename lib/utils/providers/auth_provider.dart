@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:smart_nyumba/utils/models/admin_profile.dart';
 
 import '../constants/constants.dart';
 import '../models/login_response_message.dart';
@@ -256,5 +257,18 @@ class Auth with ChangeNotifier {
       log(e.toString(), name: "ERROR FROM GETTING USER PROFILE");
       throw e.toString();
     }
+  }
+
+  Future getAdminProfile(String token) async {
+    String adminProfileUrl = Constants.ADMIN_PROFILE;
+    Uri uri = Uri.parse(adminProfileUrl);
+    final response = await http.get(uri, headers: {
+      'Authorization': 'Bearer $token',
+    });
+    log(token.toString(), name: "ADMIN TOKEN");
+    log(response.body.toString(), name: "ADMIN PROFILE RESPONSE");
+    AdminProfile profile = AdminProfile.fromJson(jsonDecode(response.body));
+    AdProfile adminProfile = profile.profile;
+    return adminProfile;
   }
 }

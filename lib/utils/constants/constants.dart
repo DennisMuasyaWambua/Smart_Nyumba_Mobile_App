@@ -61,10 +61,10 @@ class Constants {
   static const String REGISTER_URL = "$AUTHENTICATION_BASE_URL/user-register/";
   static const String VERIFY_OTP =
       "$AUTHENTICATION_BASE_URL/user-register-verification/";
+  static const String REGISTER_RESEND_OTP = "$AUTHENTICATION_BASE_URL/resend-otp/";
   static const String RESEND_OTP = "$AUTHENTICATION_BASE_URL/user-resend-otp/";
   static const String USER_PROFILE = "$AUTHENTICATION_BASE_URL/user-profile/";
   static const String ADMIN_PROFILE = "$AUTHENTICATION_BASE_URL/admin-profile/";
-  
 
   static const String TENANT_LOGOUT_URL =
       "https://api.smartnyumba.com/apps/api/v1/auth/user-logout/";

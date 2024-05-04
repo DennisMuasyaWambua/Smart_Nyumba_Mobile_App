@@ -77,7 +77,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           color: lightGrey,
                         ),
                       ),
-                      title: Text(tenant['user']['first_name']),
+                      title: Row(
+                        children: [
+                          Text(tenant['user']['first_name']),
+                          const SizedBox(width: 10.0,),
+                          // Text("Block No: ${tenant['user']['block']['block_number'].toString()}")
+                        ],
+                      ),
                       subtitle: Column(
                         children: [
                           Text("Service charge paid: ${tenant['amount']}"),

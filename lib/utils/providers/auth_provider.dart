@@ -193,6 +193,7 @@ class Auth with ChangeNotifier {
         "house_number": houseNumber,
         'password': password,
       });
+      SharedPrefrenceBuilder.setUserEmail(email);
       log(response.statusCode.toString(), name: "Register status code");
       log(response.body.toString(), name: "Register response");
       RegisterResponse registerResponse =
@@ -268,7 +269,7 @@ class Auth with ChangeNotifier {
     log(token.toString(), name: "ADMIN TOKEN");
     log(response.body.toString(), name: "ADMIN PROFILE RESPONSE");
     AdminProfile profile = AdminProfile.fromJson(jsonDecode(response.body));
-    AdProfile adminProfile = profile.profile;
+    AdProfile adminProfile = profile.profile; 
     return adminProfile;
   }
 }

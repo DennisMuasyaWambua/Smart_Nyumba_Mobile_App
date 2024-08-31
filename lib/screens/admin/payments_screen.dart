@@ -51,7 +51,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     //     .where((element) => element['user']['is_active'] == 1)
     //     .toList();
 
-    List<dynamic> renderedList = [];
+    // List<dynamic> renderedList = [];
 
     // switch (valuesToShow.first) {
     //   case false:

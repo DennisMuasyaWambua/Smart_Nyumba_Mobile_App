@@ -109,7 +109,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
         stream:
             Provider.of<Payments>(context, listen: false).getAllTransactions(),
         builder: (context, snapshot) {
-                   if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(color: Color(0xFFFFD700)),
             );
@@ -221,7 +221,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                           return Card(
                             child: ListTile(
                               title: Text("Ksh ${transaction.amount}"),
-                              subtitle: Text(transaction.paymentMode),
+                              subtitle: Text("${transaction.paymentMode}"),
                               trailing: Text(date),
                               onTap: () {
                                 final String date = DateFormat.yMMMd()

@@ -73,7 +73,7 @@ class Auth with ChangeNotifier {
     // log("${email.toString()}, ${password.toString()}", name: "PARAMETERS BEING  USED");
     // debugPrint(loginEndpoint);
 
-    try {
+    // try {
       var uri = Uri.parse(loginEndpoint);
       final response =
           await http.post(uri, body: {'email': email, 'password': password});
@@ -123,14 +123,14 @@ class Auth with ChangeNotifier {
           notifyListeners();
           return adminResponseMessage;
         }
-
+        notifyListeners();
         return adminResponseMessage;
       }
-    } catch (e) {
-      log("${Exception(e.toString())}", name: "Exception message from login");
+    // } catch (e) {
+    //   log("${Exception(e.toString())}", name: "Exception message from login");
 
-      throw Exception(e.toString());
-    }
+    //   throw Exception(e.toString());
+    // }
   }
 
   // logout url
@@ -269,7 +269,7 @@ class Auth with ChangeNotifier {
     log(token.toString(), name: "ADMIN TOKEN");
     log(response.body.toString(), name: "ADMIN PROFILE RESPONSE");
     AdminProfile profile = AdminProfile.fromJson(jsonDecode(response.body));
-    AdProfile adminProfile = profile.profile; 
+    AdProfile adminProfile = profile.profile;
     return adminProfile;
   }
 }

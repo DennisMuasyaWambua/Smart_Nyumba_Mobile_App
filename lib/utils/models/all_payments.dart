@@ -1,23 +1,23 @@
 // To parse this JSON data, do
 //
-//     final allTransactions = allTransactionsFromJson(jsonString);
+//     final allPayments = allPaymentsFromJson(jsonString);
 
 import 'dart:convert';
 
-AllTransactions allTransactionsFromJson(String str) => AllTransactions.fromJson(json.decode(str));
+AllPayments allPaymentsFromJson(String str) => AllPayments.fromJson(json.decode(str));
 
-String allTransactionsToJson(AllTransactions data) => json.encode(data.toJson());
+String allPaymentsToJson(AllPayments data) => json.encode(data.toJson());
 
-class AllTransactions {
+class AllPayments {
     bool status;
     List<Transaction> transactions;
 
-    AllTransactions({
+    AllPayments({
         required this.status,
         required this.transactions,
     });
 
-    factory AllTransactions.fromJson(Map<String, dynamic> json) => AllTransactions(
+    factory AllPayments.fromJson(Map<String, dynamic> json) => AllPayments(
         status: json["status"],
         transactions: List<Transaction>.from(json["transactions"].map((x) => Transaction.fromJson(x))),
     );
@@ -39,8 +39,6 @@ class Transaction {
     DateTime datePaid;
     String merchantRequestId;
     String checkoutRequestId;
-    String houseNumber;
-    BlockNumber blockNumber;
 
     Transaction({
         required this.id,
@@ -53,8 +51,6 @@ class Transaction {
         required this.datePaid,
         required this.merchantRequestId,
         required this.checkoutRequestId,
-        required this.houseNumber,
-        required this.blockNumber,
     });
 
     factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
@@ -68,8 +64,6 @@ class Transaction {
         datePaid: DateTime.parse(json["date_paid"]),
         merchantRequestId: json["MerchantRequestID"],
         checkoutRequestId: json["CheckoutRequestID"],
-        houseNumber: json["house_number"],
-        blockNumber: blockNumberValues.map[json["block_number"]]!,
     );
 
     Map<String, dynamic> toJson() => {
@@ -83,18 +77,8 @@ class Transaction {
         "date_paid": "${datePaid.year.toString().padLeft(4, '0')}-${datePaid.month.toString().padLeft(2, '0')}-${datePaid.day.toString().padLeft(2, '0')}",
         "MerchantRequestID": merchantRequestId,
         "CheckoutRequestID": checkoutRequestId,
-        "house_number": houseNumber,
-        "block_number": blockNumberValues.reverse[blockNumber],
     };
 }
-
-enum BlockNumber {
-    A1
-}
-
-final blockNumberValues = EnumValues({
-    "A1": BlockNumber.A1
-});
 
 enum PaymentMode {
     MPESA
@@ -105,17 +89,19 @@ final paymentModeValues = EnumValues({
 });
 
 enum ServiceName {
-    SERVICE_CHARGE
+    SERVICE_CHARGE,
+    WASTE
 }
 
 final serviceNameValues = EnumValues({
-    "Service charge": ServiceName.SERVICE_CHARGE
+    "Service charge": ServiceName.SERVICE_CHARGE,
+    "waste": ServiceName.WASTE
 });
 
 class User {
     List<Tenant> tenant;
-    Email email;
-    Email username;
+    String email;
+    String username;
     int role;
     String mobileNumber;
     int status;
@@ -131,8 +117,8 @@ class User {
 
     factory User.fromJson(Map<String, dynamic> json) => User(
         tenant: List<Tenant>.from(json["tenant"].map((x) => Tenant.fromJson(x))),
-        email: emailValues.map[json["email"]]!,
-        username: emailValues.map[json["username"]]!,
+        email: json["email"],
+        username: json["username"],
         role: json["role"],
         mobileNumber: json["mobile_number"],
         status: json["status"],
@@ -140,21 +126,13 @@ class User {
 
     Map<String, dynamic> toJson() => {
         "tenant": List<dynamic>.from(tenant.map((x) => x.toJson())),
-        "email": emailValues.reverse[email],
-        "username": emailValues.reverse[username],
+        "email": email,
+        "username": username,
         "role": role,
         "mobile_number": mobileNumber,
         "status": status,
     };
 }
-
-enum Email {
-    DENNIS_WAMBUA_STRATHMORE_EDU
-}
-
-final emailValues = EnumValues({
-    "dennis.wambua@strathmore.edu": Email.DENNIS_WAMBUA_STRATHMORE_EDU
-});
 
 class Tenant {
     PropertyBlock propertyBlock;
@@ -193,18 +171,18 @@ class PropertyBlock {
 }
 
 class Block {
-    BlockNumber blockNumber;
+    String blockNumber;
 
     Block({
         required this.blockNumber,
     });
 
     factory Block.fromJson(Map<String, dynamic> json) => Block(
-        blockNumber: blockNumberValues.map[json["block_number"]]!,
+        blockNumber: json["block_number"],
     );
 
     Map<String, dynamic> toJson() => {
-        "block_number": blockNumberValues.reverse[blockNumber],
+        "block_number": blockNumber,
     };
 }
 

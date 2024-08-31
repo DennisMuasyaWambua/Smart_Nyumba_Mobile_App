@@ -85,7 +85,7 @@ class Payments with ChangeNotifier {
   }
 
   Stream<List<Transaction>?> getAllTransactions() async* {
-    try {
+
       log(token!, name: "User Token");
       var allTransactions = await http.get(Uri.parse(Constants.ALL_TRANSACTIONS), headers: {
         'Authorization': 'Bearer $token',
@@ -94,11 +94,10 @@ class Payments with ChangeNotifier {
       AllTransactions all = AllTransactions.fromJson(jsonDecode(allTransactions.body));
       log(all.transactions.toString(), name: "TRANSACTIONS AVAILABLE");
       List<Transaction>? transactions = all.transactions;
+      log(transactions.toString(), name: "TRANSACTIONS TO STREAM");
 
       notifyListeners();
       yield transactions;
-    } catch (e) {
-      throw e.toString();
-    }
+
   }
 }

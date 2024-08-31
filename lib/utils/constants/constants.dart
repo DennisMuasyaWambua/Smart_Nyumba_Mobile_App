@@ -54,13 +54,17 @@ class Constants {
       "https://api.smartnyumba.com/apps/api/v1/auth";
   static const String LOGOUT_URL =
       "https://api.smartnyumba.com/apps/api/v1/auth/user-logout/";
+  static const String ADMIN_LOGOUT_URL =
+      "https://api.smartnyumba.com/apps/api/v1/auth/admin-logout/";
   // static const String AUTHENTICATION_BASE_URL = "https://smartnyumba-production.up.railway.app/apps/api/v1/auth";
   static const String LOGIN_URL = "$AUTHENTICATION_BASE_URL/user-login/";
   static const String REGISTER_URL = "$AUTHENTICATION_BASE_URL/user-register/";
   static const String VERIFY_OTP =
       "$AUTHENTICATION_BASE_URL/user-register-verification/";
+  static const String REGISTER_RESEND_OTP = "$AUTHENTICATION_BASE_URL/resend-otp/";
   static const String RESEND_OTP = "$AUTHENTICATION_BASE_URL/user-resend-otp/";
   static const String USER_PROFILE = "$AUTHENTICATION_BASE_URL/user-profile/";
+  static const String ADMIN_PROFILE = "$AUTHENTICATION_BASE_URL/admin-profile/";
 
   static const String TENANT_LOGOUT_URL =
       "https://api.smartnyumba.com/apps/api/v1/auth/user-logout/";
@@ -90,8 +94,6 @@ class Constants {
 
   // Admin-related
   static const String ADMIN_LOGIN_URL = "$AUTHENTICATION_BASE_URL/admin-login/";
-  static const String ADMIN_LOGOUT_URL =
-      "https://api.smartnyumba.com/apps/api/v1/auth/admin-logout/";
 
   static const String ADMIN_FETCH_TENANTS =
       "https://api.smartnyumba.com/apps/api/v1/block-landlord/view-all-tenats";

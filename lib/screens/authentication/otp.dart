@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
@@ -7,6 +9,7 @@ import 'package:smart_nyumba/widgets/button_layout.dart';
 import '../../utils/constants/constants.dart';
 import '../../utils/providers/auth_provider.dart';
 import '../../utils/providers/shared_preference_builder.dart';
+import 'package:http/http.dart' as http;
 
 class Otp extends StatefulWidget {
   static const routeName = "/otp";
@@ -98,7 +101,8 @@ class _OtpState extends State<Otp> {
                           isLoading = true;
                         });
                         // int ot = pin as int;
-                        var authentication = Auth().sendOtp(mail.toString(), pin);
+                        var authentication =
+                            Auth().sendOtp(mail.toString(), pin);
 
                         authentication.then((value) {
                           setState(() {
@@ -160,7 +164,18 @@ class _OtpState extends State<Otp> {
                       fontSize: 14,
                     ),
                   ),
-                  onClick: () {},
+                  onClick: () async {
+                    var email = SharedPrefrenceBuilder.getUserEmail;
+                    const String resendOtp = Constants.REGISTER_RESEND_OTP;
+                    final response = await http
+                        .post(Uri.parse(resendOtp), body: {"email": email});
+                    log(response.body.toString(), name: "RESEND CODE");
+                    showDialog(
+                        context: context,
+                        builder: ((_) => AlertDialog(
+                              content: Container(width:300,height:100,child: Center(child: Text("OTP sent check your email"))),
+                            )));
+                  },
                 ),
               ],
             ),

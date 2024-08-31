@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_nyumba/utils/models/all_transactions.dart';
 import 'package:smart_nyumba/utils/providers/admin_provider.dart';
 import '../../widgets/admin/_summary_cards.dart';
+import 'package:smart_nyumba/utils/providers/all_transactions.dart';
 
 class AdminHome extends StatefulWidget {
   static const routeName = "/admin-home";
@@ -16,12 +16,21 @@ class AdminHome extends StatefulWidget {
 class _AdminHomeState extends State<AdminHome> {
   late AdminController tenantProvider;
   late AllTransactions adminProvider;
+  var tenant;
+
+  @override
+  void initState() {
+    super.initState();
+    tenant = AdminController().getTenants();
+  }
+
   @override
   void didChangeDependencies() {
     Provider.of<AdminController>(context, listen: false);
     tenantProvider = Provider.of<AdminController>(context, listen: false);
     tenantProvider.fetchTenants();
-    
+    adminProvider = Provider.of<AllTransactions>(context, listen: false);
+    adminProvider.fetchEstatePayments();
 
     super.didChangeDependencies();
   }

@@ -109,7 +109,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
         stream:
             Provider.of<Payments>(context, listen: false).getAllTransactions(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(color: Color(0xFFFFD700)),
             );
@@ -216,7 +216,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                         itemBuilder: (context, index) {
                           final transaction = paymentTransactions[index];
                           final date =
-                              DateFormat.yMMMd().format(transaction.datePaid!);
+                              DateFormat.yMMMd().format(transaction.datePaid);
 
                           return Card(
                             child: ListTile(
@@ -225,7 +225,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                               trailing: Text(date),
                               onTap: () {
                                 final String date = DateFormat.yMMMd()
-                                    .format(transaction.datePaid!);
+                                    .format(transaction.datePaid);
 
                                 // receipt = Invoice(
                                 //     name: name,
@@ -245,7 +245,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                                         .toString(),
                                     "Service Charge");
                                 log(pdfFile.toString(), name: "PDF FILE PATH");
-                                previewPDF(pdfFile, transaction.datePaid!);
+                                previewPDF(pdfFile, transaction.datePaid);
                                 // save file object using provider
                                 // PdfApi().setIndex(pdfFile);
                               },
@@ -269,6 +269,8 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
           }
         },
       ),
-    );
+        
+      );
+   
   }
 }

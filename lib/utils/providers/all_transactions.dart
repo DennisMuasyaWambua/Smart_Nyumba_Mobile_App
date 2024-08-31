@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:smart_nyumba/utils/constants/constants.dart';
+import 'package:smart_nyumba/utils/models/all_payments.dart';
 import 'package:smart_nyumba/utils/providers/shared_preference_builder.dart';
 import 'package:http/http.dart' as http;
 
@@ -27,5 +28,23 @@ class AllTransactions with ChangeNotifier {
         : null;
 
     notifyListeners();
+  }
+
+  Future getServiceChargePayments() async {
+    String allPayments = Constants.ALL_PAYMENTS;
+
+    Map<String, String> headers = {
+      "Authorization": "Bearer ${SharedPrefrenceBuilder.getUserToken}",
+    };
+
+    var allPaymentsUri = Uri.parse(allPayments);
+    final response = await http.get(allPaymentsUri, headers: headers);
+    log(response.body, name: "PAYMENTS FUTURE");
+
+    // ignore: non_constant_identifier_names
+    AllPayments all_payments = AllPayments.fromJson(jsonDecode(response.body));
+    List<Transaction>? transactions = all_payments.transactions;
+
+    return transactions;
   }
 }

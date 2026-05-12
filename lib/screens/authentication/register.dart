@@ -16,6 +16,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   int currentStep = 0;
+  String? _selectedRole;
 
   late TextEditingController _emailController;
   late TextEditingController _firstNameController;
@@ -24,6 +25,10 @@ class _RegisterState extends State<Register> {
   late TextEditingController _blockNumberController;
   late TextEditingController _houseNumberController;
   late TextEditingController _mobileNumberController;
+  late TextEditingController _phoneNumberController;
+  late TextEditingController _approverEmailController;
+  late TextEditingController _estateNameController;
+  late TextEditingController _estateLocationController;
   late TextEditingController _passwordController;
   late TextEditingController _confirmPasswordController;
 
@@ -36,6 +41,10 @@ class _RegisterState extends State<Register> {
     _blockNumberController = TextEditingController();
     _houseNumberController = TextEditingController();
     _mobileNumberController = TextEditingController();
+    _phoneNumberController = TextEditingController();
+    _approverEmailController = TextEditingController();
+    _estateNameController = TextEditingController();
+    _estateLocationController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
     super.initState();
@@ -51,6 +60,10 @@ class _RegisterState extends State<Register> {
     _blockNumberController.dispose();
     _houseNumberController.dispose();
     _mobileNumberController.dispose();
+    _phoneNumberController.dispose();
+    _approverEmailController.dispose();
+    _estateNameController.dispose();
+    _estateLocationController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -134,12 +147,18 @@ class _RegisterState extends State<Register> {
                       currentStep: currentStep,
                       onStepContinue: () {
                         setState(() {
-                          currentStep != 2 ? currentStep = currentStep + 1 : null;
+                          // All roles now go through all steps (no skipping)
+                          if (currentStep != 2) {
+                            currentStep = currentStep + 1;
+                          }
                         });
                       },
                       onStepCancel: () {
                         setState(() {
-                          currentStep != 0 ? currentStep = currentStep - 1 : null;
+                          // Go back one step
+                          if (currentStep != 0) {
+                            currentStep = currentStep - 1;
+                          }
                         });
                       },
                       controlsBuilder: (_, ControlsDetails details) {
@@ -154,8 +173,13 @@ class _RegisterState extends State<Register> {
                           blockNumber: _blockNumberController.text,
                           houseNumber: _houseNumberController.text,
                           mobileNumber: _mobileNumberController.text,
+                          phoneNumber: _phoneNumberController.text,
+                          approverEmail: _approverEmailController.text,
+                          estateName: _estateNameController.text,
+                          estateLocation: _estateLocationController.text,
                           password: _passwordController.text,
                           confirmPassword: _confirmPasswordController.text,
+                          role: _selectedRole ?? '',
                         );
                       },
                       steps: [
@@ -187,9 +211,26 @@ class _RegisterState extends State<Register> {
                             RegisterInputField(
                               controller: _mobileNumberController,
                               prefixIcon: Icons.phone,
-                              hintText: "Phone Number",
+                              hintText: "Mobile Number",
                               keyboardType: TextInputType.phone,
-                              textInputAction: TextInputAction.done,
+                              textInputAction: TextInputAction.next,
+                            ),
+                            // Show phone number only for non-tenants
+                            if (_selectedRole != null && _selectedRole != 'tenant')
+                              RegisterInputField(
+                                controller: _phoneNumberController,
+                                prefixIcon: Icons.phone_android,
+                                hintText: "Phone Number (Alternative)",
+                                keyboardType: TextInputType.phone,
+                                textInputAction: TextInputAction.next,
+                              ),
+                            RegisterRoleDropdown(
+                              selectedRole: _selectedRole,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  _selectedRole = newValue;
+                                });
+                              },
                             ),
                           ]),
                         ),
@@ -198,20 +239,57 @@ class _RegisterState extends State<Register> {
                           title: const SizedBox(),
                           content: Column(
                             children: [
-                              RegisterInputField(
-                                controller: _blockNumberController,
-                                prefixIcon: Icons.apartment_rounded,
-                                hintText: "Block Number",
-                                keyboardType: TextInputType.name,
-                                textInputAction: TextInputAction.next,
-                              ),
-                              RegisterInputField(
-                                controller: _houseNumberController,
-                                prefixIcon: Icons.house,
-                                hintText: "House Number",
-                                keyboardType: TextInputType.name,
-                                textInputAction: TextInputAction.done,
-                              ),
+                              // For tenants: show block and house number
+                              if (_selectedRole == 'tenant') ...[
+                                RegisterInputField(
+                                  controller: _blockNumberController,
+                                  prefixIcon: Icons.apartment_rounded,
+                                  hintText: "Block Number",
+                                  keyboardType: TextInputType.name,
+                                  textInputAction: TextInputAction.next,
+                                ),
+                                RegisterInputField(
+                                  controller: _houseNumberController,
+                                  prefixIcon: Icons.house,
+                                  hintText: "House Number",
+                                  keyboardType: TextInputType.name,
+                                  textInputAction: TextInputAction.done,
+                                ),
+                              ]
+                              // For landlords: show estate name, location, and approver email
+                              else if (_selectedRole == 'landlord') ...[
+                                RegisterInputField(
+                                  controller: _estateNameController,
+                                  prefixIcon: Icons.business,
+                                  hintText: "Estate/Block Name",
+                                  keyboardType: TextInputType.text,
+                                  textInputAction: TextInputAction.next,
+                                ),
+                                RegisterInputField(
+                                  controller: _estateLocationController,
+                                  prefixIcon: Icons.location_on,
+                                  hintText: "Estate Location/Address",
+                                  keyboardType: TextInputType.text,
+                                  textInputAction: TextInputAction.next,
+                                ),
+                                RegisterInputField(
+                                  controller: _approverEmailController,
+                                  prefixIcon: Icons.admin_panel_settings,
+                                  hintText: "Approver Email (Admin)",
+                                  keyboardType: TextInputType.emailAddress,
+                                  textInputAction: TextInputAction.done,
+                                ),
+                              ]
+                              // For caretakers and accounts: show approver email only
+                              else ...[
+                                RegisterInputField(
+                                  controller: _approverEmailController,
+                                  prefixIcon: Icons.admin_panel_settings,
+                                  hintText: "Approver Email (Admin)",
+                                  keyboardType: TextInputType.emailAddress,
+                                  textInputAction: TextInputAction.done,
+                                ),
+                              ],
                             ],
                           ),
                         ),
@@ -225,14 +303,32 @@ class _RegisterState extends State<Register> {
                                 prefixIcon: Icons.email,
                                 hintText: "Email",
                                 keyboardType: TextInputType.emailAddress,
-                                textInputAction: TextInputAction.next,
+                                textInputAction: _selectedRole == 'tenant'
+                                    ? TextInputAction.next
+                                    : TextInputAction.done,
                               ),
-                              RegisterPasswordField(
-                                controller: _passwordController,
-                              ),
-                              RegisterConfirmPasswordField(
-                                controller: _confirmPasswordController,
-                              ),
+                              // Show password fields only for tenants
+                              if (_selectedRole == 'tenant') ...[
+                                RegisterPasswordField(
+                                  controller: _passwordController,
+                                ),
+                                RegisterConfirmPasswordField(
+                                  controller: _confirmPasswordController,
+                                ),
+                              ] else ...[
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 16.0),
+                                  child: Text(
+                                    "Password will be auto-generated and sent to your email",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.grey,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
                         ),

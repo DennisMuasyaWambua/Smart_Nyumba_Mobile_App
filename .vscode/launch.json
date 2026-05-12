@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Flutter (SM A556E)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "RZCX90H6Z7K"
+        },
+        {
+            "name": "Flutter (Debug)",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Flutter (Profile)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "Flutter (Release)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

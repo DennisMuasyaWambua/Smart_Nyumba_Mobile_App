@@ -4,27 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_nyumba/widgets/button_layout.dart';
 
-// import 'package:google_fonts/google_fonts.dart';
-import '../../../utils/constants/constants.dart';
-import '../../../utils/providers/_providers.dart';
 import '../../utils/constants/colors.dart';
+import '../../utils/constants/constants.dart';
+import '../../utils/providers/_providers.dart';
+import '../../utils/providers/caretaker_provider.dart';
 import '../../widgets/auth/_auth_widgets.dart';
-import '../admin/_admin.dart';
-import '../caretaker/_caretaker.dart';
-import '../landlord/_landlord.dart';
-import '../tenant/tenant_dashboard.dart';
-import 'register.dart';
+import 'caretaker_dashboard.dart';
 
-class Login extends StatefulWidget {
-  static const routeName = "/login";
+class CaretakerLogin extends StatefulWidget {
+  static const routeName = "/caretaker-login";
 
-  const Login({super.key});
+  const CaretakerLogin({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<CaretakerLogin> createState() => _CaretakerLoginState();
 }
 
-class _LoginState extends State<Login> {
+class _CaretakerLoginState extends State<CaretakerLogin> {
   String email = " ";
   String password = " ";
 
@@ -45,13 +41,10 @@ class _LoginState extends State<Login> {
 
   @override
   void didChangeDependencies() {
-    // Check for internet connectivity.
-    // If you are running in debug mode, comment out the code to avoid errors.
     Provider.of<InternetChecker>(context).checkForInternetConnection();
     super.didChangeDependencies();
   }
 
-  // Disposing controllers after use avoids memory leaks
   @override
   void dispose() {
     _emailController.dispose();
@@ -93,14 +86,27 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     const Padding(
-                      padding: EdgeInsets.only(bottom: 40),
+                      padding: EdgeInsets.only(bottom: 10),
                       child: Text(
-                        "Sign in",
+                        "Caretaker Sign in",
                         style: TextStyle(
                           decoration: TextDecoration.none,
                           fontFamily: 'HindJalandhar',
                           fontWeight: FontWeight.w600,
                           fontSize: 34,
+                          color: royalBlue,
+                        ),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 30),
+                      child: Text(
+                        "Manage maintenance requests",
+                        style: TextStyle(
+                          decoration: TextDecoration.none,
+                          fontFamily: 'HindJalandhar',
+                          fontWeight: FontWeight.w300,
+                          fontSize: 16,
                           color: royalBlue,
                         ),
                       ),
@@ -147,9 +153,10 @@ class _LoginState extends State<Login> {
 
                         debugPrint("$email, $password");
 
-                        log(email.toString(), name: "EMAIL PARAMETER AT LOGIN");
+                        log(email.toString(),
+                            name: "EMAIL PARAMETER AT CARETAKER LOGIN");
                         log(password.toString(),
-                            name: "PASSWORD PARAMETER AT LOGIN");
+                            name: "PASSWORD PARAMETER AT CARETAKER LOGIN");
 
                         if (!Provider.of<InternetChecker>(context,
                                 listen: false)
@@ -162,63 +169,47 @@ class _LoginState extends State<Login> {
                           return;
                         }
 
-                        final login = Auth().login(email, password, context);
+                        final login =
+                            CaretakerProvider().login(email, password, context);
 
                         login.then((value) async {
                           setState(() {
                             isLoading = false;
                           });
 
-                          if (value.message == "Login Successful") {
-                            if (value.role == "tenant") {
-                              Navigator.of(context).pushReplacementNamed(
-                                  TenantDashboard.routeName);
-                            } else if (value.role == "landlord") {
-                              Navigator.of(context).pushReplacementNamed(
-                                  LandlordDashboard.routeName);
-                            } else if (value.role == "caretaker") {
-                              Navigator.of(context).pushReplacementNamed(
-                                  CaretakerDashboard.routeName);
-                            } else {
-                              // Admin, accounts go to admin dashboard
-                              Navigator.of(context).pushReplacementNamed(
-                                  AdminDashboard.routeName);
+                          if (value.status == true &&
+                              value.message == "Login Successful") {
+                            // Save role
+                            if (value.role != null) {
+                              SharedPrefrenceBuilder.setUserRole(value.role!);
                             }
+                            Navigator.of(context).pushReplacementNamed(
+                                CaretakerDashboard.routeName);
                           } else {
                             setState(() {
-                              authErrorString = value.message;
+                              authErrorString = value.message ?? "Login failed";
                             });
                           }
+                        }).catchError((error) {
+                          setState(() {
+                            isLoading = false;
+                            authErrorString = "An error occurred during login";
+                          });
+                          log(error.toString(),
+                              name: "Error from caretaker login");
                         });
                       },
                     ),
                     Center(
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 20, bottom: 20),
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pushReplacementNamed(Register.routeName);
-                          },
-                          child: const Text(
-                            'Don’t have an account? Register',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              decoration: TextDecoration.none,
-                              color: shadeBlack,
-                              fontSize: 13,
-                              fontFamily: 'Hind',
-                              fontWeight: FontWeight.w700,
-                            ),
+                        padding: const EdgeInsets.only(top: 30),
+                        child: Text(
+                          authErrorString,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
                           ),
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: Text(
-                        authErrorString,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
                         ),
                       ),
                     ),

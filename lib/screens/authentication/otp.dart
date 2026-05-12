@@ -9,6 +9,7 @@ import 'package:smart_nyumba/widgets/button_layout.dart';
 import '../../utils/constants/constants.dart';
 import '../../utils/providers/auth_provider.dart';
 import '../../utils/providers/shared_preference_builder.dart';
+import 'activation_payment_screen.dart';
 import 'package:http/http.dart' as http;
 
 class Otp extends StatefulWidget {
@@ -110,22 +111,61 @@ class _OtpState extends State<Otp> {
                           });
 
                           if (value.status == true) {
-                            showDialog(
-                                context: context,
-                                builder: (_) => SimpleDialog(
-                                      title: Text(
-                                        "Activated",
-                                        style: GoogleFonts.urbanist(
-                                            color: Constants.buttonColor,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      children: [
-                                        Center(
-                                          child: Text(value.message),
-                                        )
-                                      ],
-                                    ));
-                            Navigator.pushReplacementNamed(context, '/login');
+                            // Check if user is a landlord
+                            String? role = SharedPrefrenceBuilder.getUserRole;
+                            String? email = SharedPrefrenceBuilder.getUserEmail;
+                            String? firstName = SharedPrefrenceBuilder.getUserFirstName;
+                            String? lastName = SharedPrefrenceBuilder.getUserLastName;
+
+                            if (role?.toLowerCase() == 'landlord') {
+                              // Landlord: redirect to activation payment screen
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => SimpleDialog(
+                                        title: Text(
+                                          "Registration Successful",
+                                          style: GoogleFonts.urbanist(
+                                              color: Constants.buttonColor,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        children: [
+                                          Center(
+                                            child: Text("Complete payment to activate your account"),
+                                          )
+                                        ],
+                                      ));
+
+                              // Small delay to show dialog, then navigate
+                              Future.delayed(const Duration(seconds: 2), () {
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  ActivationPaymentScreen.routeName,
+                                  arguments: {
+                                    'email': email ?? '',
+                                    'firstName': firstName ?? 'Landlord',
+                                    'lastName': lastName ?? ''
+                                  }
+                                );
+                              });
+                            } else {
+                              // Other roles: redirect to login
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => SimpleDialog(
+                                        title: Text(
+                                          "Activated",
+                                          style: GoogleFonts.urbanist(
+                                              color: Constants.buttonColor,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        children: [
+                                          Center(
+                                            child: Text(value.message),
+                                          )
+                                        ],
+                                      ));
+                              Navigator.pushReplacementNamed(context, '/login');
+                            }
                           } else {
                             setState(() {
                               authErrorString = "Invalid code provided";

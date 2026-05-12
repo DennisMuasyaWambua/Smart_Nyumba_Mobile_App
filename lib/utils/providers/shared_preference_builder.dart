@@ -5,6 +5,8 @@ class SharedPrefrenceBuilder {
   static const useremail = 'email';
   static const userToken = 'token';
   static const userRole = 'role';
+  static const userFirstName = 'first_name';
+  static const userLastName = 'last_name';
   static const id = 'user_id';
   static const tokenEpirationTime = 'expiration_time';
 
@@ -28,6 +30,14 @@ class SharedPrefrenceBuilder {
     await _preferences!.setString(userRole, role);
   }
 
+  static Future setUserFirstName(String firstName) async {
+    await _preferences!.setString(userFirstName, firstName);
+  }
+
+  static Future setUserLastName(String lastName) async {
+    await _preferences!.setString(userLastName, lastName);
+  }
+
   static Future setExpirationTime(DateTime expirationTime) async {
     await _preferences!.setString(tokenEpirationTime, expirationTime.toIso8601String());
   }
@@ -42,6 +52,14 @@ class SharedPrefrenceBuilder {
 
   static String? get getUserRole {
     return _preferences!.getString(userRole);
+  }
+
+  static String? get getUserFirstName {
+    return _preferences!.getString(userFirstName);
+  }
+
+  static String? get getUserLastName {
+    return _preferences!.getString(userLastName);
   }
 
   static String? get getUserEmail {

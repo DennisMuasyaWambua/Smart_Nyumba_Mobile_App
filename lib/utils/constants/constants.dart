@@ -47,39 +47,124 @@ class Constants {
   static const themePurple = Color(0xff22215B);
 
   // URL constants
-
+// https://smartnyumbabackup-production-b9a7.up.railway.app/
+// https://api.smartnyumba.com
+// hetzner url: http://178.105.35.41:8080/
   //authentication related constants
-  static const String BASE_API_URL = "https://api.smartnyumba.com/apps/api/v1";
+  static const String BASE_API_URL =
+      "http://178.105.35.41:8080/apps/api/v1";
   static const String AUTHENTICATION_BASE_URL =
-      "https://api.smartnyumba.com/apps/api/v1/auth";
+      "http://178.105.35.41:8080/apps/api/v1/auth";
   static const String LOGOUT_URL =
-      "https://api.smartnyumba.com/apps/api/v1/auth/user-logout/";
+      "http://178.105.35.41:8080/apps/api/v1/auth/user-logout/";
+
   static const String ADMIN_LOGOUT_URL =
-      "https://api.smartnyumba.com/apps/api/v1/auth/admin-logout/";
+      "http://178.105.35.41:8080/apps/api/v1/auth/admin-logout/";
   // static const String AUTHENTICATION_BASE_URL = "https://smartnyumba-production.up.railway.app/apps/api/v1/auth";
   static const String LOGIN_URL = "$AUTHENTICATION_BASE_URL/user-login/";
   static const String REGISTER_URL = "$AUTHENTICATION_BASE_URL/user-register/";
   static const String VERIFY_OTP =
       "$AUTHENTICATION_BASE_URL/user-register-verification/";
-  static const String REGISTER_RESEND_OTP = "$AUTHENTICATION_BASE_URL/resend-otp/";
+  static const String REGISTER_RESEND_OTP =
+      "$AUTHENTICATION_BASE_URL/resend-otp/";
   static const String RESEND_OTP = "$AUTHENTICATION_BASE_URL/user-resend-otp/";
   static const String USER_PROFILE = "$AUTHENTICATION_BASE_URL/user-profile/";
   static const String ADMIN_PROFILE = "$AUTHENTICATION_BASE_URL/admin-profile/";
 
+  // Landlord activation payment endpoints
+  static const String INITIATE_ACTIVATION_PAYMENT =
+      "$AUTHENTICATION_BASE_URL/initiate-activation-payment/";
+  static const String CHECK_ACTIVATION_STATUS =
+      "$AUTHENTICATION_BASE_URL/check-activation-status/";
+  static const String ACTIVATION_MPESA_CALLBACK =
+      "$AUTHENTICATION_BASE_URL/activation-mpesa-callback/";
+  static const double LANDLORD_ACTIVATION_FEE = 500.00;
+
   static const String TENANT_LOGOUT_URL =
-      "https://api.smartnyumba.com/apps/api/v1/auth/user-logout/";
+      "http://178.105.35.41:8080/apps/api/v1/auth/user-logout/";
+
+  //LANDLORD related constants
+  static const String LANDLORD_BASE_URL =
+      "http://178.105.35.41:8080/apps/api/v1/block-landlord";
+  static const String LANDLORD_LOGIN_URL =
+      "$LANDLORD_BASE_URL/block-landlord-login/";
+  static const String LANDLORD_LOGOUT_URL =
+      "$LANDLORD_BASE_URL/block-landlord-logout/";
+  static const String LANDLORD_PROFILE_URL =
+      "$LANDLORD_BASE_URL/block-landlord-profile/";
+  static const String ADD_HOUSE_URL =
+      "http://178.105.35.41:8080/apps/api/v1/properties/add-block-houses/";
+  static const String LANDLORD_FORGOT_PASSWORD =
+      "$LANDLORD_BASE_URL/block-landlord-forgot-password/";
+  static const String LANDLORD_VERIFY_CHANGE_PASSWORD =
+      "$LANDLORD_BASE_URL/block-landlord-verify-change-password/";
+  static const String LANDLORD_RESEND_OTP =
+      "$LANDLORD_BASE_URL/block-landlord-resend-otp/";
+  static const String LANDLORD_NEW_PASSWORD =
+      "$LANDLORD_BASE_URL/block-landlord-new-password/";
+
+  // Subordinate management endpoints
+  static const String LANDLORD_CREATE_SUBORDINATE =
+      "$AUTHENTICATION_BASE_URL/landlord-create-subordinate/";
+
+  // Financial dashboard endpoint
+  static const String LANDLORD_FINANCIAL_SUMMARY =
+      "$LANDLORD_BASE_URL/financial-summary/";
+
+  //CARETAKER related constants
+  static const String CARETAKER_BASE_URL =
+      "http://178.105.35.41:8080/apps/api/v1/caretaker";
+  static const String CARETAKER_LOGIN_URL =
+      "$CARETAKER_BASE_URL/caretaker-login/";
+  static const String CARETAKER_LOGOUT_URL =
+      "$CARETAKER_BASE_URL/caretaker-logout/";
+  static const String CARETAKER_PROFILE_URL =
+      "$CARETAKER_BASE_URL/caretaker-profile/";
+  static const String CARETAKER_FORGOT_PASSWORD =
+      "$CARETAKER_BASE_URL/caretaker-forgot-password/";
+  static const String CARETAKER_VERIFY_CHANGE_PASSWORD =
+      "$CARETAKER_BASE_URL/caretaker-verify-change-password/";
+  static const String CARETAKER_RESEND_OTP =
+      "$CARETAKER_BASE_URL/caretaker-resend-otp/";
+  static const String CARETAKER_NEW_PASSWORD =
+      "$CARETAKER_BASE_URL/caretaker-new-password/";
+
+  //ACCOUNTS STAFF related constants
+  static const String ACCOUNTS_BASE_URL =
+      "http://178.105.35.41:8080/apps/api/v1/staff-accounts";
+  static const String ACCOUNTS_LOGIN_URL = "$ACCOUNTS_BASE_URL/accounts-login/";
+  static const String ACCOUNTS_LOGOUT_URL =
+      "$ACCOUNTS_BASE_URL/accounts-logout/";
+  static const String ACCOUNTS_PROFILE_URL =
+      "$ACCOUNTS_BASE_URL/accounts-profile/";
+  static const String ACCOUNTS_FORGOT_PASSWORD =
+      "$ACCOUNTS_BASE_URL/accounts-forgot-password/";
+  static const String ACCOUNTS_VERIFY_CHANGE_PASSWORD =
+      "$ACCOUNTS_BASE_URL/accounts-verify-change-password/";
+  static const String ACCOUNTS_RESEND_OTP =
+      "$ACCOUNTS_BASE_URL/accounts-resend-otp/";
+  static const String ACCOUNTS_NEW_PASSWORD =
+      "$ACCOUNTS_BASE_URL/accounts-new-password/";
 
   //PAYMENT related constants
   static const String PAYMENT_BASE_URL =
-      "https://api.smartnyumba.com/apps/api/v1/tenant-services";
+      "http://178.105.35.41:8080/apps/api/v1/tenant-services";
 
   static const String PAY_SERVICE = "$PAYMENT_BASE_URL/pay-service/";
+  static const String PAY_RENT = "$PAYMENT_BASE_URL/pay-rent/";
   static const String MPESA_CALLBACK = "$PAYMENT_BASE_URL/mpesa-callback";
+  static const String MPESA_RENT_CALLBACK =
+      "$PAYMENT_BASE_URL/mpesa-rent-callback";
   static const String ALL_TRANSACTIONS = "$PAYMENT_BASE_URL/all-transactions/";
   static const String CHECK_PAYMENT_COMPLETION =
       "$PAYMENT_BASE_URL/check-subscription-status/";
+  static const String CHECK_RENT_PAYMENT_COMPLETION =
+      "$PAYMENT_BASE_URL/check-rent-payment-status/";
   static const String SERVICE_FEE_AMOUNT =
       "$PAYMENT_BASE_URL/service-fee-amount/";
+
+  // Commission rate (percentage deducted from rent payments)
+  static const double COMMISSION_RATE = 5.0;
 
   // Account related constants
   static const String TENANTS_PROFILE = "$BASE_API_URL/auth/user-profile/";
@@ -96,6 +181,6 @@ class Constants {
   static const String ADMIN_LOGIN_URL = "$AUTHENTICATION_BASE_URL/admin-login/";
 
   static const String ADMIN_FETCH_TENANTS =
-      "https://api.smartnyumba.com/apps/api/v1/block-landlord/view-all-tenats";
+      "http://178.105.35.41:8080/apps/api/v1/block-landlord/view-all-tenats";
   static const String ALL_PAYMENTS = "$BASE_API_URL/admin/all-tenant-payments/";
 }

@@ -18,8 +18,13 @@ class StepperControls extends StatefulWidget {
   final String blockNumber;
   final String houseNumber;
   final String mobileNumber;
+  final String phoneNumber;
+  final String approverEmail;
+  final String estateName;
+  final String estateLocation;
   final String password;
   final String confirmPassword;
+  final String role;
 
   const StepperControls({
     super.key,
@@ -32,8 +37,13 @@ class StepperControls extends StatefulWidget {
     required this.blockNumber,
     required this.houseNumber,
     required this.mobileNumber,
+    required this.phoneNumber,
+    required this.approverEmail,
+    required this.estateName,
+    required this.estateLocation,
     required this.password,
     required this.confirmPassword,
+    required this.role,
   });
 
   @override
@@ -45,16 +55,41 @@ class _StepperControlsState extends State<StepperControls> {
   String authErrorString = "";
 
   bool nullValueCheck() {
+    // Common required fields for all roles
     if (widget.email.isEmpty ||
         widget.firstName.isEmpty ||
         widget.lastName.isEmpty ||
         widget.idNumber.isEmpty ||
-        widget.blockNumber.isEmpty ||
-        widget.houseNumber.isEmpty ||
         widget.mobileNumber.isEmpty ||
-        widget.password.isEmpty) {
+        widget.role.isEmpty) {
       return true;
     }
+
+    // Tenant-specific required fields
+    if (widget.role == 'tenant') {
+      if (widget.blockNumber.isEmpty ||
+          widget.houseNumber.isEmpty ||
+          widget.password.isEmpty) {
+        return true;
+      }
+    }
+
+    // Landlord-specific required fields
+    if (widget.role == 'landlord') {
+      if (widget.approverEmail.isEmpty ||
+          widget.estateName.isEmpty ||
+          widget.estateLocation.isEmpty) {
+        return true;
+      }
+    }
+
+    // Other non-tenant roles (caretaker, accounts)
+    if (widget.role != 'tenant' && widget.role != 'landlord') {
+      if (widget.approverEmail.isEmpty) {
+        return true;
+      }
+    }
+
     return false;
   }
 
@@ -139,7 +174,12 @@ class _StepperControlsState extends State<StepperControls> {
                                     widget.blockNumber,
                                     widget.houseNumber,
                                     widget.mobileNumber,
+                                    widget.phoneNumber,
+                                    widget.approverEmail,
+                                    widget.estateName,
+                                    widget.estateLocation,
                                     widget.password,
+                                    widget.role,
                                     context);
 
                                 register.then((value) {
@@ -148,6 +188,10 @@ class _StepperControlsState extends State<StepperControls> {
                                     name: " register response message",
                                   );
                                   if (value.status == true) {
+                                    // Store role and firstName for post-OTP routing
+                                    SharedPrefrenceBuilder.setUserRole(widget.role);
+                                    SharedPrefrenceBuilder.setUserFirstName(widget.firstName);
+
                                     showDialog(
                                         context: context,
                                         builder: (context) {
@@ -156,14 +200,14 @@ class _StepperControlsState extends State<StepperControls> {
                                           );
                                         });
                                      Navigator.of(context).pushReplacementNamed(Otp.routeName);
-                                    
+
                                   } else {
                                     setState(() {
                                       isLoading = false;
                                       authErrorString = value.message;
                                     });
                                   }
-                                 
+
                                 });
                               },
                         child: Text(widget.currentStep != 2 ? "CONTINUE" : "SIGN UP"),

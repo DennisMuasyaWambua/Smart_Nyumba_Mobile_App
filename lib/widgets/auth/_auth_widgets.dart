@@ -5,4 +5,5 @@ export './logout_button.dart';
 export './register_input_field.dart';
 export './register_password_field.dart';
 export './register_confirm_password_field.dart';
+export './register_role_dropdown.dart';
 export './stepper_controls.dart';

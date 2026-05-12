@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 
 import 'screens/admin/_admin.dart';
 import 'screens/authentication/_auth.dart';
+import 'screens/caretaker/_caretaker.dart';
+import 'screens/landlord/_landlord.dart';
 import 'screens/tenant/_tenant.dart';
 import 'utils/providers.dart';
 import 'utils/providers/shared_preference_builder.dart';
@@ -31,14 +33,28 @@ class MyApp extends StatelessWidget {
       !isTokenValid ? SharedPrefrenceBuilder.clearInvalidToken() : null;
     }
 
+    Widget getHomeScreen() {
+      if (SharedPrefrenceBuilder.getUserToken == null || !isTokenValid) {
+        return const Login();
+      }
+
+      final role = SharedPrefrenceBuilder.getUserRole;
+      switch (role) {
+        case "tenant":
+          return const TenantDashboard();
+        case "landlord":
+          return const LandlordDashboard();
+        case "caretaker":
+          return const CaretakerDashboard();
+        default:
+          return const AdminDashboard();
+      }
+    }
+
     return MultiProvider(
       providers: providers,
       child: MaterialApp(
-        home: (SharedPrefrenceBuilder.getUserToken != null && isTokenValid)
-            ? SharedPrefrenceBuilder.getUserRole == "tenant"
-                ? const TenantDashboard()
-                : const AdminDashboard()
-            : const Login(),
+        home: getHomeScreen(),
         routes: routes,
         theme: lightTheme,
         debugShowCheckedModeBanner: false,

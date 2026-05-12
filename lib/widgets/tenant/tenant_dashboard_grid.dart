@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'marketplace_card.dart';
+import 'pay_rent_card.dart';
 import 'pay_service_charge_card.dart';
 import 'payment_statement_card.dart';
 import 'request_for_repairs_card.dart';
@@ -23,7 +24,12 @@ class TenantDashboardGrid extends StatelessWidget {
         ),
         const Row(
           children: [
+            PayRentCard(),
             RequestForRepairsCard(),
+          ],
+        ),
+        const Row(
+          children: [
             MarketplaceCard(),
           ],
         ),

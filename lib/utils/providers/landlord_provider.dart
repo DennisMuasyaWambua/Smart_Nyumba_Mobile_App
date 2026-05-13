@@ -39,9 +39,17 @@ class LandlordProvider {
           LandlordLoginResponse.fromJson(jsonDecode(response.body));
 
       // Save token if login successful
-      if (loginResponse.status == true && loginResponse.tokens?.access != null) {
-        SharedPrefrenceBuilder.setUserToken(loginResponse.tokens!.access!);
-        log(loginResponse.tokens!.access!, name: "Landlord Token saved");
+      // Support both old format (tokens.access) and new format (access_token)
+      String? token;
+      if (loginResponse.accessToken != null) {
+        token = loginResponse.accessToken;
+      } else if (loginResponse.tokens?.access != null) {
+        token = loginResponse.tokens!.access;
+      }
+
+      if (loginResponse.status == true && token != null) {
+        SharedPrefrenceBuilder.setUserToken(token);
+        log(token, name: "Landlord Token saved");
       }
 
       return loginResponse;

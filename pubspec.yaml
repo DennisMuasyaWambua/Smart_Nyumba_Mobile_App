@@ -60,6 +60,7 @@ dependencies:
   internet_connection_checker: ^1.0.0+1
   device_info_plus: ^9.1.2
   webview_flutter: ^4.4.2
+  app_links: ^6.3.2
 
 
 dev_dependencies:

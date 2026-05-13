@@ -87,7 +87,7 @@ class Constants {
   static const String LANDLORD_BASE_URL =
       "https://api.smartnyumba.tech/apps/api/v1/block-landlord";
   static const String LANDLORD_LOGIN_URL =
-      "$LANDLORD_BASE_URL/block-landlord-login/";
+      "$AUTHENTICATION_BASE_URL/landlord-login/";
   static const String LANDLORD_LOGOUT_URL =
       "$LANDLORD_BASE_URL/block-landlord-logout/";
   static const String LANDLORD_PROFILE_URL =

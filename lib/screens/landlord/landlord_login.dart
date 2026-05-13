@@ -180,7 +180,7 @@ class _LandlordLoginState extends State<LandlordLogin> {
                           });
 
                           if (value.status == true &&
-                              value.message == "Login Successful") {
+                              (value.message == "Login Successful" || value.message == "Login successful")) {
                             // Save role
                             if (value.role != null) {
                               SharedPrefrenceBuilder.setUserRole(value.role!);

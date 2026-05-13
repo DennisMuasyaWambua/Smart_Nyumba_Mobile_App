@@ -30,11 +30,20 @@ class _LandlordPropertiesScreenState extends State<LandlordPropertiesScreen> {
   }
 
   void _loadProperties() {
-    final profile = LandlordProvider().getProfile(token!, context);
-    profile.then((value) {
+    final propertiesResponse = LandlordProvider().getProperties();
+    propertiesResponse.then((response) {
       if (mounted) {
         setState(() {
-          properties = value.profile?.properties;
+          if (response['status'] == true && response['properties'] != null) {
+            // Convert from API format to Property objects
+            properties = (response['properties'] as List)
+                .map((p) => Property(
+                      id: p['id'],
+                      blockNumber: p['block_number'],
+                      location: p['location'],
+                    ))
+                .toList();
+          }
           isLoading = false;
         });
       }
@@ -46,6 +55,99 @@ class _LandlordPropertiesScreenState extends State<LandlordPropertiesScreen> {
         });
       }
     });
+  }
+
+  void _showAddPropertyDialog() {
+    final blockController = TextEditingController();
+    final locationController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Add New Property',
+          style: GoogleFonts.hind(
+            fontWeight: FontWeight.w600,
+            color: royalBlue,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: blockController,
+              decoration: const InputDecoration(
+                labelText: 'Block Number',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: locationController,
+              decoration: const InputDecoration(
+                labelText: 'Location',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: royalBlue,
+            ),
+            onPressed: () async {
+              if (blockController.text.isEmpty ||
+                  locationController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text('Please fill all fields')),
+                );
+                return;
+              }
+
+              try {
+                final response = await LandlordProvider().addProperty(
+                  blockController.text,
+                  locationController.text,
+                );
+
+                if (response['status'] == true) {
+                  if (mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text(response['message'] ??
+                              'Property added successfully')),
+                    );
+                    _loadProperties(); // Reload properties
+                  }
+                } else {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text(response['message'] ??
+                              'Failed to add property')),
+                    );
+                  }
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error: ${e.toString()}')),
+                  );
+                }
+              }
+            },
+            child: const Text('Add Property', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -178,6 +280,15 @@ class _LandlordPropertiesScreenState extends State<LandlordPropertiesScreen> {
                         ),
             ),
           ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _showAddPropertyDialog,
+        backgroundColor: royalBlue,
+        icon: const Icon(Icons.add, color: Colors.white),
+        label: const Text(
+          'Add Property',
+          style: TextStyle(color: Colors.white),
         ),
       ),
     );

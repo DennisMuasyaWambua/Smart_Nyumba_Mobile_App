@@ -369,4 +369,90 @@ class LandlordProvider {
       throw Exception(e.toString());
     }
   }
+
+  // Add new property
+  Future<Map<String, dynamic>> addProperty(
+      String blockNumber, String location) async {
+    String addPropertyEndpoint = Constants.LANDLORD_ADD_PROPERTY_URL;
+    try {
+      String? token = SharedPrefrenceBuilder.getUserToken;
+      if (token == null) {
+        throw Exception("No authentication token found");
+      }
+
+      Uri uri = Uri.parse(addPropertyEndpoint);
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        body: {
+          'block_number': blockNumber,
+          'location': location,
+        },
+      );
+
+      log(response.statusCode.toString(), name: "Add Property status code");
+      log(response.body.toString(), name: "Add Property response");
+
+      return jsonDecode(response.body);
+    } catch (e) {
+      log(e.toString(), name: "Exception from add property");
+      throw Exception(e.toString());
+    }
+  }
+
+  // Get all landlord properties
+  Future<Map<String, dynamic>> getProperties() async {
+    String propertiesEndpoint = Constants.LANDLORD_PROPERTIES_URL;
+    try {
+      String? token = SharedPrefrenceBuilder.getUserToken;
+      if (token == null) {
+        throw Exception("No authentication token found");
+      }
+
+      Uri uri = Uri.parse(propertiesEndpoint);
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      log(response.statusCode.toString(), name: "Get Properties status code");
+      log(response.body.toString(), name: "Get Properties response");
+
+      return jsonDecode(response.body);
+    } catch (e) {
+      log(e.toString(), name: "Exception from get properties");
+      throw Exception(e.toString());
+    }
+  }
+
+  // Get all tenants
+  Future<Map<String, dynamic>> getTenants() async {
+    String tenantsEndpoint = Constants.ALL_TENANTS_URL;
+    try {
+      String? token = SharedPrefrenceBuilder.getUserToken;
+      if (token == null) {
+        throw Exception("No authentication token found");
+      }
+
+      Uri uri = Uri.parse(tenantsEndpoint);
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      log(response.statusCode.toString(), name: "Get Tenants status code");
+      log(response.body.toString(), name: "Get Tenants response");
+
+      return jsonDecode(response.body);
+    } catch (e) {
+      log(e.toString(), name: "Exception from get tenants");
+      throw Exception(e.toString());
+    }
+  }
 }

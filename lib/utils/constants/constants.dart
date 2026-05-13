@@ -94,6 +94,13 @@ class Constants {
       "$LANDLORD_BASE_URL/block-landlord-profile/";
   static const String ADD_HOUSE_URL =
       "https://api.smartnyumba.tech/apps/api/v1/properties/add-block-houses/";
+
+  // Landlord property management
+  static const String LANDLORD_ADD_PROPERTY_URL =
+      "https://api.smartnyumba.tech/apps/api/v1/properties/landlord-add-property/";
+  static const String LANDLORD_PROPERTIES_URL =
+      "https://api.smartnyumba.tech/apps/api/v1/properties/landlord-properties/";
+
   static const String LANDLORD_FORGOT_PASSWORD =
       "$LANDLORD_BASE_URL/block-landlord-forgot-password/";
   static const String LANDLORD_VERIFY_CHANGE_PASSWORD =

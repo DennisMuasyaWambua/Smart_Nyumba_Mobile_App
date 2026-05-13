@@ -57,13 +57,15 @@ class _TenantManagementScreenState extends State<TenantManagementScreen> {
         final data = jsonDecode(response.body);
         if (mounted) {
           setState(() {
-            _tenants = data['tenants'] ?? [];
+            // Backend returns 'tenant' (singular) not 'tenants'
+            _tenants = data['tenant'] ?? [];
             _filteredTenants = _tenants;
             _isLoading = false;
           });
         }
       } else {
-        throw Exception('Failed to load tenants');
+        final data = jsonDecode(response.body);
+        throw Exception(data['message'] ?? 'Failed to load tenants');
       }
     } catch (e) {
       if (mounted) {

@@ -49,17 +49,17 @@ class Constants {
   // URL constants
 // https://smartnyumbabackup-production-b9a7.up.railway.app/
 // https://api.smartnyumba.com
-// hetzner url: http://178.105.35.41:8080/
+// hetzner url: https://api.smartnyumba.tech/
   //authentication related constants
   static const String BASE_API_URL =
-      "http://178.105.35.41:8080/apps/api/v1";
+      "https://api.smartnyumba.tech/apps/api/v1";
   static const String AUTHENTICATION_BASE_URL =
-      "http://178.105.35.41:8080/apps/api/v1/auth";
+      "https://api.smartnyumba.tech/apps/api/v1/auth";
   static const String LOGOUT_URL =
-      "http://178.105.35.41:8080/apps/api/v1/auth/user-logout/";
+      "https://api.smartnyumba.tech/apps/api/v1/auth/user-logout/";
 
   static const String ADMIN_LOGOUT_URL =
-      "http://178.105.35.41:8080/apps/api/v1/auth/admin-logout/";
+      "https://api.smartnyumba.tech/apps/api/v1/auth/admin-logout/";
   // static const String AUTHENTICATION_BASE_URL = "https://smartnyumba-production.up.railway.app/apps/api/v1/auth";
   static const String LOGIN_URL = "$AUTHENTICATION_BASE_URL/user-login/";
   static const String REGISTER_URL = "$AUTHENTICATION_BASE_URL/user-register/";
@@ -81,11 +81,11 @@ class Constants {
   static const double LANDLORD_ACTIVATION_FEE = 500.00;
 
   static const String TENANT_LOGOUT_URL =
-      "http://178.105.35.41:8080/apps/api/v1/auth/user-logout/";
+      "https://api.smartnyumba.tech/apps/api/v1/auth/user-logout/";
 
   //LANDLORD related constants
   static const String LANDLORD_BASE_URL =
-      "http://178.105.35.41:8080/apps/api/v1/block-landlord";
+      "https://api.smartnyumba.tech/apps/api/v1/block-landlord";
   static const String LANDLORD_LOGIN_URL =
       "$LANDLORD_BASE_URL/block-landlord-login/";
   static const String LANDLORD_LOGOUT_URL =
@@ -93,7 +93,7 @@ class Constants {
   static const String LANDLORD_PROFILE_URL =
       "$LANDLORD_BASE_URL/block-landlord-profile/";
   static const String ADD_HOUSE_URL =
-      "http://178.105.35.41:8080/apps/api/v1/properties/add-block-houses/";
+      "https://api.smartnyumba.tech/apps/api/v1/properties/add-block-houses/";
   static const String LANDLORD_FORGOT_PASSWORD =
       "$LANDLORD_BASE_URL/block-landlord-forgot-password/";
   static const String LANDLORD_VERIFY_CHANGE_PASSWORD =
@@ -113,7 +113,7 @@ class Constants {
 
   //CARETAKER related constants
   static const String CARETAKER_BASE_URL =
-      "http://178.105.35.41:8080/apps/api/v1/caretaker";
+      "https://api.smartnyumba.tech/apps/api/v1/caretaker";
   static const String CARETAKER_LOGIN_URL =
       "$CARETAKER_BASE_URL/caretaker-login/";
   static const String CARETAKER_LOGOUT_URL =
@@ -131,7 +131,7 @@ class Constants {
 
   //ACCOUNTS STAFF related constants
   static const String ACCOUNTS_BASE_URL =
-      "http://178.105.35.41:8080/apps/api/v1/staff-accounts";
+      "https://api.smartnyumba.tech/apps/api/v1/staff-accounts";
   static const String ACCOUNTS_LOGIN_URL = "$ACCOUNTS_BASE_URL/accounts-login/";
   static const String ACCOUNTS_LOGOUT_URL =
       "$ACCOUNTS_BASE_URL/accounts-logout/";
@@ -148,7 +148,7 @@ class Constants {
 
   //PAYMENT related constants
   static const String PAYMENT_BASE_URL =
-      "http://178.105.35.41:8080/apps/api/v1/tenant-services";
+      "https://api.smartnyumba.tech/apps/api/v1/tenant-services";
 
   static const String PAY_SERVICE = "$PAYMENT_BASE_URL/pay-service/";
   static const String PAY_RENT = "$PAYMENT_BASE_URL/pay-rent/";
@@ -181,6 +181,9 @@ class Constants {
   static const String ADMIN_LOGIN_URL = "$AUTHENTICATION_BASE_URL/admin-login/";
 
   static const String ADMIN_FETCH_TENANTS =
-      "http://178.105.35.41:8080/apps/api/v1/block-landlord/view-all-tenats";
+      "https://api.smartnyumba.tech/apps/api/v1/block-landlord/view-all-tenats";
   static const String ALL_PAYMENTS = "$BASE_API_URL/admin/all-tenant-payments/";
+  static const String PLATFORM_EARNINGS = "$BASE_API_URL/admin/platform-earnings/";
+  static const String GET_SYSTEM_CONFIG = "$BASE_API_URL/admin/system-config/";
+  static const String UPDATE_SYSTEM_CONFIG = "$BASE_API_URL/admin/update-system-config/";
 }

@@ -8,6 +8,7 @@ import 'package:smart_nyumba/widgets/button_layout.dart';
 import '../../../utils/constants/constants.dart';
 import '../../../utils/providers/_providers.dart';
 import '../../utils/constants/colors.dart';
+import '../../utils/providers/payment_provider.dart';
 import '../../widgets/auth/_auth_widgets.dart';
 import '../admin/_admin.dart';
 import '../caretaker/_caretaker.dart';
@@ -165,29 +166,72 @@ class _LoginState extends State<Login> {
                         final login = Auth().login(email, password, context);
 
                         login.then((value) async {
+                          if (!mounted) return;
+
                           setState(() {
                             isLoading = false;
                           });
 
-                          if (value.message == "Login Successful") {
+                          log("Login response: ${value.message}, role: ${value.role}", name: "LOGIN SCREEN");
+
+                          // Check if login was successful (handle both "Login Successful" and "Login successful")
+                          if (value.status == true && value.accessToken != null) {
+                            log("Login successful, routing to dashboard for role: ${value.role}", name: "LOGIN SCREEN");
+
                             if (value.role == "tenant") {
-                              Navigator.of(context).pushReplacementNamed(
-                                  TenantDashboard.routeName);
+                              if (mounted) {
+                                Navigator.of(context).pushReplacementNamed(
+                                    TenantDashboard.routeName);
+                              }
                             } else if (value.role == "landlord") {
-                              Navigator.of(context).pushReplacementNamed(
-                                  LandlordDashboard.routeName);
+                              // Check landlord activation status
+                              try {
+                                if (!mounted) return;
+                                final paymentProvider = Provider.of<Payments>(context, listen: false);
+                                final activationStatus = await paymentProvider.checkActivationPaymentStatus(email);
+
+                                log("Landlord activation status: $activationStatus", name: "LOGIN SCREEN");
+
+                                if (activationStatus == 1) {
+                                  // Activated - proceed to dashboard
+                                  if (mounted) {
+                                    Navigator.of(context).pushReplacementNamed(
+                                        LandlordDashboard.routeName);
+                                  }
+                                } else {
+                                  // Not activated - show error
+                                  if (mounted) {
+                                    setState(() {
+                                      authErrorString = "Account not activated. Please complete activation payment.";
+                                    });
+                                  }
+                                }
+                              } catch (e) {
+                                log("Error checking activation: $e", name: "LOGIN SCREEN");
+                                // If error checking status, still proceed to dashboard
+                                if (mounted) {
+                                  Navigator.of(context).pushReplacementNamed(
+                                      LandlordDashboard.routeName);
+                                }
+                              }
                             } else if (value.role == "caretaker") {
-                              Navigator.of(context).pushReplacementNamed(
-                                  CaretakerDashboard.routeName);
+                              if (mounted) {
+                                Navigator.of(context).pushReplacementNamed(
+                                    CaretakerDashboard.routeName);
+                              }
                             } else {
                               // Admin, accounts go to admin dashboard
-                              Navigator.of(context).pushReplacementNamed(
-                                  AdminDashboard.routeName);
+                              if (mounted) {
+                                Navigator.of(context).pushReplacementNamed(
+                                    AdminDashboard.routeName);
+                              }
                             }
                           } else {
-                            setState(() {
-                              authErrorString = value.message;
-                            });
+                            if (mounted) {
+                              setState(() {
+                                authErrorString = value.message ?? "Login failed";
+                              });
+                            }
                           }
                         });
                       },

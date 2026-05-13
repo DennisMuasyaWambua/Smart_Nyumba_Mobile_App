@@ -64,73 +64,121 @@ class Auth with ChangeNotifier {
 
   late LoginResponseMessage loginResponseMessage;
 
-  // log in method
+  // log in method - works for ALL user types (tenant, landlord, admin)
   Future<LoginResponseMessage> login(
       String email, password, BuildContext context) async {
-    String loginEndpoint = Constants.LOGIN_URL;
-    String adminLoginEndPoint = Constants.ADMIN_LOGIN_URL;
-    // log(loginEndpoint.toString(), name: "LOGIN URL");
-    // log("${email.toString()}, ${password.toString()}", name: "PARAMETERS BEING  USED");
-    // debugPrint(loginEndpoint);
 
-    // try {
+    log(email.toString(), name: "LOGIN EMAIL");
+    log(password.toString(), name: "LOGIN PASSWORD");
+
+    // Try tenant/user login first
+    try {
+      String loginEndpoint = Constants.LOGIN_URL;
       var uri = Uri.parse(loginEndpoint);
       final response =
           await http.post(uri, body: {'email': email, 'password': password});
-      // log(uri.toString(), name: "LOGIN URL");
-      // debugPrint(response.body);
 
-      log(response.body.toString(), name: " RESPONSE");
-      log(response.statusCode.toString(), name: "Status code");
-      loginResponseMessage =
-          LoginResponseMessage.fromJson(json.decode(response.body));
-      log(loginResponseMessage.message.toString(),
-          name: "Response message from login");
-      // Saving the token from logging in
+      log(response.body.toString(), name: "TENANT LOGIN RESPONSE");
+      log(response.statusCode.toString(), name: "TENANT LOGIN STATUS CODE");
 
-      // SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
-      if (loginResponseMessage.accessToken != null) {
-        SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
+      if (response.statusCode == 200) {
+        loginResponseMessage =
+            LoginResponseMessage.fromJson(json.decode(response.body));
 
-        loginResponseMessage.role != null
-            ? SharedPrefrenceBuilder.setUserRole(loginResponseMessage.role!)
-            : SharedPrefrenceBuilder.setUserRole('tenant');
-        SharedPrefrenceBuilder.setUserEmail(email);
+        if (loginResponseMessage.status == true && loginResponseMessage.accessToken != null) {
+          SharedPrefrenceBuilder.setUserToken(loginResponseMessage.accessToken!);
+          loginResponseMessage.role != null
+              ? SharedPrefrenceBuilder.setUserRole(loginResponseMessage.role!)
+              : SharedPrefrenceBuilder.setUserRole('tenant');
+          SharedPrefrenceBuilder.setUserEmail(email);
+          setToken(loginResponseMessage.accessToken!);
+          SharedPrefrenceBuilder.setExpirationTime(
+            DateTime.now().add(const Duration(hours: 1)),
+          );
+          notifyListeners();
+          log("Tenant login successful", name: "LOGIN");
+          return loginResponseMessage;
+        }
+      }
+    } catch (e) {
+      log(e.toString(), name: "Tenant login attempt failed");
+    }
 
-        setToken(loginResponseMessage.accessToken!);
-        SharedPrefrenceBuilder.setExpirationTime(
-          DateTime.now().add(const Duration(hours: 1)),
-        );
+    // Try landlord login
+    try {
+      String landlordLoginEndpoint = Constants.LANDLORD_LOGIN_URL;
+      var landlordUri = Uri.parse(landlordLoginEndpoint);
+      final landlordResponse = await http.post(landlordUri,
+          body: {'email': email, 'password': password});
 
-        notifyListeners();
-        return loginResponseMessage;
-      } else {
-        var adminUri = Uri.parse(adminLoginEndPoint);
-        final adminResponse = await http
-            .post(adminUri, body: {'email': email, 'password': password});
+      log(landlordResponse.body.toString(), name: "LANDLORD LOGIN RESPONSE");
+      log(landlordResponse.statusCode.toString(), name: "LANDLORD LOGIN STATUS CODE");
+
+      if (landlordResponse.statusCode == 200) {
+        var landlordData = json.decode(landlordResponse.body);
+        if (landlordData['status'] == true && landlordData['access_token'] != null) {
+          loginResponseMessage = LoginResponseMessage(
+            status: landlordData['status'],
+            message: landlordData['message'],
+            accessToken: landlordData['access_token'],
+            role: landlordData['role'] ?? 'landlord',
+          );
+
+          SharedPrefrenceBuilder.setUserEmail(email);
+          SharedPrefrenceBuilder.setUserToken(landlordData['access_token']);
+          SharedPrefrenceBuilder.setUserRole(landlordData['role'] ?? 'landlord');
+          setToken(landlordData['access_token']);
+          SharedPrefrenceBuilder.setExpirationTime(
+            DateTime.now().add(const Duration(hours: 1)),
+          );
+          notifyListeners();
+          log("Landlord login successful", name: "LOGIN");
+          return loginResponseMessage;
+        }
+      }
+    } catch (e) {
+      log(e.toString(), name: "Landlord login attempt failed");
+    }
+
+    // Try admin login
+    try {
+      String adminLoginEndPoint = Constants.ADMIN_LOGIN_URL;
+      var adminUri = Uri.parse(adminLoginEndPoint);
+      final adminResponse = await http
+          .post(adminUri, body: {'email': email, 'password': password});
+
+      log(adminResponse.body.toString(), name: "ADMIN LOGIN RESPONSE");
+      log(adminResponse.statusCode.toString(), name: "ADMIN LOGIN STATUS CODE");
+
+      if (adminResponse.statusCode == 200) {
         LoginResponseMessage adminResponseMessage =
             LoginResponseMessage.fromJson(json.decode(adminResponse.body));
 
-        if (adminResponseMessage.accessToken != null) {
+        if (adminResponseMessage.status == true && adminResponseMessage.accessToken != null) {
           SharedPrefrenceBuilder.setUserEmail(email);
-          SharedPrefrenceBuilder.setUserToken(
-              adminResponseMessage.accessToken!);
-          SharedPrefrenceBuilder.setUserRole(adminResponseMessage.role!);
+          SharedPrefrenceBuilder.setUserToken(adminResponseMessage.accessToken!);
+          SharedPrefrenceBuilder.setUserRole(adminResponseMessage.role ?? 'admin');
           setToken(adminResponseMessage.accessToken!);
           SharedPrefrenceBuilder.setExpirationTime(
             DateTime.now().add(const Duration(hours: 1)),
           );
           notifyListeners();
+          log("Admin login successful", name: "LOGIN");
           return adminResponseMessage;
         }
-        notifyListeners();
-        return adminResponseMessage;
       }
-    // } catch (e) {
-    //   log("${Exception(e.toString())}", name: "Exception message from login");
+    } catch (e) {
+      log(e.toString(), name: "Admin login attempt failed");
+    }
 
-    //   throw Exception(e.toString());
-    // }
+    // All login attempts failed
+    log("All login attempts failed", name: "LOGIN");
+    return LoginResponseMessage(
+      status: false,
+      message: 'Invalid email or password',
+      accessToken: null,
+      role: null,
+    );
   }
 
   // logout url

@@ -39,6 +39,7 @@ class Transaction {
     int? block;  // block ID
     String houseNumber;
     String blockNumber;
+    DateTime? datePaid;  // Nullable - API doesn't always return this
 
     Transaction({
         required this.id,
@@ -51,6 +52,7 @@ class Transaction {
         this.block,
         required this.houseNumber,
         required this.blockNumber,
+        this.datePaid,
     });
 
     factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
@@ -64,6 +66,7 @@ class Transaction {
         block: json["block"],
         houseNumber: json["house_number"],
         blockNumber: json["block_number"],
+        datePaid: json["date_paid"] != null ? DateTime.parse(json["date_paid"]) : null,
     );
 
     Map<String, dynamic> toJson() => {
@@ -77,6 +80,7 @@ class Transaction {
         "block": block,
         "house_number": houseNumber,
         "block_number": blockNumber,
+        "date_paid": datePaid?.toIso8601String(),
     };
 }
 

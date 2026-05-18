@@ -216,7 +216,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                         itemBuilder: (context, index) {
                           final transaction = paymentTransactions[index];
                           final date =
-                              DateFormat.yMMMd().format(transaction.datePaid);
+                              DateFormat.yMMMd().format(transaction.datePaid ?? DateTime.now());
 
                           return Card(
                             child: ListTile(
@@ -225,7 +225,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                               trailing: Text(date),
                               onTap: () {
                                 final String date = DateFormat.yMMMd()
-                                    .format(transaction.datePaid);
+                                    .format(transaction.datePaid ?? DateTime.now());
 
                                 // receipt = Invoice(
                                 //     name: name,
@@ -245,7 +245,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
                                         .toString(),
                                     "Service Charge");
                                 log(pdfFile.toString(), name: "PDF FILE PATH");
-                                previewPDF(pdfFile, transaction.datePaid);
+                                previewPDF(pdfFile, transaction.datePaid ?? DateTime.now());
                                 // save file object using provider
                                 // PdfApi().setIndex(pdfFile);
                               },

@@ -126,16 +126,6 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
   }
 
   Future<void> _checkPaymentStatus() async {
-    if (_pollCount >= _maxPollAttempts) {
-      _pollTimer?.cancel();
-      setState(() {
-        _paymentState = PaymentState.failed;
-        _errorMessage =
-            'Payment verification timeout. Please check your transactions.';
-      });
-      return;
-    }
-
     _pollCount++;
     log('Checking payment status (attempt $_pollCount/$_maxPollAttempts)',
         name: 'PAYMENT_CHECK');
@@ -166,10 +156,26 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
             Navigator.of(context).pop(true); // Return success
           }
         });
+      } else if (_pollCount >= _maxPollAttempts) {
+        // Only timeout if status is not successful after max attempts
+        _pollTimer?.cancel();
+        setState(() {
+          _paymentState = PaymentState.failed;
+          _errorMessage =
+              'Payment verification timeout. Please check your transactions.';
+        });
       }
     } catch (e) {
       log('Error checking payment status: ${e.toString()}',
           name: 'PAYMENT_CHECK');
+
+      if (_pollCount >= _maxPollAttempts) {
+        _pollTimer?.cancel();
+        setState(() {
+          _paymentState = PaymentState.failed;
+          _errorMessage = 'Unable to verify payment. Please check your transactions.';
+        });
+      }
     }
   }
 

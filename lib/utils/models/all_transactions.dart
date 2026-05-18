@@ -9,17 +9,21 @@ AllTransactions allTransactionsFromJson(String str) => AllTransactions.fromJson(
 String allTransactionsToJson(AllTransactions data) => json.encode(data.toJson());
 
 class AllTransactions {
+    bool status;
     List<Transaction> transactions;
 
     AllTransactions({
+        required this.status,
         required this.transactions,
     });
 
     factory AllTransactions.fromJson(Map<String, dynamic> json) => AllTransactions(
+        status: json["status"],
         transactions: List<Transaction>.from(json["transactions"].map((x) => Transaction.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
+        "status": status,
         "transactions": List<dynamic>.from(transactions.map((x) => x.toJson())),
     };
 }
@@ -77,7 +81,7 @@ class Transaction {
 }
 
 class User {
-    List<Tenant> tenant;
+    List<Tenant>? tenant;
     String email;
     String username;
     int role;
@@ -85,7 +89,7 @@ class User {
     int status;
 
     User({
-        required this.tenant,
+        this.tenant,
         required this.email,
         required this.username,
         required this.role,
@@ -94,7 +98,9 @@ class User {
     });
 
     factory User.fromJson(Map<String, dynamic> json) => User(
-        tenant: List<Tenant>.from(json["tenant"].map((x) => Tenant.fromJson(x))),
+        tenant: json["tenant"] != null
+            ? List<Tenant>.from(json["tenant"].map((x) => Tenant.fromJson(x)))
+            : null,
         email: json["email"],
         username: json["username"],
         role: json["role"],
@@ -103,7 +109,9 @@ class User {
     );
 
     Map<String, dynamic> toJson() => {
-        "tenant": List<dynamic>.from(tenant.map((x) => x.toJson())),
+        "tenant": tenant != null
+            ? List<dynamic>.from(tenant!.map((x) => x.toJson()))
+            : null,
         "email": email,
         "username": username,
         "role": role,

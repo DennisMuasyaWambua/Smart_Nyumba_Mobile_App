@@ -117,7 +117,7 @@ class _AllTransactionsDataState extends State<AllTransactionsData> {
             List<Transaction>? paymentTransactions = snapshot.data;
             if (paymentTransactions!.isNotEmpty) {
               balance = double.parse(
-                      paymentTransactions[0].annualServiceCharge.toString()) -
+                      paymentTransactions[0].balanceServiceCharge.toString()) -
                   paymentTransactions.length*double.parse(paymentTransactions[0].amount.toString());
 
               log(balance.toString(), name: "BALANCE");

@@ -47,7 +47,7 @@ class Payments with ChangeNotifier {
       'email': userEmail,
       'mobile_number': mobileNumber,
       'service_name': serviceName,
-      'pay_via': "mpesa"
+      'pay_via': "pesapal"
     });
 
     log(response.body.toString(), name: "SERVICE CHARGE PAYMENT MESSAGE");
@@ -94,13 +94,12 @@ class Payments with ChangeNotifier {
     log(userEmail.toString(), name: "USER_EMAIL FROM SHARED_PREFERENCES");
     log(amount.toString(), name: "RENT AMOUNT TO BE PAID");
 
-    // Calculate commission (deducted from rent, not added)
-    double rentAmount = double.parse(amount);
-    double commission = rentAmount * (Constants.COMMISSION_RATE / 100);
-    double landlordAmount = rentAmount - commission;
+    // Get current month and year for rent payment
+    DateTime now = DateTime.now();
+    int currentMonth = now.month;
+    int currentYear = now.year;
 
-    log(commission.toString(), name: "COMMISSION AMOUNT (${Constants.COMMISSION_RATE}%) - GOES TO PLATFORM");
-    log(landlordAmount.toString(), name: "LANDLORD AMOUNT - GOES TO LANDLORD");
+    log("Month: $currentMonth, Year: $currentYear", name: "RENT PAYMENT DATE");
 
     Uri payRentUri = Uri.parse(Constants.PAY_RENT);
     var response = await http.post(payRentUri, headers: {
@@ -108,10 +107,9 @@ class Payments with ChangeNotifier {
     }, body: {
       'email': userEmail,
       'mobile_number': mobileNumber,
-      'rent_amount': amount,
-      'commission': commission.toStringAsFixed(2),
-      'landlord_amount': landlordAmount.toStringAsFixed(2),
-      'pay_via': "mpesa"
+      'month': currentMonth.toString(),
+      'year': currentYear.toString(),
+      'pay_via': "pesapal"
     });
 
     log(response.body.toString(), name: "RENT PAYMENT MESSAGE");
@@ -152,20 +150,28 @@ class Payments with ChangeNotifier {
   }
 
   Stream<List<Transaction>?> getAllTransactions() async* {
-
+    try {
       log(token!, name: "User Token");
       var allTransactions = await http.get(Uri.parse(Constants.ALL_TRANSACTIONS), headers: {
         'Authorization': 'Bearer $token',
       });
       log(allTransactions.body.toString(), name: "ALL TRANSACTIONS");
+
       AllTransactions all = AllTransactions.fromJson(jsonDecode(allTransactions.body));
       log(all.transactions.toString(), name: "TRANSACTIONS AVAILABLE");
+
       List<Transaction>? transactions = all.transactions;
       log(transactions.toString(), name: "TRANSACTIONS TO STREAM");
 
       notifyListeners();
       yield transactions;
+    } catch (e, stackTrace) {
+      log('Error in getAllTransactions: ${e.toString()}', name: "TRANSACTIONS ERROR");
+      log('Stack trace: ${stackTrace.toString()}', name: "TRANSACTIONS ERROR STACK");
 
+      // Yield empty list on error so UI doesn't hang
+      yield [];
+    }
   }
 
   // Initiate landlord activation payment via M-Pesa STK Push (OLD - Deprecated)

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../api/api_client.dart';
 
 import '../constants/constants.dart';
 import '../models/landlord_login_response.dart';
@@ -24,7 +25,7 @@ class LandlordProvider {
     String loginEndpoint = Constants.LANDLORD_LOGIN_URL;
     try {
       Uri loginUri = Uri.parse(loginEndpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         loginUri,
         body: {
           'email': email,
@@ -70,7 +71,7 @@ class LandlordProvider {
       }
 
       Uri logoutUri = Uri.parse(logoutEndpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         logoutUri,
         headers: {
           'Authorization': 'Bearer $token',
@@ -96,7 +97,7 @@ class LandlordProvider {
     try {
       String profileUrl = Constants.LANDLORD_PROFILE_URL;
       Uri uri = Uri.parse(profileUrl);
-      final response = await http.get(uri, headers: {
+      final response = await SafeHttp.get(uri, headers: {
         'Authorization': 'Bearer $token',
       });
 
@@ -118,6 +119,17 @@ class LandlordProvider {
         setEmail(email!);
         setFirstName(firstName!);
         setLastName(lastName!);
+
+        // Save to SharedPreferences
+        if (email != null) {
+          SharedPrefrenceBuilder.setUserEmail(email!);
+        }
+        if (firstName != null) {
+          SharedPrefrenceBuilder.setUserFirstName(firstName!);
+        }
+        if (lastName != null) {
+          SharedPrefrenceBuilder.setUserLastName(lastName!);
+        }
       }
 
       return profile;
@@ -143,7 +155,7 @@ class LandlordProvider {
       }
 
       Uri addHouseUri = Uri.parse(addHouseEndpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         addHouseUri,
         headers: {
           'Authorization': 'Bearer $token',
@@ -174,7 +186,7 @@ class LandlordProvider {
     String forgotPasswordEndpoint = Constants.LANDLORD_FORGOT_PASSWORD;
     try {
       Uri forgotPasswordUri = Uri.parse(forgotPasswordEndpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         forgotPasswordUri,
         body: {'email': email},
       );
@@ -196,7 +208,7 @@ class LandlordProvider {
     String verifyEndpoint = Constants.LANDLORD_VERIFY_CHANGE_PASSWORD;
     try {
       Uri verifyUri = Uri.parse(verifyEndpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         verifyUri,
         body: {
           'email': email,
@@ -222,7 +234,7 @@ class LandlordProvider {
     String resendOtpEndpoint = Constants.LANDLORD_RESEND_OTP;
     try {
       Uri resendOtpUri = Uri.parse(resendOtpEndpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         resendOtpUri,
         body: {'email': email},
       );
@@ -244,7 +256,7 @@ class LandlordProvider {
     String newPasswordEndpoint = Constants.LANDLORD_NEW_PASSWORD;
     try {
       Uri newPasswordUri = Uri.parse(newPasswordEndpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         newPasswordUri,
         body: {
           'email': email,
@@ -306,7 +318,7 @@ class LandlordProvider {
       log(jsonEncode(requestBody), name: "Register Subordinate request body");
 
       Uri uri = Uri.parse(endpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         uri,
         headers: {
           'Authorization': 'Bearer $token',
@@ -347,7 +359,7 @@ class LandlordProvider {
       if (month != null) queryParams['month'] = month.toString();
 
       Uri uri = Uri.parse(endpoint).replace(queryParameters: queryParams);
-      final response = await http.get(
+      final response = await SafeHttp.get(
         uri,
         headers: {
           'Authorization': 'Bearer $token',
@@ -380,16 +392,32 @@ class LandlordProvider {
         throw Exception("No authentication token found");
       }
 
+      String? landlordEmail = SharedPrefrenceBuilder.getUserEmail;
+
+      Map<String, dynamic> requestBody = {
+        'block_number': blockNumber,
+        'location': location,
+      };
+
+      // Add landlord email if available
+      if (landlordEmail != null && landlordEmail.isNotEmpty) {
+        requestBody['block_landlord_email'] = landlordEmail;
+        log("Using landlord email: $landlordEmail", name: "Add Property");
+      } else {
+        log("No landlord email found in SharedPreferences, backend will use token",
+            name: "Add Property");
+      }
+
+      log(jsonEncode(requestBody), name: "Add Property request body");
+
       Uri uri = Uri.parse(addPropertyEndpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         uri,
         headers: {
           'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
         },
-        body: {
-          'block_number': blockNumber,
-          'location': location,
-        },
+        body: jsonEncode(requestBody),
       );
 
       log(response.statusCode.toString(), name: "Add Property status code");
@@ -412,7 +440,7 @@ class LandlordProvider {
       }
 
       Uri uri = Uri.parse(propertiesEndpoint);
-      final response = await http.get(
+      final response = await SafeHttp.get(
         uri,
         headers: {
           'Authorization': 'Bearer $token',
@@ -439,7 +467,7 @@ class LandlordProvider {
       }
 
       Uri uri = Uri.parse(tenantsEndpoint);
-      final response = await http.get(
+      final response = await SafeHttp.get(
         uri,
         headers: {
           'Authorization': 'Bearer $token',
@@ -452,6 +480,91 @@ class LandlordProvider {
       return jsonDecode(response.body);
     } catch (e) {
       log(e.toString(), name: "Exception from get tenants");
+      throw Exception(e.toString());
+    }
+  }
+
+  // Onboard tenant by landlord/caretaker
+  Future<SubordinateCreateResponse> onboardTenant(
+    String email,
+    String firstName,
+    String lastName,
+    String idNumber,
+    String mobileNumber,
+    String blockNumber,
+    String houseNumber,
+    BuildContext context,
+  ) async {
+    String endpoint = Constants.LANDLORD_ONBOARD_TENANT;
+    try {
+      String? token = SharedPrefrenceBuilder.getUserToken;
+      if (token == null) {
+        throw Exception("No authentication token found");
+      }
+
+      // Prepare JSON body
+      Map<String, dynamic> requestBody = {
+        'email': email,
+        'first_name': firstName,
+        'last_name': lastName,
+        'mobile_number': mobileNumber,
+        'id_number': idNumber,
+        'block_number': blockNumber,
+        'house_number': houseNumber,
+      };
+
+      log(jsonEncode(requestBody), name: "Onboard Tenant request body");
+
+      Uri uri = Uri.parse(endpoint);
+      final response = await SafeHttp.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      log(response.statusCode.toString(), name: "Onboard Tenant status code");
+      log(response.body.toString(), name: "Onboard Tenant response");
+
+      SubordinateCreateResponse tenantResponse =
+          SubordinateCreateResponse.fromJson(jsonDecode(response.body));
+
+      return tenantResponse;
+    } catch (e) {
+      log(e.toString(), name: "Exception from onboard tenant");
+      throw Exception(e.toString());
+    }
+  }
+
+  // Get available houses for a property block
+  Future<Map<String, dynamic>> getAvailableHouses(String blockNumber) async {
+    String endpoint = Constants.AVAILABLE_HOUSES_URL;
+    try {
+      String? token = SharedPrefrenceBuilder.getUserToken;
+      if (token == null) {
+        throw Exception("No authentication token found");
+      }
+
+      // Add query parameter
+      Uri uri = Uri.parse(endpoint).replace(queryParameters: {
+        'block_number': blockNumber,
+      });
+
+      final response = await SafeHttp.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      log(response.statusCode.toString(), name: "Get Available Houses status code");
+      log(response.body.toString(), name: "Get Available Houses response");
+
+      return jsonDecode(response.body);
+    } catch (e) {
+      log(e.toString(), name: "Exception from get available houses");
       throw Exception(e.toString());
     }
   }

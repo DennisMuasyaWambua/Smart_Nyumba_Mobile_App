@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
+import '../../utils/api/api_client.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 
@@ -48,8 +48,9 @@ class _TransactionReportsScreenState extends State<TransactionReportsScreen> {
         throw Exception("No authentication token found");
       }
 
-      Uri uri = Uri.parse(Constants.ALL_TRANSACTIONS);
-      final response = await http.get(
+      // Use landlord-specific transactions endpoint
+      Uri uri = Uri.parse(Constants.LANDLORD_TRANSACTIONS);
+      final response = await SafeHttp.get(
         uri,
         headers: {
           'Authorization': 'Bearer $token',
@@ -158,6 +159,7 @@ class _TransactionReportsScreenState extends State<TransactionReportsScreen> {
 
   Widget _buildTransactionCard(Map<String, dynamic> transaction) {
     final type = transaction['type'] ?? 'rent';
+    final isRent = type == 'rent';
     final amount = double.tryParse(transaction['amount']?.toString() ?? '0') ?? 0.0;
     final date = transaction['date_paid'] ?? transaction['date'] ?? '';
     final tenantEmail = transaction['tenant_email'] ??
@@ -165,67 +167,54 @@ class _TransactionReportsScreenState extends State<TransactionReportsScreen> {
     final paymentMethod = transaction['payment_method'] ?? 'mpesa';
     final houseNumber = transaction['house_number'] ??
                         transaction['property_block']?['house_number'] ?? 'N/A';
-
-    // Calculate commission (5%)
-    final commission = amount * 0.05;
-    final landlordPayout = amount - commission;
+    final accent =
+        isRent ? Constants.servicesColor : Constants.paymentColor;
 
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      elevation: 2,
+      elevation: 0,
+      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
       child: ExpansionTile(
-        leading: CircleAvatar(
-          backgroundColor: type == 'rent' ? Colors.blue[100] : Colors.green[100],
+        shape: const Border(),
+        tilePadding: const EdgeInsets.symmetric(horizontal: 12),
+        leading: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: accent.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Icon(
-            type == 'rent' ? Icons.home : Icons.build,
-            color: type == 'rent' ? Colors.blue : Colors.green,
+            isRent ? Icons.home_outlined : Icons.build_outlined,
+            color: accent,
+            size: 20,
           ),
         ),
         title: Text(
-          type == 'rent' ? 'Rent Payment' : 'Service Charge',
+          isRent ? 'Rent Payment' : 'Service Charge',
           style: GoogleFonts.hind(
             fontWeight: FontWeight.w600,
-            fontSize: 15,
+            fontSize: 14,
           ),
         ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 4),
-            Text(
-              'House $houseNumber • $tenantEmail',
-              style: GoogleFonts.hind(fontSize: 12),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              _formatDate(date),
-              style: GoogleFonts.hind(
-                fontSize: 11,
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
+        subtitle: Text(
+          'House $houseNumber • ${_formatDate(date)}',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.hind(
+            fontSize: 12,
+            color: Colors.grey.shade600,
+          ),
         ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              _currencyFormat.format(amount),
-              style: GoogleFonts.hind(
-                fontWeight: FontWeight.w700,
-                fontSize: 14,
-                color: Colors.green[700],
-              ),
-            ),
-            Text(
-              paymentMethod.toUpperCase(),
-              style: GoogleFonts.hind(
-                fontSize: 10,
-                color: Colors.grey,
-              ),
-            ),
-          ],
+        trailing: Text(
+          '+ ${_currencyFormat.format(amount)}',
+          style: GoogleFonts.hind(
+            fontWeight: FontWeight.w700,
+            fontSize: 14,
+            color: Colors.green.shade700,
+          ),
         ),
         children: [
           Padding(
@@ -234,12 +223,8 @@ class _TransactionReportsScreenState extends State<TransactionReportsScreen> {
               children: [
                 _buildDetailRow('Total Amount', _currencyFormat.format(amount)),
                 _buildDetailRow(
-                  'Commission (5%)',
-                  _currencyFormat.format(commission),
-                ),
-                _buildDetailRow(
                   'Your Payout',
-                  _currencyFormat.format(landlordPayout),
+                  _currencyFormat.format(amount),
                 ),
                 _buildDetailRow('Payment Method', paymentMethod.toUpperCase()),
                 _buildDetailRow('Date', _formatDate(date)),
@@ -290,17 +275,12 @@ class _TransactionReportsScreenState extends State<TransactionReportsScreen> {
 
   Widget _buildSummaryCard() {
     double totalAmount = 0;
-    double totalCommission = 0;
-    double totalPayout = 0;
     int rentCount = 0;
     int serviceCount = 0;
 
     for (var transaction in _filteredTransactions) {
-      double amount = double.tryParse(transaction['amount']?.toString() ?? '0') ?? 0.0;
-      totalAmount += amount;
-      totalCommission += amount * 0.05;
-      totalPayout += amount * 0.95;
-
+      totalAmount +=
+          double.tryParse(transaction['amount']?.toString() ?? '0') ?? 0.0;
       if (transaction['type'] == 'rent') {
         rentCount++;
       } else {
@@ -308,86 +288,92 @@ class _TransactionReportsScreenState extends State<TransactionReportsScreen> {
       }
     }
 
-    return Card(
-      margin: const EdgeInsets.all(16),
-      elevation: 3,
-      color: Colors.blue[50],
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text(
-              'Summary',
-              style: GoogleFonts.hind(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-              ),
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Constants.themePurple,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Your Payout',
+            style: GoogleFonts.hind(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.white70,
             ),
-            const Divider(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildSummaryItem('Rent', rentCount.toString(), Colors.blue),
-                _buildSummaryItem(
-                    'Service', serviceCount.toString(), Colors.green),
-                _buildSummaryItem(
-                    'Total', _filteredTransactions.length.toString(), Colors.orange),
-              ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            _currencyFormat.format(totalAmount),
+            style: GoogleFonts.hind(
+              fontSize: 28,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
             ),
-            const Divider(height: 24),
-            _buildDetailRow('Total Revenue', _currencyFormat.format(totalAmount)),
-            _buildDetailRow('Total Commission', _currencyFormat.format(totalCommission)),
-            const SizedBox(height: 4),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.green[100],
-                borderRadius: BorderRadius.circular(8),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: _buildSummaryItem(
+                    'Rent', '$rentCount', Constants.servicesColor),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Your Total Payout',
-                    style: GoogleFonts.hind(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.green[900],
-                    ),
-                  ),
-                  Text(
-                    _currencyFormat.format(totalPayout),
-                    style: GoogleFonts.hind(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.green[900],
-                    ),
-                  ),
-                ],
+              Container(
+                width: 1,
+                height: 32,
+                color: Colors.white24,
+                margin: const EdgeInsets.symmetric(horizontal: 12),
               ),
-            ),
-          ],
-        ),
+              Expanded(
+                child: _buildSummaryItem(
+                    'Service', '$serviceCount', Constants.paymentColor),
+              ),
+              Container(
+                width: 1,
+                height: 32,
+                color: Colors.white24,
+                margin: const EdgeInsets.symmetric(horizontal: 12),
+              ),
+              Expanded(
+                child: _buildSummaryItem(
+                    'Total', '${_filteredTransactions.length}', Colors.white70),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildSummaryItem(String label, String value, Color color) {
+  Widget _buildSummaryItem(String label, String value, Color dotColor) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Row(
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: GoogleFonts.hind(fontSize: 12, color: Colors.white70),
+            ),
+          ],
+        ),
+        const SizedBox(height: 2),
         Text(
           value,
           style: GoogleFonts.hind(
-            fontSize: 24,
+            fontSize: 18,
             fontWeight: FontWeight.w700,
-            color: color,
-          ),
-        ),
-        Text(
-          label,
-          style: GoogleFonts.hind(
-            fontSize: 12,
-            color: Colors.grey[700],
+            color: Colors.white,
           ),
         ),
       ],
@@ -434,6 +420,8 @@ class _TransactionReportsScreenState extends State<TransactionReportsScreen> {
                       style: GoogleFonts.hind(fontSize: 12),
                     ),
                     style: OutlinedButton.styleFrom(
+                      foregroundColor: Constants.themePurple,
+                      side: BorderSide(color: Colors.grey.shade300),
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     ),
                   ),
@@ -526,18 +514,31 @@ class _TransactionReportsScreenState extends State<TransactionReportsScreen> {
   }
 
   Widget _buildFilterChip(String label, String value) {
-    final isSelected = _selectedType == value;
-    return FilterChip(
-      label: Text(label),
-      selected: isSelected,
-      onSelected: (selected) {
+    final selected = _selectedType == value;
+    return ChoiceChip(
+      label: Text(
+        label,
+        style: GoogleFonts.hind(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: selected ? Colors.white : Constants.themePurple,
+        ),
+      ),
+      selected: selected,
+      selectedColor: Constants.themePurple,
+      backgroundColor: Colors.white,
+      shape: StadiumBorder(
+        side: BorderSide(
+          color: selected ? Constants.themePurple : Colors.grey.shade300,
+        ),
+      ),
+      showCheckmark: false,
+      onSelected: (_) {
         setState(() {
           _selectedType = value;
         });
         _filterTransactions();
       },
-      selectedColor: Colors.blue[100],
-      checkmarkColor: Colors.blue[800],
     );
   }
 }

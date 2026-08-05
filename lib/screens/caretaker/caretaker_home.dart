@@ -2,10 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/providers/caretaker_provider.dart';
+import '../../utils/providers/repairs_provider.dart';
 import '../../utils/providers/shared_preference_builder.dart';
 import '../../widgets/caretaker/caretaker_summary_card.dart';
+import '../landlord/onboard_tenant_screen.dart';
 import 'caretaker_profile.dart';
 import 'repair_requests_screen.dart';
 
@@ -24,16 +27,14 @@ class _CaretakerHomeState extends State<CaretakerHome> {
   int _selectedIndex = 0;
   var token = SharedPrefrenceBuilder.getUserToken;
 
-  // Placeholder data - will be replaced with actual API calls
-  int pendingRequests = 0;
-  int inProgressRequests = 0;
-  int completedRequests = 0;
-
   @override
   void initState() {
     super.initState();
     log(token.toString(), name: "CARETAKER TOKEN");
     _loadProfile();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<RepairsProvider>().fetchAllRepairs();
+    });
   }
 
   void _loadProfile() {
@@ -96,10 +97,12 @@ class _CaretakerHomeState extends State<CaretakerHome> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
-            child: CaretakerSummaryCard(
-              pendingRequests: pendingRequests,
-              inProgressRequests: inProgressRequests,
-              completedRequests: completedRequests,
+            child: Consumer<RepairsProvider>(
+              builder: (context, repairs, _) => CaretakerSummaryCard(
+                pendingRequests: repairs.pendingRepairs.length,
+                inProgressRequests: repairs.inProgressRepairs.length,
+                completedRequests: repairs.completedRepairs.length,
+              ),
             ),
           ),
           const SizedBox(height: 20),
@@ -132,6 +135,18 @@ class _CaretakerHomeState extends State<CaretakerHome> {
               ),
             ),
             const SizedBox(height: 16),
+            _buildActionButton(
+              icon: Icons.person_add_alt_1,
+              label: 'Onboard New Tenant',
+              color: const Color(0xFF22C55E),
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  OnboardTenantScreen.routeName,
+                );
+              },
+            ),
+            const SizedBox(height: 12),
             _buildActionButton(
               icon: Icons.build,
               label: 'View Repair Requests',

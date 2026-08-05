@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/constants/colors.dart';
+import '../../utils/models/repair.dart';
+import '../../utils/providers/repairs_provider.dart';
 
 class RepairRequestsScreen extends StatefulWidget {
   static const routeName = "/repair-requests";
@@ -16,21 +20,102 @@ class _RepairRequestsScreenState extends State<RepairRequestsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  // Placeholder data - will be replaced with actual API calls
-  final List<Map<String, dynamic>> pendingRequests = [];
-  final List<Map<String, dynamic>> inProgressRequests = [];
-  final List<Map<String, dynamic>> completedRequests = [];
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<RepairsProvider>().fetchAllRepairs();
+    });
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  Future<void> _updateStatus(Repair repair, String newStatus) async {
+    final error =
+        await context.read<RepairsProvider>().updateStatus(repair.id, newStatus);
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(error ??
+            (newStatus == 'in_progress'
+                ? 'Repair marked as in progress'
+                : 'Repair marked as completed')),
+        backgroundColor: error == null ? Colors.green : Colors.red,
+      ),
+    );
+  }
+
+  void _showRepairDetails(Repair repair) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              repair.brokenProperty,
+              style: GoogleFonts.hind(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: royalBlue,
+              ),
+            ),
+            const SizedBox(height: 16),
+            _detailRow(Icons.home, repair.location),
+            const SizedBox(height: 8),
+            _detailRow(Icons.person, repair.email),
+            if (repair.createdAt != null) ...[
+              const SizedBox(height: 8),
+              _detailRow(
+                Icons.calendar_today,
+                DateFormat('dd MMM yyyy, HH:mm').format(repair.createdAt!),
+              ),
+            ],
+            const SizedBox(height: 16),
+            Text(
+              'Description',
+              style: GoogleFonts.hind(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Colors.grey[700],
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              repair.description,
+              style: GoogleFonts.hind(fontSize: 14),
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _detailRow(IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: Colors.grey),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: GoogleFonts.hind(fontSize: 14, color: Colors.black87),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -62,13 +147,27 @@ class _RepairRequestsScreenState extends State<RepairRequestsScreen>
               ],
             ),
             Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _buildRequestList(pendingRequests, 'pending'),
-                  _buildRequestList(inProgressRequests, 'in_progress'),
-                  _buildRequestList(completedRequests, 'completed'),
-                ],
+              child: Consumer<RepairsProvider>(
+                builder: (context, provider, _) {
+                  if (provider.isLoading && provider.repairs.isEmpty) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (provider.error != null && provider.repairs.isEmpty) {
+                    return _buildErrorState(provider);
+                  }
+
+                  return TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildRequestList(provider.pendingRepairs, 'pending'),
+                      _buildRequestList(
+                          provider.inProgressRepairs, 'in_progress'),
+                      _buildRequestList(
+                          provider.completedRepairs, 'completed'),
+                    ],
+                  );
+                },
               ),
             ),
           ],
@@ -77,57 +176,99 @@ class _RepairRequestsScreenState extends State<RepairRequestsScreen>
     );
   }
 
-  Widget _buildRequestList(List<Map<String, dynamic>> requests, String status) {
-    if (requests.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              status == 'pending'
-                  ? Icons.pending_actions
-                  : status == 'in_progress'
-                      ? Icons.build
-                      : Icons.check_circle,
-              size: 80,
-              color: Colors.grey,
+  Widget _buildErrorState(RepairsProvider provider) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.wifi_off, size: 80, color: Colors.grey),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Text(
+              provider.error!,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.hind(fontSize: 16, color: Colors.grey),
             ),
-            const SizedBox(height: 16),
-            Text(
-              status == 'pending'
-                  ? 'No pending requests'
-                  : status == 'in_progress'
-                      ? 'No requests in progress'
-                      : 'No completed requests',
-              style: GoogleFonts.hind(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: provider.fetchAllRepairs,
+            style: ElevatedButton.styleFrom(backgroundColor: royalBlue),
+            child: Text(
+              'Retry',
+              style: GoogleFonts.hind(color: Colors.white),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Repair requests will appear here',
-              style: GoogleFonts.hind(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: requests.length,
-      itemBuilder: (context, index) {
-        final request = requests[index];
-        return _buildRequestCard(request, status);
-      },
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildRequestCard(Map<String, dynamic> request, String status) {
+  Widget _buildRequestList(List<Repair> requests, String status) {
+    return RefreshIndicator(
+      onRefresh: () => context.read<RepairsProvider>().fetchAllRepairs(),
+      child: requests.isEmpty
+          ? LayoutBuilder(
+              builder: (context, constraints) => SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: SizedBox(
+                  height: constraints.maxHeight,
+                  child: _buildEmptyState(status),
+                ),
+              ),
+            )
+          : ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(16),
+              itemCount: requests.length,
+              itemBuilder: (context, index) {
+                return _buildRequestCard(requests[index], status);
+              },
+            ),
+    );
+  }
+
+  Widget _buildEmptyState(String status) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            status == 'pending'
+                ? Icons.pending_actions
+                : status == 'in_progress'
+                    ? Icons.build
+                    : Icons.check_circle,
+            size: 80,
+            color: Colors.grey,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            status == 'pending'
+                ? 'No pending requests'
+                : status == 'in_progress'
+                    ? 'No requests in progress'
+                    : 'No completed requests',
+            style: GoogleFonts.hind(
+              fontSize: 18,
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Repair requests will appear here',
+            style: GoogleFonts.hind(
+              fontSize: 14,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRequestCard(Repair repair, String status) {
     Color statusColor = status == 'pending'
         ? Colors.orange
         : status == 'in_progress'
@@ -141,14 +282,7 @@ class _RepairRequestsScreenState extends State<RepairRequestsScreen>
         borderRadius: BorderRadius.circular(12),
       ),
       child: InkWell(
-        onTap: () {
-          // Navigate to repair details
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Repair details screen coming soon'),
-            ),
-          );
-        },
+        onTap: () => _showRepairDetails(repair),
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -160,7 +294,7 @@ class _RepairRequestsScreenState extends State<RepairRequestsScreen>
                 children: [
                   Expanded(
                     child: Text(
-                      request['title'] ?? 'Repair Request',
+                      repair.brokenProperty,
                       style: GoogleFonts.hind(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
@@ -202,7 +336,7 @@ class _RepairRequestsScreenState extends State<RepairRequestsScreen>
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    request['house'] ?? 'Block A - House 1',
+                    repair.location,
                     style: GoogleFonts.hind(
                       fontSize: 14,
                       color: Colors.grey,
@@ -212,7 +346,7 @@ class _RepairRequestsScreenState extends State<RepairRequestsScreen>
               ),
               const SizedBox(height: 8),
               Text(
-                request['description'] ?? 'No description provided',
+                repair.description,
                 style: GoogleFonts.hind(
                   fontSize: 14,
                   color: Colors.black87,
@@ -233,7 +367,10 @@ class _RepairRequestsScreenState extends State<RepairRequestsScreen>
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        request['date'] ?? 'Today',
+                        repair.createdAt != null
+                            ? DateFormat('dd MMM yyyy')
+                                .format(repair.createdAt!)
+                            : 'Date unavailable',
                         style: GoogleFonts.hind(
                           fontSize: 12,
                           color: Colors.grey,
@@ -243,14 +380,7 @@ class _RepairRequestsScreenState extends State<RepairRequestsScreen>
                   ),
                   if (status == 'pending')
                     ElevatedButton(
-                      onPressed: () {
-                        // Mark as in progress
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Marking request as in progress'),
-                          ),
-                        );
-                      },
+                      onPressed: () => _updateStatus(repair, 'in_progress'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: royalBlue,
                         shape: RoundedRectangleBorder(
@@ -271,14 +401,7 @@ class _RepairRequestsScreenState extends State<RepairRequestsScreen>
                     ),
                   if (status == 'in_progress')
                     ElevatedButton(
-                      onPressed: () {
-                        // Mark as completed
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Marking request as completed'),
-                          ),
-                        );
-                      },
+                      onPressed: () => _updateStatus(repair, 'completed'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         shape: RoundedRectangleBorder(

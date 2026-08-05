@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import '../api/api_client.dart';
 import 'package:smart_nyumba/utils/models/admin_profile.dart';
 
 import '../constants/constants.dart';
@@ -76,7 +76,7 @@ class Auth with ChangeNotifier {
       String loginEndpoint = Constants.LOGIN_URL;
       var uri = Uri.parse(loginEndpoint);
       final response =
-          await http.post(uri, body: {'email': email, 'password': password});
+          await SafeHttp.post(uri, body: {'email': email, 'password': password});
 
       log(response.body.toString(), name: "TENANT LOGIN RESPONSE");
       log(response.statusCode.toString(), name: "TENANT LOGIN STATUS CODE");
@@ -108,7 +108,7 @@ class Auth with ChangeNotifier {
     try {
       String landlordLoginEndpoint = Constants.LANDLORD_LOGIN_URL;
       var landlordUri = Uri.parse(landlordLoginEndpoint);
-      final landlordResponse = await http.post(landlordUri,
+      final landlordResponse = await SafeHttp.post(landlordUri,
           body: {'email': email, 'password': password});
 
       log(landlordResponse.body.toString(), name: "LANDLORD LOGIN RESPONSE");
@@ -140,12 +140,51 @@ class Auth with ChangeNotifier {
       log(e.toString(), name: "Landlord login attempt failed");
     }
 
+    // Try caretaker login
+    try {
+      String caretakerLoginEndpoint = Constants.CARETAKER_LOGIN_URL;
+      var caretakerUri = Uri.parse(caretakerLoginEndpoint);
+      final caretakerResponse = await SafeHttp.post(caretakerUri,
+          body: {'email': email, 'password': password});
+
+      log(caretakerResponse.body.toString(), name: "CARETAKER LOGIN RESPONSE");
+      log(caretakerResponse.statusCode.toString(),
+          name: "CARETAKER LOGIN STATUS CODE");
+
+      if (caretakerResponse.statusCode == 200) {
+        var caretakerData = json.decode(caretakerResponse.body);
+        if (caretakerData['status'] == true &&
+            caretakerData['access_token'] != null) {
+          loginResponseMessage = LoginResponseMessage(
+            status: caretakerData['status'],
+            message: caretakerData['message'],
+            accessToken: caretakerData['access_token'],
+            role: caretakerData['role'] ?? 'caretaker',
+          );
+
+          SharedPrefrenceBuilder.setUserEmail(email);
+          SharedPrefrenceBuilder.setUserToken(caretakerData['access_token']);
+          SharedPrefrenceBuilder.setUserRole(
+              caretakerData['role'] ?? 'caretaker');
+          setToken(caretakerData['access_token']);
+          SharedPrefrenceBuilder.setExpirationTime(
+            DateTime.now().add(const Duration(hours: 1)),
+          );
+          notifyListeners();
+          log("Caretaker login successful", name: "LOGIN");
+          return loginResponseMessage;
+        }
+      }
+    } catch (e) {
+      log(e.toString(), name: "Caretaker login attempt failed");
+    }
+
     // Try admin login
     try {
       String adminLoginEndPoint = Constants.ADMIN_LOGIN_URL;
       var adminUri = Uri.parse(adminLoginEndPoint);
-      final adminResponse = await http
-          .post(adminUri, body: {'email': email, 'password': password});
+      final adminResponse = await SafeHttp.post(adminUri,
+          body: {'email': email, 'password': password});
 
       log(adminResponse.body.toString(), name: "ADMIN LOGIN RESPONSE");
       log(adminResponse.statusCode.toString(), name: "ADMIN LOGIN STATUS CODE");
@@ -190,8 +229,8 @@ class Auth with ChangeNotifier {
     try {
       String logoutUrl = Constants.LOGOUT_URL;
 
-      var logout = await http
-          .post(headers: headers, Uri.parse(logoutUrl), body: {"email": email});
+      var logout = await SafeHttp.post(Uri.parse(logoutUrl),
+          headers: headers, body: {"email": email});
       log(logout.body.toString(), name: "LOGOUT");
       if (logout.statusCode == 200) {
         isLoggedout = true;
@@ -200,7 +239,7 @@ class Auth with ChangeNotifier {
 
       if (logout.statusCode != 200) {
         String adminLogoutUrl = Constants.ADMIN_LOGOUT_URL;
-        var adminLogout = await http.post(
+        var adminLogout = await SafeHttp.post(
             headers: headers,
             Uri.parse(adminLogoutUrl),
             body: {"email": email});
@@ -273,7 +312,7 @@ class Auth with ChangeNotifier {
       log(role.toString(), name: "Registration Role");
       log(requestBody.toString(), name: "Request Body");
 
-      final response = await http.post(register, body: requestBody);
+      final response = await SafeHttp.post(register, body: requestBody);
       SharedPrefrenceBuilder.setUserEmail(email);
       log(response.statusCode.toString(), name: "Register status code");
       log(response.body.toString(), name: "Register response");
@@ -297,7 +336,7 @@ class Auth with ChangeNotifier {
       Uri otpVerification = Uri.parse(otpVerificationUrl);
 
       final verifyOtp =
-          await http.post(otpVerification, body: {"email": email, "otp": otp});
+          await SafeHttp.post(otpVerification, body: {"email": email, "otp": otp});
 
       log(verifyOtp.body, name: "Verified Status from user register");
       SendOtp result = SendOtp.fromJson(jsonDecode(verifyOtp.body));
@@ -314,7 +353,7 @@ class Auth with ChangeNotifier {
     try {
       String userProfileUrl = Constants.USER_PROFILE;
       Uri uri = Uri.parse(userProfileUrl);
-      final response = await http.get(uri, headers: {
+      final response = await SafeHttp.get(uri, headers: {
         'Authorization': 'Bearer $token',
       });
       log(token.toString(), name: "USER TOKEN");
@@ -344,7 +383,7 @@ class Auth with ChangeNotifier {
   Future getAdminProfile(String token) async {
     String adminProfileUrl = Constants.ADMIN_PROFILE;
     Uri uri = Uri.parse(adminProfileUrl);
-    final response = await http.get(uri, headers: {
+    final response = await SafeHttp.get(uri, headers: {
       'Authorization': 'Bearer $token',
     });
     log(token.toString(), name: "ADMIN TOKEN");

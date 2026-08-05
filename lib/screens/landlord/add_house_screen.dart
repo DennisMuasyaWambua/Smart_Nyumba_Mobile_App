@@ -44,12 +44,31 @@ class _AddHouseScreenState extends State<AddHouseScreen> {
     _loadProperties();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    try {
+      Provider.of<InternetChecker>(context, listen: false).checkForInternetConnection();
+    } catch (e) {
+      log("InternetChecker not initialized", name: "ADD HOUSE");
+    }
+  }
+
   void _loadProperties() {
-    final profile = LandlordProvider().getProfile(token!, context);
-    profile.then((value) {
+    setState(() {
+      isLoadingProperties = true;
+    });
+
+    final propertiesResponse = LandlordProvider().getProperties();
+    propertiesResponse.then((response) {
       if (mounted) {
         setState(() {
-          properties = value.profile?.properties;
+          if (response['status'] == true && response['properties'] != null) {
+            // Convert from API format to Property objects
+            properties = (response['properties'] as List)
+                .map((p) => Property.fromJson(p))
+                .toList();
+          }
           isLoadingProperties = false;
         });
       }
@@ -83,10 +102,16 @@ class _AddHouseScreenState extends State<AddHouseScreen> {
       return;
     }
 
-    if (!Provider.of<InternetChecker>(context, listen: false).isInternetActive) {
-      Provider.of<InternetChecker>(context, listen: false)
-          .showInternetConnectionDialog(context);
-      return;
+    // Check internet connection if provider is available
+    try {
+      final internetChecker = Provider.of<InternetChecker>(context, listen: false);
+      if (!internetChecker.isInternetActive) {
+        internetChecker.showInternetConnectionDialog(context);
+        return;
+      }
+    } catch (e) {
+      // InternetChecker not available, continue anyway
+      log("InternetChecker not available: ${e.toString()}", name: "ADD HOUSE");
     }
 
     setState(() {
@@ -166,13 +191,23 @@ class _AddHouseScreenState extends State<AddHouseScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Add New House',
-                  style: GoogleFonts.hind(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: royalBlue,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Add New House',
+                      style: GoogleFonts.hind(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: royalBlue,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.refresh, color: royalBlue),
+                      onPressed: _loadProperties,
+                      tooltip: 'Refresh Properties',
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 Text(

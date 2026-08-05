@@ -91,11 +91,15 @@ class _RegisterSubordinateScreenState extends State<RegisterSubordinateScreen> {
     }
 
     // Check internet connection
-    if (!Provider.of<InternetChecker>(context, listen: false)
-        .isInternetActive) {
-      Provider.of<InternetChecker>(context, listen: false)
-          .showInternetConnectionDialog(context);
-      return;
+    try {
+      final internetChecker = Provider.of<InternetChecker>(context, listen: false);
+      if (!internetChecker.isInternetActive) {
+        internetChecker.showInternetConnectionDialog(context);
+        return;
+      }
+    } catch (e) {
+      // InternetChecker not available, continue anyway
+      log("InternetChecker not available: ${e.toString()}", name: "Register Subordinate");
     }
 
     setState(() {
@@ -104,8 +108,7 @@ class _RegisterSubordinateScreenState extends State<RegisterSubordinateScreen> {
     });
 
     try {
-      final landlordProvider = Provider.of<LandlordProvider>(context, listen: false);
-      final response = await landlordProvider.registerSubordinate(
+      final response = await LandlordProvider().registerSubordinate(
         _emailController.text,
         _firstNameController.text,
         _lastNameController.text,

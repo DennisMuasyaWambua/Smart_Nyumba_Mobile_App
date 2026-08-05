@@ -1,10 +1,14 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../screens/authentication/login.dart';
+import '../../utils/providers/account_settings_provider.dart';
 import '../../utils/providers/landlord_provider.dart';
 import '../../utils/providers/shared_preference_builder.dart';
+import '../../widgets/policy_screen.dart';
+import 'pricing_settings_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const routeName = "/landlord-settings";
@@ -71,18 +75,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: const Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               // Validate passwords
+              if (currentPasswordController.text.isEmpty ||
+                  newPasswordController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('All fields are required')),
+                );
+                return;
+              }
               if (newPasswordController.text != confirmPasswordController.text) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Passwords do not match')),
                 );
                 return;
               }
-              // TODO: Implement password change API call
+              if (newPasswordController.text.length < 8) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content:
+                        Text('Password must be at least 8 characters long'),
+                  ),
+                );
+                return;
+              }
+
               Navigator.pop(context);
+              final error =
+                  await context.read<AccountSettingsProvider>().changePassword(
+                        currentPassword: currentPasswordController.text,
+                        newPassword: newPasswordController.text,
+                      );
+              if (!mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Password changed successfully')),
+                SnackBar(
+                  content: Text(error ?? 'Password changed successfully'),
+                  backgroundColor: error == null ? Colors.green : Colors.red,
+                ),
               );
             },
             child: const Text('Change Password'),
@@ -93,9 +122,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showEditProfileDialog() {
-    // TODO: Load current profile data
-    final firstNameController = TextEditingController();
-    final lastNameController = TextEditingController();
+    final firstNameController =
+        TextEditingController(text: SharedPrefrenceBuilder.getUserFirstName);
+    final lastNameController =
+        TextEditingController(text: SharedPrefrenceBuilder.getUserLastName);
     final phoneController = TextEditingController();
 
     showDialog(
@@ -142,11 +172,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: const Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () {
-              // TODO: Implement profile update API call
+            onPressed: () async {
+              if (firstNameController.text.trim().isEmpty &&
+                  lastNameController.text.trim().isEmpty &&
+                  phoneController.text.trim().isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Nothing to update')),
+                );
+                return;
+              }
+
               Navigator.pop(context);
+              final error =
+                  await context.read<AccountSettingsProvider>().updateProfile(
+                        firstName: firstNameController.text.trim(),
+                        lastName: lastNameController.text.trim(),
+                        mobileNumber: phoneController.text.trim(),
+                      );
+              if (!mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Profile updated successfully')),
+                SnackBar(
+                  content: Text(error ?? 'Profile updated successfully'),
+                  backgroundColor: error == null ? Colors.green : Colors.red,
+                ),
               );
             },
             child: const Text('Save'),
@@ -310,6 +358,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
 
+            // Subscription
+            _buildSettingsSection(
+              'SUBSCRIPTION',
+              [
+                _buildSettingsTile(
+                  icon: Icons.workspace_premium,
+                  title: 'Pricing & Subscription',
+                  subtitle: 'View plans, upgrade or renew via iPay',
+                  iconColor: Colors.amber[700],
+                  onTap: () {
+                    Navigator.pushNamed(
+                        context, PricingSettingsScreen.routeName);
+                  },
+                ),
+              ],
+            ),
+
             // Notification Settings
             _buildSettingsSection(
               'NOTIFICATIONS',
@@ -408,9 +473,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   icon: Icons.privacy_tip,
                   title: 'Privacy Policy',
                   onTap: () {
-                    // TODO: Open privacy policy
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Privacy Policy')),
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const PolicyScreen.privacyPolicy(),
+                      ),
                     );
                   },
                 ),
@@ -419,9 +485,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   icon: Icons.description,
                   title: 'Terms of Service',
                   onTap: () {
-                    // TODO: Open terms of service
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Terms of Service')),
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const PolicyScreen.termsOfService(),
+                      ),
                     );
                   },
                 ),

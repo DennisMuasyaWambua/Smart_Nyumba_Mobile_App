@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
+import '../api/api_client.dart';
 
 import '../constants/constants.dart';
 import '../models/user_profile.dart';
@@ -22,7 +23,7 @@ class TenantsProfile with ChangeNotifier {
     Map<String, String> headers = {
       "Authorization": "Bearer $token",
     };
-    var response = await http.get(Uri.parse(profileEndpoint), headers: headers);
+    var response = await SafeHttp.get(Uri.parse(profileEndpoint), headers: headers);
     log(response.body.toString(), name: "USER profile");
 
     UserProfile data = UserProfile.fromJson(jsonDecode(response.body));

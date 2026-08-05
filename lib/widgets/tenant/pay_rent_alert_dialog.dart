@@ -1,13 +1,14 @@
-import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_nyumba/utils/constants/constants.dart';
+import 'package:smart_nyumba/utils/constants/colors.dart';
 import 'package:smart_nyumba/utils/providers/payment_provider.dart';
 import 'package:smart_nyumba/utils/providers/shared_preference_builder.dart';
 import 'package:smart_nyumba/utils/providers/tenants_profile_provider.dart';
-import 'package:smart_nyumba/widgets/button_layout.dart';
+import 'package:smart_nyumba/screens/tenant/payment_webview_screen.dart';
 
 class PayRentAlertDialog extends StatefulWidget {
   const PayRentAlertDialog({super.key});
@@ -17,283 +18,419 @@ class PayRentAlertDialog extends StatefulWidget {
 }
 
 class _PayRentAlertDialogState extends State<PayRentAlertDialog> {
-  late TextEditingController controller;
-  String? rentAmount;
-  double? commission;
-  double? landlordAmount;
+  static final RegExp _phoneRegex = RegExp(r'^254\d{9}$');
+
+  final TextEditingController _phoneController = TextEditingController();
+  final NumberFormat _currencyFormat =
+      NumberFormat.currency(symbol: 'KSh ', decimalDigits: 0);
+
+  String? _rentCharged;
+  bool _loadingRent = true;
+  String? _rentError;
+
+  bool _paying = false;
+  String? _phoneError;
+  String? _payError;
+  int _monthsToPay = 1; // pay current + (N-1) months ahead
+
+  List<Map<String, int>> _monthsForward(int n) {
+    final now = DateTime.now();
+    return List.generate(n, (i) {
+      final d = DateTime(now.year, now.month + i, 1);
+      return {'month': d.month, 'year': d.year};
+    });
+  }
+
+  double get _totalDue =>
+      (double.tryParse(_rentCharged ?? '') ?? 0) * _monthsToPay;
 
   @override
   void initState() {
-    controller = TextEditingController();
     super.initState();
+    _loadRent();
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
-  void calculateCommission(String amount) {
-    double rent = double.parse(amount);
+  Future<void> _loadRent() async {
     setState(() {
-      rentAmount = amount;
-      commission = rent * (Constants.COMMISSION_RATE / 100);
-      landlordAmount = rent - commission!;
+      _loadingRent = true;
+      _rentError = null;
     });
+    try {
+      final profile = await Provider.of<TenantsProfile>(context, listen: false)
+          .getUserProfile(SharedPrefrenceBuilder.getUserToken!);
+      if (!mounted) return;
+      final rent = profile.propertyBlock?.rentCharged;
+      setState(() {
+        _rentCharged = rent;
+        _loadingRent = false;
+        if (rent == null) {
+          _rentError = 'Could not find your rent amount. Please try again.';
+        }
+      });
+    } catch (e) {
+      log(e.toString(), name: 'PAY RENT DIALOG');
+      if (!mounted) return;
+      setState(() {
+        _loadingRent = false;
+        _rentError = 'Could not load your rent details. Please try again.';
+      });
+    }
+  }
+
+  String get _formattedRent {
+    final parsed = double.tryParse(_rentCharged ?? '');
+    return parsed != null ? _currencyFormat.format(parsed) : 'KSh --';
+  }
+
+  Future<void> _payRent() async {
+    final phone = _phoneController.text.trim();
+    if (!_phoneRegex.hasMatch(phone)) {
+      setState(() {
+        _phoneError = 'Enter your number in the format 254712345678';
+      });
+      return;
+    }
+
+    setState(() {
+      _phoneError = null;
+      _payError = null;
+      _paying = true;
+    });
+
+    final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+
+    try {
+      final result = await Provider.of<Payments>(context, listen: false)
+          .payMultiMonthRent(phone, _monthsForward(_monthsToPay));
+      log(result.toJson().toString(), name: 'RENT PAYMENT RESULT');
+
+      if (!mounted) return;
+
+      if (result.status == true && result.redirectUrl != null) {
+        navigator.pop();
+        navigator.pushNamed(
+          PaymentWebViewScreen.routeName,
+          arguments: {
+            'paymentType': 'rent',
+            'redirectUrl': result.redirectUrl,
+            'orderTrackingId': result.orderTrackingId,
+            'email': SharedPrefrenceBuilder.getUserEmail,
+          },
+        ).then((success) {
+          if (success == true) {
+            messenger.showSnackBar(
+              const SnackBar(
+                content: Text('Rent payment completed successfully!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
+        });
+      } else {
+        setState(() {
+          _paying = false;
+          _payError = result.message;
+        });
+      }
+    } catch (e) {
+      log(e.toString(), name: 'RENT PAYMENT ERROR');
+      if (!mounted) return;
+      setState(() {
+        _paying = false;
+        _payError = 'Payment could not be started. Please try again.';
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text("Pay Rent"),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("Enter your phone number:"),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: controller,
-              cursorColor: Colors.black,
-              keyboardType: TextInputType.phone,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 4,
-                ),
-                hintText: "254XXXXXXXXX",
-              ),
-            ),
-            const SizedBox(height: 20),
-            FutureBuilder(
-              future: Provider.of<TenantsProfile>(context, listen: false)
-                  .getUserProfile(SharedPrefrenceBuilder.getUserToken!),
-              builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data?.propertyBlock?.rentCharged != null) {
-                  String rent = snapshot.data!.propertyBlock!.rentCharged!;
-                  calculateCommission(rent);
-
-                  return Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade50,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.blue.shade200),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Total Rent to Pay:',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                                color: Colors.blue,
-                              ),
-                            ),
-                            Text(
-                              'KES $rent',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                                color: Colors.blue,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Divider(height: 16),
-                        const Text(
-                          'Payment breakdown:',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Platform Commission (${Constants.COMMISSION_RATE}%):',
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            Text(
-                              'KES ${commission?.toStringAsFixed(2)}',
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Landlord receives:',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            Text(
-                              'KES ${landlordAmount?.toStringAsFixed(2)}',
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                return const CircularProgressIndicator();
-              },
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            OutlinedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.black),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: 6,
-                ),
-              ),
-              child: const Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            ButtonLayout(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
-                vertical: 0,
-              ),
-              borderRadius: 4,
-              text: const Text(
-                'Pay',
-                style: TextStyle(color: Colors.white),
-              ),
-              onClick: () {
-                if (controller.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Please enter your phone number'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                  return;
-                }
-
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) => const Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.amber,
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Pay Rent',
+                    style: GoogleFonts.hind(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: royalBlue,
                     ),
                   ),
-                );
-
-                var token = SharedPrefrenceBuilder.getUserToken;
-
-                log(token.toString(), name: "TOKEN FOR RENT PAYMENT");
-                var user = Provider.of<TenantsProfile>(context, listen: false)
-                    .getUserProfile(token!);
-
-                user.then((value) {
-                  log(value.email.toString(), name: "USER EMAIL FOR RENT PAYMENT");
-
-                  String mobile = controller.text.toString();
-                  String rent = value.propertyBlock!.rentCharged.toString();
-
-                  var pay = Provider.of<Payments>(context, listen: false)
-                      .payRent(mobile, rent, context);
-
-                  pay.then((value) {
-                    log(value.toJson().toString(), name: "RENT PAYMENT RESULT");
-
-                    Navigator.of(context).pop();
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(value.message ?? 'Payment initiated'),
-                        backgroundColor: value.status == true ? Colors.green : Colors.orange,
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 20),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: _paying ? null : () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              _buildAmountHero(),
+              const SizedBox(height: 16),
+              _buildMonthStepper(),
+              const SizedBox(height: 16),
+              Text(
+                'M-Pesa phone number',
+                style: GoogleFonts.hind(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey.shade700,
+                ),
+              ),
+              const SizedBox(height: 6),
+              TextFormField(
+                controller: _phoneController,
+                enabled: !_paying,
+                keyboardType: TextInputType.phone,
+                style: GoogleFonts.hind(fontSize: 15),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  hintText: '254712345678',
+                  errorText: _phoneError,
+                  errorMaxLines: 2,
+                ),
+                onChanged: (_) {
+                  if (_phoneError != null) {
+                    setState(() => _phoneError = null);
+                  }
+                },
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Icon(Icons.phone_android,
+                      size: 16, color: Colors.grey.shade600),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      "You'll receive an M-Pesa prompt on this number to complete payment.",
+                      style: GoogleFonts.hind(
+                        fontSize: 12,
+                        color: Colors.grey.shade600,
                       ),
-                    );
-                  }).catchError((error) {
-                    Navigator.of(context).pop();
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Payment failed: ${error.toString()}'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  });
-                });
-
-                Timer.periodic(const Duration(seconds: 10), (timer) {
-                  var check = Provider.of<Payments>(context, listen: false)
-                      .checkRentPaymentStatus();
-                  check.then((value) {
-                    if (value == 0) {
-                      log("$value rent payment was successful", name: "RENT PAYMENT SUCCESS");
-                      timer.cancel();
-
-                      if (mounted) {
-                        Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Rent payment completed successfully!'),
-                            backgroundColor: Colors.green,
+                    ),
+                  ),
+                ],
+              ),
+              if (_payError != null) ...[
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.error_outline,
+                          size: 18, color: Colors.red.shade700),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _payError!,
+                          style: GoogleFonts.hind(
+                            fontSize: 12,
+                            color: Colors.red.shade700,
                           ),
-                        );
-                      }
-                    } else {
-                      timer.cancel();
-                      log("$value rent payment failed", name: "RENT PAYMENT FAILED");
-                    }
-                  }).catchError((error) {
-                    timer.cancel();
-                    log(error.toString(), name: "RENT PAYMENT CHECK ERROR");
-                  });
-                });
-              },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 48,
+                child: ElevatedButton(
+                  onPressed:
+                      (_paying || _loadingRent || _rentCharged == null)
+                          ? null
+                          : _payRent,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: royalBlue,
+                    disabledBackgroundColor: royalBlue.withValues(alpha: 0.4),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: _paying
+                      ? const SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2.5,
+                          ),
+                        )
+                      : Text(
+                          _rentCharged == null
+                              ? 'Pay'
+                              : 'Pay ${_currencyFormat.format(_totalDue)}'
+                                  '${_monthsToPay > 1 ? ' · ${_monthsToPay}mo' : ''}',
+                          style: GoogleFonts.hind(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMonthStepper() {
+    final now = DateTime.now();
+    final last = DateTime(now.year, now.month + _monthsToPay - 1, 1);
+    final range = _monthsToPay == 1
+        ? DateFormat.yMMM().format(now)
+        : '${DateFormat.MMM().format(now)} – ${DateFormat.yMMM().format(last)}';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Months to pay',
+            style: GoogleFonts.hind(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade700)),
+        const SizedBox(height: 6),
+        Row(
+          children: [
+            _stepBtn(Icons.remove, _monthsToPay > 1 && !_paying,
+                () => setState(() => _monthsToPay--)),
+            Expanded(
+              child: Column(
+                children: [
+                  Text('$_monthsToPay',
+                      style: GoogleFonts.hind(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: royalBlue)),
+                  Text(range,
+                      style: GoogleFonts.hind(
+                          fontSize: 11, color: Colors.grey.shade600)),
+                ],
+              ),
             ),
+            _stepBtn(Icons.add, _monthsToPay < 12 && !_paying,
+                () => setState(() => _monthsToPay++)),
           ],
         ),
       ],
+    );
+  }
+
+  Widget _stepBtn(IconData icon, bool enabled, VoidCallback onTap) {
+    return InkWell(
+      onTap: enabled ? onTap : null,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          color: enabled ? royalBlue.withValues(alpha: 0.08) : Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(icon,
+            color: enabled ? royalBlue : Colors.grey.shade400, size: 20),
+      ),
+    );
+  }
+
+  Widget _buildAmountHero() {
+    if (_loadingRent) {
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 24),
+        alignment: Alignment.center,
+        child: const SizedBox(
+          height: 24,
+          width: 24,
+          child: CircularProgressIndicator(strokeWidth: 2.5),
+        ),
+      );
+    }
+
+    if (_rentError != null) {
+      return Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.orange.shade50,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: [
+            Text(
+              _rentError!,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.hind(
+                fontSize: 13,
+                color: Colors.orange.shade800,
+              ),
+            ),
+            TextButton(
+              onPressed: _loadRent,
+              child: Text(
+                'Retry',
+                style: GoogleFonts.hind(fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      decoration: BoxDecoration(
+        color: royalBlue.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Text(
+            'Monthly rent due',
+            style: GoogleFonts.hind(
+              fontSize: 13,
+              color: Colors.grey.shade600,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            _formattedRent,
+            style: GoogleFonts.hind(
+              fontSize: 28,
+              fontWeight: FontWeight.w700,
+              color: royalBlue,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

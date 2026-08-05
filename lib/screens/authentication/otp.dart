@@ -10,7 +10,7 @@ import '../../utils/constants/constants.dart';
 import '../../utils/providers/auth_provider.dart';
 import '../../utils/providers/shared_preference_builder.dart';
 import 'activation_payment_screen.dart';
-import 'package:http/http.dart' as http;
+import '../../utils/api/api_client.dart';
 
 class Otp extends StatefulWidget {
   static const routeName = "/otp";
@@ -206,9 +206,9 @@ class _OtpState extends State<Otp> {
                   ),
                   onClick: () async {
                     var email = SharedPrefrenceBuilder.getUserEmail;
-                    const String resendOtp = Constants.REGISTER_RESEND_OTP;
-                    final response = await http
-                        .post(Uri.parse(resendOtp), body: {"email": email});
+                    final String resendOtp = Constants.REGISTER_RESEND_OTP;
+                    final response = await SafeHttp.post(Uri.parse(resendOtp),
+                        body: {"email": email});
                     log(response.body.toString(), name: "RESEND CODE");
                     showDialog(
                         context: context,

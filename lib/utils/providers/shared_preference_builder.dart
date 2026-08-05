@@ -1,7 +1,25 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefrenceBuilder {
   static SharedPreferences? _preferences;
+  static const _secureStorage = FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+  );
+
+  // The auth token lives in secure storage; an in-memory copy keeps the
+  // existing synchronous getUserToken API working.
+  static String? _cachedToken;
+
+  /// Fired after a new auth token is stored (i.e. on every successful login).
+  /// main.dart wires this to register the device for push notifications,
+  /// keeping this storage layer free of any push/Firebase dependency.
+  static void Function()? onTokenSet;
+
+  /// Fired when the session is cleared (logout / 401). main.dart wires this to
+  /// drop the device's push token so notifications stop for this device.
+  static void Function()? onTokenCleared;
+
   static const useremail = 'email';
   static const userToken = 'token';
   static const userRole = 'role';
@@ -12,6 +30,16 @@ class SharedPrefrenceBuilder {
 
   static Future init() async {
     _preferences = await SharedPreferences.getInstance();
+
+    // Migrate any token stored in plain SharedPreferences by older app
+    // versions into secure storage.
+    final legacyToken = _preferences!.getString(userToken);
+    if (legacyToken != null) {
+      await _secureStorage.write(key: userToken, value: legacyToken);
+      await _preferences!.remove(userToken);
+    }
+
+    _cachedToken = await _secureStorage.read(key: userToken);
   }
 
   static Future setUserEmail(String email) async {
@@ -23,7 +51,9 @@ class SharedPrefrenceBuilder {
   }
 
   static Future setUserToken(String token) async {
-    await _preferences!.setString(userToken, token);
+    _cachedToken = token;
+    await _secureStorage.write(key: userToken, value: token);
+    onTokenSet?.call();
   }
 
   static Future setUserRole(String role) async {
@@ -47,7 +77,7 @@ class SharedPrefrenceBuilder {
   }
 
   static String? get getUserToken {
-    return _preferences!.getString(userToken);
+    return _cachedToken;
   }
 
   static String? get getUserRole {
@@ -71,7 +101,11 @@ class SharedPrefrenceBuilder {
   }
 
   static void clearInvalidToken() async {
-    await _preferences!.remove(SharedPrefrenceBuilder.userToken);
+    // Drop the push token first, while the auth token is still available for
+    // the best-effort backend unregister call.
+    onTokenCleared?.call();
+    _cachedToken = null;
+    await _secureStorage.delete(key: userToken);
     await _preferences!.remove(SharedPrefrenceBuilder.userRole);
     await _preferences!.remove(SharedPrefrenceBuilder.tokenEpirationTime);
   }

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../api/api_client.dart';
 import 'package:smart_nyumba/utils/models/all_tenants.dart';
 import 'package:smart_nyumba/utils/providers/_providers.dart';
 import '../constants/constants.dart';
@@ -20,7 +21,7 @@ class AdminController with ChangeNotifier {
 
     try {
       var uri = Uri.parse(tenantEndpoint);
-      final response = await http.get(uri, headers: headers);
+      final response = await SafeHttp.get(uri, headers: headers);
       // log(response.body.toString(), name: "ADMIN CONTROLLER");
 
       _rawTenantsData = json.decode(response.body);
@@ -46,7 +47,7 @@ class AdminController with ChangeNotifier {
     };
     try {
       var uri = Uri.parse(tenantEndpoint);
-      final response = await http.get(uri, headers: headers);
+      final response = await SafeHttp.get(uri, headers: headers);
       // log(response.body.toString(), name: "ADMIN CONTROLLER");
 
       _rawTenantsData = json.decode(response.body);

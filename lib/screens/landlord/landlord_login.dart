@@ -181,10 +181,12 @@ class _LandlordLoginState extends State<LandlordLogin> {
 
                           if (value.status == true &&
                               (value.message == "Login Successful" || value.message == "Login successful")) {
-                            // Save role
+                            // Save role and email
                             if (value.role != null) {
                               SharedPrefrenceBuilder.setUserRole(value.role!);
                             }
+                            // Save email for property creation
+                            SharedPrefrenceBuilder.setUserEmail(email);
 
                             // Check activation status for landlords
                             log("Checking landlord activation status...", name: "LANDLORD LOGIN");

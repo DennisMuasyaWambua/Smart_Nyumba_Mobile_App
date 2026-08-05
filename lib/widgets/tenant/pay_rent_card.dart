@@ -1,7 +1,6 @@
 
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_nyumba/utils/constants/colors.dart';
 
 import 'pay_rent_alert_dialog.dart';
 

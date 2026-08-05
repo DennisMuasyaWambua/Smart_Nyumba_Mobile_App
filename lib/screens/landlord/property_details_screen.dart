@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import '../../utils/api/api_client.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 
@@ -75,7 +76,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
 
   Future<void> _loadTenants(String token) async {
     Uri uri = Uri.parse(Constants.ALL_TENANTS_URL);
-    final response = await http.get(
+    final response = await SafeHttp.get(
       uri,
       headers: {
         'Authorization': 'Bearer $token',
@@ -101,7 +102,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   Future<void> _loadFinancialData(String token) async {
     // Get transactions and calculate property-specific financials
     Uri uri = Uri.parse(Constants.ALL_TRANSACTIONS);
-    final response = await http.get(
+    final response = await SafeHttp.get(
       uri,
       headers: {
         'Authorization': 'Bearer $token',
@@ -139,8 +140,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
           'rent_revenue': rentRevenue,
           'service_revenue': serviceRevenue,
           'total_revenue': rentRevenue + serviceRevenue,
-          'commission': (rentRevenue + serviceRevenue) * 0.05,
-          'landlord_payout': (rentRevenue + serviceRevenue) * 0.95,
+          'landlord_payout': rentRevenue + serviceRevenue,
           'transaction_count': transactionCount,
         };
       });
@@ -181,7 +181,6 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
 
   Widget _buildFinancialCard() {
     final totalRevenue = _financialData['total_revenue'] ?? 0.0;
-    final commission = _financialData['commission'] ?? 0.0;
     final payout = _financialData['landlord_payout'] ?? 0.0;
     final rentRevenue = _financialData['rent_revenue'] ?? 0.0;
     final serviceRevenue = _financialData['service_revenue'] ?? 0.0;
@@ -207,8 +206,6 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
             _buildFinancialRow('Rent Revenue', rentRevenue, Colors.purple),
             const SizedBox(height: 8),
             _buildFinancialRow('Service Revenue', serviceRevenue, Colors.teal),
-            const SizedBox(height: 8),
-            _buildFinancialRow('Commission (5%)', commission, Colors.orange),
             const Divider(height: 24),
             Container(
               padding: const EdgeInsets.all(12),

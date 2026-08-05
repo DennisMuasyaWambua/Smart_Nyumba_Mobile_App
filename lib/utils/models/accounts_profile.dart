@@ -88,7 +88,7 @@ class AccountsDetails {
       email: json['email'],
       phoneNumber: json['phone_number'],
       idNumber: json['id_number'],
-      isActive: json['is_active'],
+      isActive: json['is_active'] == 1 || json['is_active'] == true,
     );
   }
 

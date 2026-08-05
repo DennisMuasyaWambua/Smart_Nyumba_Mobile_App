@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../api/api_client.dart';
 
 import '../constants/constants.dart';
 import '../models/caretaker_login_response.dart';
@@ -21,7 +22,7 @@ class CaretakerProvider {
     String loginEndpoint = Constants.CARETAKER_LOGIN_URL;
     try {
       Uri loginUri = Uri.parse(loginEndpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         loginUri,
         body: {
           'email': email,
@@ -59,7 +60,7 @@ class CaretakerProvider {
       }
 
       Uri logoutUri = Uri.parse(logoutEndpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         logoutUri,
         headers: {
           'Authorization': 'Bearer $token',
@@ -86,7 +87,7 @@ class CaretakerProvider {
     try {
       String profileUrl = Constants.CARETAKER_PROFILE_URL;
       Uri uri = Uri.parse(profileUrl);
-      final response = await http.get(uri, headers: {
+      final response = await SafeHttp.get(uri, headers: {
         'Authorization': 'Bearer $token',
       });
 
@@ -121,7 +122,7 @@ class CaretakerProvider {
     String forgotPasswordEndpoint = Constants.CARETAKER_FORGOT_PASSWORD;
     try {
       Uri forgotPasswordUri = Uri.parse(forgotPasswordEndpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         forgotPasswordUri,
         body: {'email': email},
       );
@@ -144,7 +145,7 @@ class CaretakerProvider {
     String verifyEndpoint = Constants.CARETAKER_VERIFY_CHANGE_PASSWORD;
     try {
       Uri verifyUri = Uri.parse(verifyEndpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         verifyUri,
         body: {
           'email': email,
@@ -170,7 +171,7 @@ class CaretakerProvider {
     String resendOtpEndpoint = Constants.CARETAKER_RESEND_OTP;
     try {
       Uri resendOtpUri = Uri.parse(resendOtpEndpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         resendOtpUri,
         body: {'email': email},
       );
@@ -192,7 +193,7 @@ class CaretakerProvider {
     String newPasswordEndpoint = Constants.CARETAKER_NEW_PASSWORD;
     try {
       Uri newPasswordUri = Uri.parse(newPasswordEndpoint);
-      final response = await http.post(
+      final response = await SafeHttp.post(
         newPasswordUri,
         body: {
           'email': email,

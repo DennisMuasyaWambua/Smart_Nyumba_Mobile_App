@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import '../../utils/api/api_client.dart';
 import 'dart:convert';
 
 import '../../utils/constants/constants.dart';
@@ -43,7 +44,7 @@ class _TenantManagementScreenState extends State<TenantManagementScreen> {
       }
 
       Uri uri = Uri.parse(Constants.ALL_TENANTS_URL);
-      final response = await http.get(
+      final response = await SafeHttp.get(
         uri,
         headers: {
           'Authorization': 'Bearer $token',

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../../utils/models/notification_item.dart';
+import '../../utils/providers/notifications_provider.dart';
 
 class NotificationsScreen extends StatefulWidget {
   static const routeName = "/landlord-notifications";
@@ -12,65 +16,11 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
-  // Sample notifications data - would come from API in production
-  final List<Map<String, dynamic>> _notifications = [
-    {
-      'id': 1,
-      'title': 'Payment Received',
-      'message': 'Rent payment of KSh 15,000 received from tenant@email.com',
-      'type': 'payment',
-      'date': DateTime.now().subtract(const Duration(hours: 2)),
-      'read': false,
-    },
-    {
-      'id': 2,
-      'title': 'New Tenant Registered',
-      'message': 'A new tenant has registered for House 12, Block A',
-      'type': 'tenant',
-      'date': DateTime.now().subtract(const Duration(hours: 5)),
-      'read': false,
-    },
-    {
-      'id': 3,
-      'title': 'Payment Received',
-      'message': 'Service charge payment of KSh 2,000 received',
-      'type': 'payment',
-      'date': DateTime.now().subtract(const Duration(days: 1)),
-      'read': true,
-    },
-    {
-      'id': 4,
-      'title': 'Account Update',
-      'message': 'Your landlord profile has been updated successfully',
-      'type': 'system',
-      'date': DateTime.now().subtract(const Duration(days: 2)),
-      'read': true,
-    },
-  ];
-
-  List<Map<String, dynamic>> get _unreadNotifications =>
-      _notifications.where((n) => n['read'] == false).toList();
-
-  void _markAsRead(int id) {
-    setState(() {
-      final index = _notifications.indexWhere((n) => n['id'] == id);
-      if (index != -1) {
-        _notifications[index]['read'] = true;
-      }
-    });
-  }
-
-  void _markAllAsRead() {
-    setState(() {
-      for (var notification in _notifications) {
-        notification['read'] = true;
-      }
-    });
-  }
-
-  void _deleteNotification(int id) {
-    setState(() {
-      _notifications.removeWhere((n) => n['id'] == id);
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<NotificationsProvider>().fetchNotifications();
     });
   }
 
@@ -80,6 +30,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         return Icons.payments;
       case 'tenant':
         return Icons.person_add;
+      case 'repair':
+        return Icons.build;
       case 'system':
         return Icons.info;
       default:
@@ -93,6 +45,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         return Colors.green;
       case 'tenant':
         return Colors.blue;
+      case 'repair':
+        return Colors.deepOrange;
       case 'system':
         return Colors.orange;
       default:
@@ -100,114 +54,87 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
-  Widget _buildNotificationCard(Map<String, dynamic> notification) {
-    final isRead = notification['read'] == true;
-    final type = notification['type'] ?? 'system';
-    final date = notification['date'] as DateTime;
+  Widget _buildNotificationCard(NotificationItem notification) {
+    final isRead = notification.read;
+    final type = notification.type;
 
-    return Dismissible(
-      key: Key(notification['id'].toString()),
-      direction: DismissDirection.endToStart,
-      onDismissed: (direction) {
-        _deleteNotification(notification['id']);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Notification deleted'),
-            action: SnackBarAction(
-              label: 'Undo',
-              onPressed: () {
-                setState(() {
-                  _notifications.add(notification);
-                });
-              },
-            ),
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      elevation: isRead ? 0 : 2,
+      color: isRead ? Colors.grey[50] : Colors.white,
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: _getNotificationColor(type).withOpacity(0.2),
+          child: Icon(
+            _getNotificationIcon(type),
+            color: _getNotificationColor(type),
+            size: 20,
           ),
-        );
-      },
-      background: Container(
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 20),
-        color: Colors.red,
-        child: const Icon(Icons.delete, color: Colors.white),
-      ),
-      child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        elevation: isRead ? 0 : 2,
-        color: isRead ? Colors.grey[50] : Colors.white,
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundColor: _getNotificationColor(type).withOpacity(0.2),
-            child: Icon(
-              _getNotificationIcon(type),
-              color: _getNotificationColor(type),
-              size: 20,
-            ),
-          ),
-          title: Text(
-            notification['title'] ?? 'Notification',
-            style: GoogleFonts.hind(
-              fontWeight: isRead ? FontWeight.w500 : FontWeight.w700,
-              fontSize: 14,
-            ),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 4),
-              Text(
-                notification['message'] ?? '',
-                style: GoogleFonts.hind(
-                  fontSize: 12,
-                  color: Colors.grey[700],
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                _formatDate(date),
-                style: GoogleFonts.hind(
-                  fontSize: 11,
-                  color: Colors.grey[500],
-                ),
-              ),
-            ],
-          ),
-          trailing: isRead
-              ? null
-              : Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-          onTap: () {
-            if (!isRead) {
-              _markAsRead(notification['id']);
-            }
-            _showNotificationDetails(notification);
-          },
         ),
+        title: Text(
+          notification.title,
+          style: GoogleFonts.hind(
+            fontWeight: isRead ? FontWeight.w500 : FontWeight.w700,
+            fontSize: 14,
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 4),
+            Text(
+              notification.message,
+              style: GoogleFonts.hind(
+                fontSize: 12,
+                color: Colors.grey[700],
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              _formatDate(notification.createdAt),
+              style: GoogleFonts.hind(
+                fontSize: 11,
+                color: Colors.grey[500],
+              ),
+            ),
+          ],
+        ),
+        trailing: isRead
+            ? null
+            : Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: Colors.blue,
+                  shape: BoxShape.circle,
+                ),
+              ),
+        onTap: () {
+          if (!isRead) {
+            context.read<NotificationsProvider>().markAsRead(notification.id);
+          }
+          _showNotificationDetails(notification);
+        },
       ),
     );
   }
 
-  void _showNotificationDetails(Map<String, dynamic> notification) {
+  void _showNotificationDetails(NotificationItem notification) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Row(
           children: [
             Icon(
-              _getNotificationIcon(notification['type'] ?? 'system'),
-              color: _getNotificationColor(notification['type'] ?? 'system'),
+              _getNotificationIcon(notification.type),
+              color: _getNotificationColor(notification.type),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                notification['title'] ?? 'Notification',
+                notification.title,
                 style: GoogleFonts.hind(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
@@ -221,12 +148,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              notification['message'] ?? '',
+              notification.message,
               style: GoogleFonts.hind(fontSize: 14),
             ),
             const SizedBox(height: 16),
             Text(
-              _formatDate(notification['date'] as DateTime),
+              _formatDate(notification.createdAt),
               style: GoogleFonts.hind(
                 fontSize: 12,
                 color: Colors.grey,
@@ -236,13 +163,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _deleteNotification(notification['id']);
-            },
-            child: const Text('Delete'),
-          ),
-          TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Close'),
           ),
@@ -251,7 +171,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     );
   }
 
-  String _formatDate(DateTime date) {
+  String _formatDate(DateTime? date) {
+    if (date == null) return '';
     final now = DateTime.now();
     final difference = now.difference(date);
 
@@ -268,79 +189,129 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Text(
-              'Notifications',
-              style: GoogleFonts.hind(fontWeight: FontWeight.w600),
-            ),
-            if (_unreadNotifications.isNotEmpty) ...[
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(12),
+    return Consumer<NotificationsProvider>(
+      builder: (context, provider, _) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Row(
+              children: [
+                Text(
+                  'Notifications',
+                  style: GoogleFonts.hind(fontWeight: FontWeight.w600),
                 ),
-                child: Text(
-                  _unreadNotifications.length.toString(),
-                  style: GoogleFonts.hind(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ],
-        ),
-        actions: [
-          if (_unreadNotifications.isNotEmpty)
-            TextButton(
-              onPressed: _markAllAsRead,
-              child: Text(
-                'Mark all read',
-                style: GoogleFonts.hind(fontSize: 12),
-              ),
-            ),
-        ],
-      ),
-      body: _notifications.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.notifications_none,
-                    size: 64,
-                    color: Colors.grey[400],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No notifications',
-                    style: GoogleFonts.hind(
-                      fontSize: 18,
-                      color: Colors.grey[600],
+                if (provider.unreadCount > 0) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'You\'re all caught up!',
-                    style: GoogleFonts.hind(
-                      fontSize: 14,
-                      color: Colors.grey[500],
+                    child: Text(
+                      provider.unreadCount.toString(),
+                      style: GoogleFonts.hind(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
+              ],
+            ),
+            actions: [
+              if (provider.unreadCount > 0)
+                TextButton(
+                  onPressed: provider.markAllAsRead,
+                  child: Text(
+                    'Mark all read',
+                    style: GoogleFonts.hind(fontSize: 12),
+                  ),
+                ),
+            ],
+          ),
+          body: _buildBody(provider),
+        );
+      },
+    );
+  }
+
+  Widget _buildBody(NotificationsProvider provider) {
+    if (provider.isLoading && provider.notifications.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (provider.error != null && provider.notifications.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.wifi_off, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Text(
+                provider.error!,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.hind(fontSize: 16, color: Colors.grey[600]),
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: provider.fetchNotifications,
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: provider.fetchNotifications,
+      child: provider.notifications.isEmpty
+          ? LayoutBuilder(
+              builder: (context, constraints) => SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: SizedBox(
+                  height: constraints.maxHeight,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.notifications_none,
+                          size: 64,
+                          color: Colors.grey[400],
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'No notifications',
+                          style: GoogleFonts.hind(
+                            fontSize: 18,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'You\'re all caught up!',
+                          style: GoogleFonts.hind(
+                            fontSize: 14,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             )
           : ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.symmetric(vertical: 8),
-              itemCount: _notifications.length,
+              itemCount: provider.notifications.length,
               itemBuilder: (context, index) {
-                return _buildNotificationCard(_notifications[index]);
+                return _buildNotificationCard(provider.notifications[index]);
               },
             ),
     );

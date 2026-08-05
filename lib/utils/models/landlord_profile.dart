@@ -26,8 +26,9 @@ class Profile {
   User? user;
   LandlordDetails? landlord;
   List<Property>? properties;
+  ProfileSubscription? subscription;
 
-  Profile({this.user, this.landlord, this.properties});
+  Profile({this.user, this.landlord, this.properties, this.subscription});
 
   factory Profile.fromJson(Map<String, dynamic> json) {
     return Profile(
@@ -35,6 +36,9 @@ class Profile {
       landlord: json['landlord'] != null ? LandlordDetails.fromJson(json['landlord']) : null,
       properties: json['properties'] != null
           ? (json['properties'] as List).map((p) => Property.fromJson(p)).toList()
+          : null,
+      subscription: json['subscription'] != null
+          ? ProfileSubscription.fromJson(json['subscription'])
           : null,
     );
   }
@@ -44,6 +48,47 @@ class Profile {
       'user': user?.toJson(),
       'landlord': landlord?.toJson(),
       'properties': properties?.map((p) => p.toJson()).toList(),
+      'subscription': subscription?.toJson(),
+    };
+  }
+}
+
+class ProfileSubscription {
+  String? tierLevel;
+  String? status;
+  bool? isActive;
+  bool? isPremium;
+  int? unitLimit;
+  String? expiryDate;
+
+  ProfileSubscription({
+    this.tierLevel,
+    this.status,
+    this.isActive,
+    this.isPremium,
+    this.unitLimit,
+    this.expiryDate,
+  });
+
+  factory ProfileSubscription.fromJson(Map<String, dynamic> json) {
+    return ProfileSubscription(
+      tierLevel: json['tier_level'],
+      status: json['status'],
+      isActive: json['is_active'],
+      isPremium: json['is_premium'],
+      unitLimit: json['unit_limit'],
+      expiryDate: json['expiry_date'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'tier_level': tierLevel,
+      'status': status,
+      'is_active': isActive,
+      'is_premium': isPremium,
+      'unit_limit': unitLimit,
+      'expiry_date': expiryDate,
     };
   }
 }
@@ -91,7 +136,7 @@ class LandlordDetails {
       email: json['email'],
       phoneNumber: json['phone_number'],
       idNumber: json['id_number'],
-      isActive: json['is_active'],
+      isActive: json['is_active'] == 1 || json['is_active'] == true,
     );
   }
 

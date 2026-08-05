@@ -8,15 +8,17 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../utils/constants/colors.dart';
 import '../../utils/providers/payment_provider.dart';
+import '../../utils/providers/subscription_provider.dart';
 
-enum PaymentState { loading, webview, polling, success, failed }
+enum PaymentState { loading, webview, polling, success, pending, failed }
 
-/// Generic payment WebView screen for tenant payments (rent and service charge)
+/// Generic payment WebView screen for payments (rent, service charge and
+/// landlord SaaS subscriptions)
 ///
 /// Pass the following arguments via Navigator:
-/// - paymentType: 'rent' or 'service'
-/// - redirectUrl: Pesapal payment URL
-/// - orderTrackingId: Order tracking ID from Pesapal
+/// - paymentType: 'rent', 'service' or 'subscription'
+/// - redirectUrl: gateway payment URL (Pesapal or iPay)
+/// - orderTrackingId: order tracking/order id from the gateway
 /// - email: User email (for polling payment status)
 class PaymentWebViewScreen extends StatefulWidget {
   static const routeName = '/payment-webview';
@@ -39,7 +41,6 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
   String? _paymentType;
   String? _redirectUrl;
   String? _orderTrackingId;
-  String? _email;
 
   @override
   void initState() {
@@ -59,9 +60,11 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
             log('Page finished loading: $url', name: 'PAYMENT_WEBVIEW');
 
             // Check if payment completed by monitoring URL patterns
+            // (iPay redirects back to our /subscriptions/ipay/callback/ URL)
             if (url.contains('payment-complete') ||
                 url.contains('success') ||
-                url.contains('completed')) {
+                url.contains('completed') ||
+                url.contains('ipay/callback')) {
               log('Payment may be complete, starting status check',
                   name: 'PAYMENT_WEBVIEW');
               _startPollingAfterPayment();
@@ -69,6 +72,18 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
           },
           onNavigationRequest: (NavigationRequest request) {
             log('Navigation request: ${request.url}', name: 'PAYMENT_WEBVIEW');
+
+            // Pesapal redirects back to our deep link (smartnyumba://...) once
+            // the shopper finishes checkout. A WebView can't load a custom
+            // scheme, so intercept it here to start status polling instead of
+            // letting the navigation fail.
+            if (request.url.startsWith('smartnyumba://') ||
+                request.url.contains('payment-complete')) {
+              log('Payment callback detected, starting status check',
+                  name: 'PAYMENT_WEBVIEW');
+              _startPollingAfterPayment();
+              return NavigationDecision.prevent;
+            }
             return NavigationDecision.navigate;
           },
         ),
@@ -92,7 +107,6 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
           _paymentType = args['paymentType'] as String?;
           _redirectUrl = args['redirectUrl'] as String?;
           _orderTrackingId = args['orderTrackingId'] as String?;
-          _email = args['email'] as String?;
 
           if (_redirectUrl != null) {
             _paymentState = PaymentState.webview;
@@ -131,14 +145,31 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         name: 'PAYMENT_CHECK');
 
     try {
-      var paymentProvider = Provider.of<Payments>(context, listen: false);
       int? status;
 
+      // Every status check needs the gateway order tracking id to look up the
+      // transaction. Without it we can't verify, so surface a failure instead
+      // of hanging.
+      if (_orderTrackingId == null || _orderTrackingId!.isEmpty) {
+        log('Missing orderTrackingId, cannot verify payment',
+            name: 'PAYMENT_CHECK');
+        _pollTimer?.cancel();
+        setState(() {
+          _paymentState = PaymentState.pending;
+        });
+        return;
+      }
+
       // Check payment status based on payment type
-      if (_paymentType == 'rent') {
-        status = await paymentProvider.checkRentPaymentStatus();
+      if (_paymentType == 'subscription') {
+        status = await Provider.of<SubscriptionProvider>(context, listen: false)
+            .checkSubscriptionPaymentStatus(_orderTrackingId!);
+      } else if (_paymentType == 'rent') {
+        status = await Provider.of<Payments>(context, listen: false)
+            .checkRentPaymentStatus(_orderTrackingId!);
       } else {
-        status = await paymentProvider.checkPaymentStatus();
+        status = await Provider.of<Payments>(context, listen: false)
+            .checkPaymentStatus(_orderTrackingId!);
       }
 
       log('Payment status: $status', name: 'PAYMENT_CHECK');
@@ -149,21 +180,15 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         setState(() {
           _paymentState = PaymentState.success;
         });
-
-        // Auto navigate back after 2 seconds
-        Future.delayed(const Duration(seconds: 2), () {
-          if (mounted) {
-            Navigator.of(context).pop(true); // Return success
-          }
-        });
       } else if (_pollCount >= _maxPollAttempts) {
-        // Only timeout if status is not successful after max attempts
+        // Not confirmed yet — the payment may still be processing, so show
+        // a "pending" state rather than a failure.
         _pollTimer?.cancel();
         setState(() {
-          _paymentState = PaymentState.failed;
-          _errorMessage =
-              'Payment verification timeout. Please check your transactions.';
+          _paymentState = PaymentState.pending;
         });
+      } else {
+        setState(() {}); // refresh the progress indicator
       }
     } catch (e) {
       log('Error checking payment status: ${e.toString()}',
@@ -172,8 +197,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
       if (_pollCount >= _maxPollAttempts) {
         _pollTimer?.cancel();
         setState(() {
-          _paymentState = PaymentState.failed;
-          _errorMessage = 'Unable to verify payment. Please check your transactions.';
+          _paymentState = PaymentState.pending;
         });
       }
     }
@@ -181,40 +205,42 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // Prevent back navigation during polling
-        if (_paymentState == PaymentState.polling) {
-          final shouldPop = await showDialog<bool>(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Cancel Payment?'),
-              content: const Text(
-                  'Payment is being verified. Are you sure you want to cancel?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('No'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    _pollTimer?.cancel();
-                    Navigator.of(context).pop(true);
-                  },
-                  child: const Text('Yes'),
-                ),
-              ],
-            ),
-          );
-          return shouldPop ?? false;
-        }
-        return true;
+    return PopScope(
+      // Prevent back navigation during polling without confirmation
+      canPop: _paymentState != PaymentState.polling,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Cancel Payment?'),
+            content: const Text(
+                'Payment is being verified. Are you sure you want to cancel?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Yes'),
+              ),
+            ],
+          ),
+        );
+        if (shouldPop != true || !context.mounted) return;
+        _pollTimer?.cancel();
+        Navigator.of(context).pop(false);
       },
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: royalBlue,
           title: Text(
-            _paymentType == 'rent' ? 'Pay Rent' : 'Pay Service Charge',
+            _paymentType == 'subscription'
+                ? 'Pay Subscription'
+                : _paymentType == 'rent'
+                    ? 'Pay Rent'
+                    : 'Pay Service Charge',
             style: GoogleFonts.hind(
               fontSize: 20,
               fontWeight: FontWeight.w600,
@@ -253,20 +279,96 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
                 const CircularProgressIndicator(color: royalBlue),
                 const SizedBox(height: 32),
                 Text(
-                  'Verifying Payment',
+                  'Confirming your payment',
                   style: GoogleFonts.hind(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
                     color: royalBlue,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 Text(
-                  'Please wait while we confirm your payment...',
+                  'This usually takes a few seconds. Please keep this screen open.',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.hind(
                     fontSize: 14,
                     color: Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: _pollCount / _maxPollAttempts,
+                    minHeight: 6,
+                    backgroundColor: Colors.grey.shade200,
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(royalBlue),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+
+      case PaymentState.pending:
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.hourglass_top,
+                  color: statusAmber,
+                  size: 80,
+                ),
+                const SizedBox(height: 32),
+                Text(
+                  'Payment still processing',
+                  style: GoogleFonts.hind(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    color: royalBlue,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  "We haven't received confirmation yet. If you completed the "
+                  'payment, it will reflect in your transactions shortly — '
+                  "it's safe to leave this screen.",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.hind(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: _startPollingAfterPayment,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: royalBlue,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                  ),
+                  child: Text(
+                    'Check Again',
+                    style: GoogleFonts.hind(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(
+                    'Done',
+                    style: GoogleFonts.hind(
+                      color: royalBlue,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],
@@ -297,11 +399,29 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Your ${_paymentType == 'rent' ? 'rent' : 'service charge'} payment has been received.',
+                  'Your ${_paymentType == 'subscription' ? 'subscription' : _paymentType == 'rent' ? 'rent' : 'service charge'} payment has been received.',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.hind(
                     fontSize: 14,
                     color: Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: royalBlue,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                  ),
+                  child: Text(
+                    'Done',
+                    style: GoogleFonts.hind(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],

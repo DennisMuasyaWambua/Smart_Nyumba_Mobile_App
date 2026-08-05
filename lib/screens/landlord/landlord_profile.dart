@@ -37,6 +37,7 @@ class _LandlordProfileScreenState extends State<LandlordProfileScreen> {
   void _loadProfile() {
     final profile = LandlordProvider().getProfile(token!, context);
     profile.then((value) {
+      log('Profile data received: ${value.toJson().toString()}', name: 'PROFILE DATA');
       if (mounted) {
         setState(() {
           firstName = value.profile?.user?.firstName ?? '';
@@ -46,6 +47,12 @@ class _LandlordProfileScreenState extends State<LandlordProfileScreen> {
           idNumber = value.profile?.landlord?.idNumber ?? '';
           totalProperties = value.profile?.properties?.length ?? 0;
           isLoading = false;
+
+          log('First Name: $firstName', name: 'PROFILE PARSED');
+          log('Last Name: $lastName', name: 'PROFILE PARSED');
+          log('Email: $email', name: 'PROFILE PARSED');
+          log('Mobile: $mobileNumber', name: 'PROFILE PARSED');
+          log('ID: $idNumber', name: 'PROFILE PARSED');
         });
       }
     }).catchError((error) {

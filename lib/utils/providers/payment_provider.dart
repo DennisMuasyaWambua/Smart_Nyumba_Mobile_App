@@ -4,14 +4,15 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import '../api/api_client.dart';
 
 import '../constants/constants.dart';
 import '../models/activation_payment_response.dart';
 import '../models/activation_status.dart';
 import '../models/all_transactions.dart';
-import '../models/check_payment_status.dart';
 import '../models/pay_service_charge.dart';
+import '../models/rent_summary.dart';
+import '../models/service_summary.dart';
 import './shared_preference_builder.dart';
 
 class Payments with ChangeNotifier {
@@ -24,7 +25,7 @@ class Payments with ChangeNotifier {
   int get serviceChargeAmount => _serviceChargeAmount;
   var userId;
   int paymentStatus = 0;
-  String? token = SharedPrefrenceBuilder.getUserToken;
+  String? get token => SharedPrefrenceBuilder.getUserToken;
 
   //payment of serviceCharge
   Future<PayServiceCharge> payServiceCharge(
@@ -37,11 +38,11 @@ class Payments with ChangeNotifier {
 
     Uri servicecharge = Uri.parse(Constants.PAY_SERVICE);
     // Uri serviceAmt = Uri.parse(Constants.SERVICE_FEE_AMOUNT);
-    // var serviceamt = await http.get(serviceAmt,headers:{'Authorization': 'Bearer $token'});
+    // var serviceamt = await SafeHttp.get(serviceAmt,headers:{'Authorization': 'Bearer $token'});
     // log(serviceamt.body.toString(),name: "SERVICE AMOUNT");
     // Amount amt = Amount.fromJson(json.decode(serviceamt.body));
     // log(amount.toString(),name: "SERVICE AMOUNT");
-    var response = await http.post(servicecharge, headers: {
+    var response = await SafeHttp.post(servicecharge, headers: {
       'Authorization': 'Bearer $token',
     }, body: {
       'email': userEmail,
@@ -61,23 +62,27 @@ class Payments with ChangeNotifier {
     return service;
   }
 
-  Future<int?> checkPaymentStatus() async {
+  Future<int?> checkPaymentStatus(String orderTrackingId) async {
     try {
-      String userEmail = SharedPrefrenceBuilder.getUserEmail!;
-      var check = await http.post(Uri.parse(Constants.CHECK_PAYMENT_COMPLETION), headers: {
-        'Authorization': 'Bearer $token',
-      }, body: {
-        'email': userEmail
-      });
+      var check = await SafeHttp.post(
+          Uri.parse(Constants.CHECK_PAYMENT_STATUS),
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+          body: {
+            'order_tracking_id': orderTrackingId,
+            'transaction_type': 'service',
+          });
       log(check.body.toString(), name: "THIS IS THE CHECK PAYMENT RESPONSE");
 
-      CheckPaymentStatus pStatus = CheckPaymentStatus.fromJson(jsonDecode(check.body));
-      paymentStatus = pStatus.data!.status!;
+      // CheckPaymentStatusAPIView returns the transaction status at the top
+      // level: {"transaction_id": .., "status": 0|1|2, ...}. It live-queries
+      // Pesapal, so the value is authoritative without waiting for the IPN.
+      final decoded = jsonDecode(check.body);
+      final statusValue = decoded is Map ? decoded['status'] : null;
+      paymentStatus = statusValue is int ? statusValue : 0;
 
-      log(pStatus.status.toString(), name: "PAYMENT_STATUS");
-      log(pStatus.message.toString(), name: "PAYMENT_MESSAGE");
-      log(pStatus.data.toString(),
-          name: "****************ALL TRANSACTIONS THAT ARE AVAILABLE***************");
+      log(paymentStatus.toString(), name: "PAYMENT_STATUS");
       notifyListeners();
       return paymentStatus;
     } catch (e) {
@@ -86,7 +91,7 @@ class Payments with ChangeNotifier {
     }
   }
 
-  // Payment of rent with commission deduction
+  // Payment of rent
   Future<PayServiceCharge> payRent(
       String mobileNumber, String amount, BuildContext context) async {
     String userEmail = SharedPrefrenceBuilder.getUserEmail!;
@@ -102,7 +107,7 @@ class Payments with ChangeNotifier {
     log("Month: $currentMonth, Year: $currentYear", name: "RENT PAYMENT DATE");
 
     Uri payRentUri = Uri.parse(Constants.PAY_RENT);
-    var response = await http.post(payRentUri, headers: {
+    var response = await SafeHttp.post(payRentUri, headers: {
       'Authorization': 'Bearer $token',
     }, body: {
       'email': userEmail,
@@ -124,22 +129,27 @@ class Payments with ChangeNotifier {
   }
 
   // Check rent payment status
-  Future<int?> checkRentPaymentStatus() async {
+  Future<int?> checkRentPaymentStatus(String orderTrackingId) async {
     try {
-      String userEmail = SharedPrefrenceBuilder.getUserEmail!;
-      var check = await http.post(Uri.parse(Constants.CHECK_RENT_PAYMENT_COMPLETION), headers: {
-        'Authorization': 'Bearer $token',
-      }, body: {
-        'email': userEmail
-      });
+      var check = await SafeHttp.post(
+          Uri.parse(Constants.CHECK_RENT_PAYMENT_COMPLETION),
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+          body: {
+            'order_tracking_id': orderTrackingId,
+            'transaction_type': 'rent',
+          });
 
       log(check.body.toString(), name: "CHECK RENT PAYMENT RESPONSE");
 
-      CheckPaymentStatus pStatus = CheckPaymentStatus.fromJson(jsonDecode(check.body));
-      int rentPaymentStatus = pStatus.data!.status!;
+      // CheckPaymentStatusAPIView returns the status at the top level and
+      // live-queries Pesapal, so this reflects the true payment state.
+      final decoded = jsonDecode(check.body);
+      final statusValue = decoded is Map ? decoded['status'] : null;
+      final int rentPaymentStatus = statusValue is int ? statusValue : 0;
 
-      log(pStatus.status.toString(), name: "RENT_PAYMENT_STATUS");
-      log(pStatus.message.toString(), name: "RENT_PAYMENT_MESSAGE");
+      log(rentPaymentStatus.toString(), name: "RENT_PAYMENT_STATUS");
 
       notifyListeners();
       return rentPaymentStatus;
@@ -152,7 +162,7 @@ class Payments with ChangeNotifier {
   Stream<List<Transaction>?> getAllTransactions() async* {
     try {
       log(token!, name: "User Token");
-      var allTransactions = await http.get(Uri.parse(Constants.ALL_TRANSACTIONS), headers: {
+      var allTransactions = await SafeHttp.get(Uri.parse(Constants.ALL_TRANSACTIONS), headers: {
         'Authorization': 'Bearer $token',
       });
       log(allTransactions.body.toString(), name: "ALL TRANSACTIONS");
@@ -181,7 +191,7 @@ class Payments with ChangeNotifier {
     log(mobileNumber.toString(), name: "ACTIVATION PAYMENT MOBILE");
 
     Uri activationPaymentUri = Uri.parse(Constants.INITIATE_ACTIVATION_PAYMENT);
-    var response = await http.post(activationPaymentUri, body: {
+    var response = await SafeHttp.post(activationPaymentUri, body: {
       'email': email,
       'mobile_number': mobileNumber,
     });
@@ -211,7 +221,7 @@ class Payments with ChangeNotifier {
     log(lastName.toString(), name: "PESAPAL ACTIVATION LASTNAME");
 
     Uri activationPaymentUri = Uri.parse(Constants.INITIATE_ACTIVATION_PAYMENT);
-    var response = await http.post(activationPaymentUri, body: {
+    var response = await SafeHttp.post(activationPaymentUri, body: {
       'email': email,
       'mobile_number': mobileNumber,
       'first_name': firstName,
@@ -238,7 +248,7 @@ class Payments with ChangeNotifier {
     try {
       log(email.toString(), name: "CHECK ACTIVATION STATUS EMAIL");
 
-      var check = await http.post(Uri.parse(Constants.CHECK_ACTIVATION_STATUS),
+      var check = await SafeHttp.post(Uri.parse(Constants.CHECK_ACTIVATION_STATUS),
           body: {'email': email});
 
       log(check.body.toString(), name: "CHECK ACTIVATION STATUS RESPONSE");
@@ -254,6 +264,131 @@ class Payments with ChangeNotifier {
       return activationStatus.activationStatus;
     } catch (e) {
       log(e.toString(), name: "CHECK ACTIVATION STATUS ERROR");
+      throw e.toString();
+    }
+  }
+
+  // Get monthly rent summary with balances
+  Future<RentSummaryResponse> getMonthlyRentSummary() async {
+    try {
+      log(token!, name: "User Token");
+      var response = await SafeHttp.get(
+        Uri.parse(Constants.MONTHLY_RENT_SUMMARY),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      log(response.body.toString(), name: "MONTHLY RENT SUMMARY RESPONSE");
+
+      RentSummaryResponse rentSummary =
+          RentSummaryResponse.fromJson(jsonDecode(response.body));
+
+      log(rentSummary.status.toString(), name: "RENT SUMMARY STATUS");
+      if (rentSummary.data != null) {
+        log(rentSummary.data!.summaries.length.toString(),
+            name: "NUMBER OF MONTHS");
+      }
+
+      notifyListeners();
+      return rentSummary;
+    } catch (e, stackTrace) {
+      log('Error in getMonthlyRentSummary: ${e.toString()}',
+          name: "RENT SUMMARY ERROR");
+      log('Stack trace: ${stackTrace.toString()}',
+          name: "RENT SUMMARY ERROR STACK");
+      throw e.toString();
+    }
+  }
+
+  // Get monthly service-charge summary with paid/unpaid months
+  Future<ServiceSummaryResponse> getMonthlyServiceSummary() async {
+    try {
+      var response = await SafeHttp.get(
+        Uri.parse(Constants.MONTHLY_SERVICE_SUMMARY),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      log(response.body.toString(), name: "MONTHLY SERVICE SUMMARY RESPONSE");
+
+      ServiceSummaryResponse serviceSummary =
+          ServiceSummaryResponse.fromJson(jsonDecode(response.body));
+
+      log(serviceSummary.status.toString(), name: "SERVICE SUMMARY STATUS");
+      notifyListeners();
+      return serviceSummary;
+    } catch (e, stackTrace) {
+      log('Error in getMonthlyServiceSummary: ${e.toString()}',
+          name: "SERVICE SUMMARY ERROR");
+      log('Stack trace: ${stackTrace.toString()}',
+          name: "SERVICE SUMMARY ERROR STACK");
+      throw e.toString();
+    }
+  }
+
+  // Pay for multiple months of rent at once
+  Future<PayServiceCharge> payMultiMonthRent(
+      String mobileNumber, List<Map<String, int>> months) async {
+    try {
+      log(mobileNumber.toString(), name: "MULTI-MONTH MOBILE");
+      log(months.toString(), name: "MONTHS TO PAY");
+
+      Uri payMultiMonthUri = Uri.parse(Constants.PAY_MULTI_MONTH_RENT);
+      var response = await SafeHttp.post(
+        payMultiMonthUri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'mobile_number': mobileNumber,
+          'months': months,
+          'pay_via': 'pesapal'
+        }),
+      );
+
+      log(response.body.toString(), name: "MULTI-MONTH RENT PAYMENT RESPONSE");
+
+      PayServiceCharge rentPayment =
+          PayServiceCharge.fromJson(json.decode(response.body));
+
+      log(rentPayment.status.toString(),
+          name: "MULTI-MONTH RENT PAYMENT STATUS");
+      log(rentPayment.message.toString(),
+          name: "MULTI-MONTH RENT PAYMENT MESSAGE");
+
+      notifyListeners();
+      return rentPayment;
+    } catch (e) {
+      log(e.toString(), name: "MULTI-MONTH RENT PAYMENT ERROR");
+      throw e.toString();
+    }
+  }
+
+  // Pay service charge for multiple months at once (advance or overdue)
+  Future<PayServiceCharge> payMultiMonthService(
+      String mobileNumber, List<Map<String, int>> months) async {
+    try {
+      var response = await SafeHttp.post(
+        Uri.parse(Constants.PAY_MULTI_MONTH_SERVICE),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'mobile_number': mobileNumber,
+          'months': months,
+          'pay_via': 'pesapal'
+        }),
+      );
+
+      log(response.body.toString(), name: "MULTI-MONTH SERVICE PAYMENT RESPONSE");
+
+      PayServiceCharge servicePayment =
+          PayServiceCharge.fromJson(json.decode(response.body));
+
+      notifyListeners();
+      return servicePayment;
+    } catch (e) {
+      log(e.toString(), name: "MULTI-MONTH SERVICE PAYMENT ERROR");
       throw e.toString();
     }
   }

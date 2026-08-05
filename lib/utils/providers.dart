@@ -1,8 +1,13 @@
 
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:smart_nyumba/utils/providers/account_settings_provider.dart';
 import 'package:smart_nyumba/utils/providers/all_transactions.dart';
 import 'package:smart_nyumba/utils/providers/get_all_tenants.dart';
+import 'package:smart_nyumba/utils/providers/marketplace_provider.dart';
+import 'package:smart_nyumba/utils/providers/notifications_provider.dart';
+import 'package:smart_nyumba/utils/providers/repairs_provider.dart';
+import 'package:smart_nyumba/utils/providers/subscription_provider.dart';
 import '../utils/providers/_providers.dart';
 
 List<SingleChildWidget> providers = [
@@ -13,4 +18,9 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider(create: (context) => AdminController()),
   ChangeNotifierProvider(create: (context)=>Tenancy()),
   ChangeNotifierProvider(create: (context)=>AllTransactions()),
+  ChangeNotifierProvider(create: (context) => RepairsProvider()),
+  ChangeNotifierProvider(create: (context) => MarketplaceProvider()),
+  ChangeNotifierProvider(create: (context) => NotificationsProvider()),
+  ChangeNotifierProvider(create: (context) => AccountSettingsProvider()),
+  ChangeNotifierProvider(create: (context) => SubscriptionProvider()),
 ];

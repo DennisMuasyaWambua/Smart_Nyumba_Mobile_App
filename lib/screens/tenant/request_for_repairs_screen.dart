@@ -1,8 +1,11 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quickalert/quickalert.dart';
 
 import '../../utils/models/user_profile.dart';
 import '../../utils/providers/_providers.dart';
+import '../../utils/providers/repairs_provider.dart';
 import '../../widgets/button_layout.dart';
 
 enum RepairType {
@@ -54,6 +57,8 @@ class _RequestForRepairsScreenState extends State<RequestForRepairsScreen> {
 
   String defaultBlockNumber = "";
   String defaultHouseNumber = "";
+  String? _tenantEmail;
+  bool _submitting = false;
 
   @override
   void initState() {
@@ -80,6 +85,7 @@ class _RequestForRepairsScreenState extends State<RequestForRepairsScreen> {
       defaultHouseNumber = value.profile!.propertyBlock!.houseNumber!;
       blockNumberController.text = value.profile!.propertyBlock!.block!.toString();
       houseNumberController.text = value.profile!.propertyBlock!.houseNumber!;
+      _tenantEmail = value.profile!.email ?? value.profile!.user?.email;
     });
 
     super.initState();
@@ -102,6 +108,66 @@ class _RequestForRepairsScreenState extends State<RequestForRepairsScreen> {
     houseNumberController.dispose();
     descriptionController.dispose();
     super.dispose();
+  }
+
+  Future<void> _submitRepairRequest() async {
+    if (_submitting) return;
+
+    final email = _tenantEmail ?? SharedPrefrenceBuilder.getUserEmail;
+    if (email == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Could not load your profile. Please try again.'),
+        ),
+      );
+      return;
+    }
+
+    if (descriptionController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please describe the repair needed')),
+      );
+      return;
+    }
+
+    setState(() {
+      _submitting = true;
+    });
+
+    final error = await context.read<RepairsProvider>().submitRepair(
+          email: email,
+          brokenProperty: repairType.text,
+          description: descriptionController.text.trim(),
+          blockNumber: blockNumberController.text.trim(),
+          houseNumber: houseNumberController.text.trim(),
+        );
+
+    if (!mounted) return;
+    setState(() {
+      _submitting = false;
+    });
+
+    if (error == null) {
+      descriptionController.clear();
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+        title: 'Request Sent',
+        text: 'Your repair request has been sent. '
+            'The caretaker will contact you shortly.',
+        onConfirmBtnTap: () {
+          Navigator.of(context).pop(); // close the alert
+          Navigator.of(context).pop(); // back to the dashboard
+        },
+      );
+    } else {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Request Failed',
+        text: error,
+      );
+    }
   }
 
   @override
@@ -335,14 +401,23 @@ class _RequestForRepairsScreenState extends State<RequestForRepairsScreen> {
                   padding: const EdgeInsets.only(top: 24),
                   child: ButtonLayout(
                     borderRadius: 4,
-                    text: const Text(
-                      "Submit",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    onClick: () {},
+                    text: _submitting
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text(
+                            "Submit",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                    onClick: _submitRepairRequest,
                   ),
                 )
               ],

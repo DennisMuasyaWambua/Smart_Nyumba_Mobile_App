@@ -37,11 +37,7 @@ class _LandlordPropertiesScreenState extends State<LandlordPropertiesScreen> {
           if (response['status'] == true && response['properties'] != null) {
             // Convert from API format to Property objects
             properties = (response['properties'] as List)
-                .map((p) => Property(
-                      id: p['id'],
-                      blockNumber: p['block_number'],
-                      location: p['location'],
-                    ))
+                .map((p) => Property.fromJson(p))
                 .toList();
           }
           isLoading = false;
@@ -77,8 +73,9 @@ class _LandlordPropertiesScreenState extends State<LandlordPropertiesScreen> {
             TextField(
               controller: blockController,
               decoration: const InputDecoration(
-                labelText: 'Block Number',
+                labelText: 'Property name',
                 border: OutlineInputBorder(),
+                
               ),
             ),
             const SizedBox(height: 16),
@@ -128,17 +125,26 @@ class _LandlordPropertiesScreenState extends State<LandlordPropertiesScreen> {
                   }
                 } else {
                   if (mounted) {
+                    // Show detailed error message
+                    String errorMsg = response['message'] ?? 'Failed to add property';
+                    if (response['error'] != null) {
+                      errorMsg += '\nDetails: ${response['error']}';
+                    }
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                          content: Text(response['message'] ??
-                              'Failed to add property')),
+                        content: Text(errorMsg),
+                        duration: const Duration(seconds: 5),
+                      ),
                     );
                   }
                 }
               } catch (e) {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error: ${e.toString()}')),
+                    SnackBar(
+                      content: Text('Error: ${e.toString()}'),
+                      duration: const Duration(seconds: 5),
+                    ),
                   );
                 }
               }

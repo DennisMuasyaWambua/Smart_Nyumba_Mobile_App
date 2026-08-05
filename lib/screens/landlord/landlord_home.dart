@@ -2,21 +2,28 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
+import '../../utils/constants/constants.dart';
 import '../../utils/models/landlord_profile.dart';
 import '../../utils/providers/landlord_provider.dart';
 import '../../utils/providers/shared_preference_builder.dart';
+import '../../utils/providers/subscription_provider.dart';
 import '../../widgets/landlord/dashboard_action_card.dart';
-import '../../widgets/landlord/landlord_summary_card.dart';
 import 'add_house_screen.dart';
+import 'etims_invoices_screen.dart';
 import 'financial_dashboard.dart';
 import 'landlord_profile.dart';
 import 'landlord_properties.dart';
+import 'pricing_settings_screen.dart';
 import 'register_subordinate_screen.dart';
+import 'onboard_tenant_screen.dart';
 import 'tenant_management.dart';
 import 'transaction_reports.dart';
 import 'notifications_screen.dart';
 import 'settings_screen.dart';
+import 'withholding_report_screen.dart';
 
 class LandlordHome extends StatefulWidget {
   static const routeName = "/landlord-home";
@@ -34,11 +41,50 @@ class _LandlordHomeState extends State<LandlordHome> {
   int _selectedIndex = 0;
   var token = SharedPrefrenceBuilder.getUserToken;
 
+  Map<String, dynamic>? _monthSummary;
+  bool _loadingKpi = true;
+  final NumberFormat _currencyFormat =
+      NumberFormat.currency(symbol: 'KSh ', decimalDigits: 0);
+
   @override
   void initState() {
     super.initState();
     log(token.toString(), name: "LANDLORD TOKEN");
     _loadProfile();
+    _loadSubscription();
+    _loadKpi();
+  }
+
+  Future<void> _loadKpi() async {
+    try {
+      final data =
+          await LandlordProvider().getFinancialSummary(period: 'month');
+      if (!mounted) return;
+      Map<String, dynamic>? summary;
+      if (data['status'] == true) {
+        final inner = data['data'];
+        if (inner is Map && inner['summary'] is Map<String, dynamic>) {
+          summary = inner['summary'] as Map<String, dynamic>;
+        }
+      }
+      setState(() {
+        _monthSummary = summary;
+        _loadingKpi = false;
+      });
+    } catch (e) {
+      log(e.toString(), name: "ERROR LOADING HOME KPI");
+      if (!mounted) return;
+      setState(() => _loadingKpi = false);
+    }
+  }
+
+  void _loadSubscription() {
+    Provider.of<SubscriptionProvider>(context, listen: false)
+        .fetchMySubscription()
+        .catchError((error) {
+      log(error.toString(), name: "ERROR LOADING SUBSCRIPTION");
+      return null;
+    });
   }
 
   void _loadProfile() {
@@ -61,6 +107,55 @@ class _LandlordHomeState extends State<LandlordHome> {
     });
   }
 
+  void _showUpgradeDialog() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(Icons.workspace_premium, color: Color(0xFF4A90E2)),
+            const SizedBox(width: 8),
+            Text(
+              'Premium Feature',
+              style: GoogleFonts.hind(fontWeight: FontWeight.w700),
+            ),
+          ],
+        ),
+        content: Text(
+          'This feature requires the PREMIUM plan (KES 9,999/mo). '
+          'Upgrade to unlock KRA eTIMS automation and automated 10% tax withholding.',
+          style: GoogleFonts.hind(fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(
+              'Not now',
+              style: GoogleFonts.hind(color: Colors.grey[600]),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF4A90E2),
+            ),
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              Navigator.pushNamed(context, PricingSettingsScreen.routeName)
+                  .then((_) => _loadSubscription());
+            },
+            child: Text(
+              'Upgrade',
+              style: GoogleFonts.hind(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   List<Widget> get _pages => [
         _buildDashboard(),
         const LandlordPropertiesScreen(),
@@ -75,67 +170,78 @@ class _LandlordHomeState extends State<LandlordHome> {
   }
 
   Widget _buildDashboard() {
-    return SingleChildScrollView(
-      child: Column(
+    return RefreshIndicator(
+      onRefresh: () async {
+        _loadProfile();
+        await _loadKpi();
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: Text(
-              'Landlord Dashboard',
-              style: GoogleFonts.hind(
-                fontSize: 17,
-                color: Colors.black,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Welcome $firstName $lastName',
-                style: GoogleFonts.urbanist(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
-            child: LandlordSummaryCard(
-              totalProperties: properties?.length ?? 0,
-            ),
-          ),
-          // Financial Dashboard Section
+          _buildGreeting(),
+          _buildKpiHero(),
+          // Premium Tools Section (PREMIUM tier only)
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-                Text(
-                  'Financial Overview',
-                  style: GoogleFonts.hind(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                DashboardActionCard(
-                  title: 'Financial Dashboard',
-                  icon: Icons.analytics,
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      FinancialDashboard.routeName,
-                    );
-                  },
-                ),
-              ],
+            child: Consumer<SubscriptionProvider>(
+              builder: (context, subscriptionProvider, _) {
+                final isPremium = subscriptionProvider.isPremium;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 16),
+                    Text(
+                      'Premium Tools',
+                      style: GoogleFonts.hind(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: DashboardActionCard(
+                            title: 'eTIMS Invoices',
+                            icon: Icons.receipt,
+                            locked: !isPremium,
+                            onTap: () {
+                              if (isPremium) {
+                                Navigator.pushNamed(
+                                  context,
+                                  EtimsInvoicesScreen.routeName,
+                                );
+                              } else {
+                                _showUpgradeDialog();
+                              }
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: DashboardActionCard(
+                            title: 'Tax Withholding',
+                            icon: Icons.account_balance,
+                            locked: !isPremium,
+                            onTap: () {
+                              if (isPremium) {
+                                Navigator.pushNamed(
+                                  context,
+                                  WithholdingReportScreen.routeName,
+                                );
+                              } else {
+                                _showUpgradeDialog();
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
             ),
           ),
           // Management Section
@@ -182,6 +288,17 @@ class _LandlordHomeState extends State<LandlordHome> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 16),
+                DashboardActionCard(
+                  title: 'Onboard New Tenant',
+                  icon: Icons.person_add_alt_1,
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      OnboardTenantScreen.routeName,
+                    );
+                  },
                 ),
               ],
             ),
@@ -237,7 +354,163 @@ class _LandlordHomeState extends State<LandlordHome> {
             ),
           ),
         ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildGreeting() {
+    final name = '$firstName $lastName'.trim();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Welcome back',
+              style: GoogleFonts.hind(
+                fontSize: 13,
+                color: Colors.grey.shade600,
+              ),
+            ),
+            Text(
+              name.isEmpty ? 'Landlord' : name,
+              style: GoogleFonts.hind(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                color: Constants.themePurple,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildKpiHero() {
+    final payout =
+        ((_monthSummary?['total_landlord_payout'] ?? 0) as num).toDouble();
+    final revenue =
+        ((_monthSummary?['total_revenue'] ?? 0) as num).toDouble();
+    final propertyCount = properties?.length ?? 0;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: GestureDetector(
+        onTap: () =>
+            Navigator.pushNamed(context, FinancialDashboard.routeName),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Constants.themePurple, Color(0xFF6495ED)],
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "This month's payout",
+                    style: GoogleFonts.hind(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  const Icon(Icons.arrow_forward_ios,
+                      color: Colors.white70, size: 14),
+                ],
+              ),
+              const SizedBox(height: 6),
+              _loadingKpi
+                  ? const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 6),
+                      child: SizedBox(
+                        height: 26,
+                        width: 26,
+                        child: CircularProgressIndicator(
+                            color: Colors.white, strokeWidth: 2.5),
+                      ),
+                    )
+                  : Text(
+                      _currencyFormat.format(payout),
+                      style: GoogleFonts.hind(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildHeroStat(
+                      'Collected',
+                      _loadingKpi ? '—' : _currencyFormat.format(revenue),
+                      Icons.payments_outlined,
+                    ),
+                  ),
+                  Container(
+                    width: 1,
+                    height: 34,
+                    color: Colors.white24,
+                    margin: const EdgeInsets.symmetric(horizontal: 12),
+                  ),
+                  Expanded(
+                    child: _buildHeroStat(
+                      'Properties',
+                      '$propertyCount',
+                      Icons.apartment,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeroStat(String label, String value, IconData icon) {
+    return Row(
+      children: [
+        Icon(icon, color: Colors.white70, size: 20),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                value,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.hind(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                label,
+                style: GoogleFonts.hind(
+                  fontSize: 11,
+                  color: Colors.white70,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -274,7 +547,7 @@ class _LandlordHomeState extends State<LandlordHome> {
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: const Color(0xFF4169E1),
+        selectedItemColor: Constants.themePurple,
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(

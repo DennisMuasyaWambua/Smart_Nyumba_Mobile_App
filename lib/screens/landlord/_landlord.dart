@@ -9,6 +9,7 @@ export './onboard_tenant_screen.dart';
 export './financial_dashboard.dart';
 export './tenant_management.dart';
 export './transaction_reports.dart';
+export './defaulters_screen.dart';
 export './property_details_screen.dart';
 export './notifications_screen.dart';
 export './settings_screen.dart';

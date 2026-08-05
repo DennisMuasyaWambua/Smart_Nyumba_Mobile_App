@@ -76,7 +76,21 @@ class Constants {
   static String get REGISTER_RESEND_OTP =>
       "$AUTHENTICATION_BASE_URL/resend-otp/";
   static String get RESEND_OTP => "$AUTHENTICATION_BASE_URL/user-resend-otp/";
+
+  // Forgot-password flow (universal user accounts: tenant/landlord/etc.)
+  static String get USER_FORGOT_PASSWORD =>
+      "$AUTHENTICATION_BASE_URL/user-forgot-password/";
+  static String get USER_VERIFY_RESET_OTP =>
+      "$AUTHENTICATION_BASE_URL/user-verify-change-password/";
+  static String get USER_NEW_PASSWORD =>
+      "$AUTHENTICATION_BASE_URL/user-new-password/";
   static String get USER_PROFILE => "$AUTHENTICATION_BASE_URL/user-profile/";
+
+  // Profile picture (R2) endpoints
+  static String get PROFILE_IMAGE_PRESIGN_UPLOAD =>
+      "$AUTHENTICATION_BASE_URL/profile-image/presign-upload/";
+  static String get PROFILE_IMAGE =>
+      "$AUTHENTICATION_BASE_URL/profile-image/";
   static String get ADMIN_PROFILE => "$AUTHENTICATION_BASE_URL/admin-profile/";
 
   // Landlord activation payment endpoints
@@ -140,6 +154,12 @@ class Constants {
   // Landlord transactions endpoint
   static String get LANDLORD_TRANSACTIONS =>
       "$LANDLORD_BASE_URL/landlord-transactions/";
+
+  // Landlord defaulters endpoint
+  static String get LANDLORD_DEFAULTERS =>
+      "$LANDLORD_BASE_URL/landlord-defaulters/";
+  static String get SET_PROPERTY_PENALTY =>
+      "$LANDLORD_BASE_URL/set-property-penalty/";
 
   //CARETAKER related constants
   static String get CARETAKER_BASE_URL => "$BASE_API_URL/caretaker";

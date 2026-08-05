@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import '../../utils/api/api_client.dart';
 import 'dart:convert';
 
@@ -107,11 +107,38 @@ class _TenantManagementScreenState extends State<TenantManagementScreen> {
     });
   }
 
+  /// The nested property-block map, tolerant of either JSON key casing.
+  Map<String, dynamic>? _pb(Map tenant) {
+    final pb = tenant['PropertyBlock'] ?? tenant['property_block'];
+    return pb is Map ? Map<String, dynamic>.from(pb) : null;
+  }
+
+  Map<String, dynamic>? _block(Map tenant) {
+    final b = _pb(tenant)?['block'];
+    return b is Map ? Map<String, dynamic>.from(b) : null;
+  }
+
+  String _money(dynamic v) {
+    final d = double.tryParse(v?.toString() ?? '');
+    if (d == null) return 'N/A';
+    return NumberFormat.currency(symbol: 'KES ', decimalDigits: 0).format(d);
+  }
+
+  String _date(dynamic v) {
+    final s = v?.toString() ?? '';
+    if (s.isEmpty) return 'N/A';
+    try {
+      return DateFormat('dd MMM yyyy').format(DateTime.parse(s));
+    } catch (_) {
+      return s;
+    }
+  }
+
   Widget _buildTenantCard(Map<String, dynamic> tenant) {
     final name = tenant['name'] ?? 'N/A';
     final email = tenant['email'] ?? 'N/A';
-    final houseNumber = tenant['property_block']?['house_number'] ?? 'N/A';
-    final block = tenant['property_block']?['block'] ?? 'N/A';
+    final houseNumber = _pb(tenant)?['house_number'] ?? 'N/A';
+    final block = _block(tenant)?['block_number'] ?? 'N/A';
     final isActive = tenant['is_active'] == 1;
 
     return Card(
@@ -173,65 +200,171 @@ class _TenantManagementScreenState extends State<TenantManagementScreen> {
   }
 
   void _showTenantDetails(Map<String, dynamic> tenant) {
-    showDialog(
+    final pb = _pb(tenant);
+    final block = _block(tenant);
+    final name = (tenant['name'] ?? 'Tenant').toString();
+    final active = tenant['is_active'] == 1;
+
+    showModalBottomSheet<void>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          tenant['name'] ?? 'Tenant Details',
-          style: GoogleFonts.hind(fontWeight: FontWeight.w700),
-        ),
-        content: SingleChildScrollView(
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.7,
+        minChildSize: 0.4,
+        maxChildSize: 0.92,
+        builder: (context, controller) => SingleChildScrollView(
+          controller: controller,
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
             children: [
-              _buildDetailRow('Email', tenant['email'] ?? 'N/A'),
-              _buildDetailRow('ID Number', tenant['id_number'] ?? 'N/A'),
-              _buildDetailRow(
-                'Block',
-                tenant['property_block']?['block']?.toString() ?? 'N/A',
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(2)),
+                ),
               ),
-              _buildDetailRow(
-                'House Number',
-                tenant['property_block']?['house_number'] ?? 'N/A',
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 26,
+                    backgroundColor: active
+                        ? Colors.green.shade100
+                        : Colors.grey.shade300,
+                    child: Text(
+                      name.isNotEmpty ? name[0].toUpperCase() : '?',
+                      style: GoogleFonts.hind(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        color: active ? Colors.green.shade800 : Colors.grey,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(name,
+                            style: GoogleFonts.hind(
+                                fontSize: 19,
+                                fontWeight: FontWeight.w700,
+                                color: Constants.themePurple)),
+                        Text(
+                          '${block?['block_number'] ?? 'N/A'} • House ${pb?['house_number'] ?? 'N/A'}',
+                          style: GoogleFonts.hind(
+                              fontSize: 13, color: Colors.grey.shade600),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: active ? Colors.green.shade100 : Colors.red.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(active ? 'Active' : 'Inactive',
+                        style: GoogleFonts.hind(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: active
+                                ? Colors.green.shade800
+                                : Colors.red.shade800)),
+                  ),
+                ],
               ),
-              _buildDetailRow(
-                'Status',
-                tenant['is_active'] == 1 ? 'Active' : 'Inactive',
-              ),
+              const SizedBox(height: 20),
+              _detailSection('Occupancy', [
+                _detailItem(Icons.apartment, 'Property / block',
+                    '${block?['block_number'] ?? 'N/A'}'),
+                _detailItem(Icons.location_on_outlined, 'Location',
+                    '${block?['location'] ?? 'N/A'}'),
+                _detailItem(Icons.home_outlined, 'House / unit',
+                    '${pb?['house_number'] ?? 'N/A'}'),
+                _detailItem(Icons.event_available_outlined,
+                    'Property registered', _date(block?['registration_date'])),
+              ]),
+              const SizedBox(height: 8),
+              _detailSection('Charges', [
+                _detailItem(Icons.payments_outlined, 'Monthly rent',
+                    _money(pb?['rent_charged'])),
+                _detailItem(Icons.cleaning_services_outlined,
+                    'Monthly service charge', _money(pb?['service_charge'])),
+                _detailItem(Icons.calendar_month_outlined,
+                    'Annual service charge', _money(pb?['annual_service_charge'])),
+                _detailItem(Icons.schedule_outlined, 'Rent due date',
+                    _date(pb?['rent_due_date'])),
+              ]),
+              const SizedBox(height: 8),
+              _detailSection('Tenant', [
+                _detailItem(Icons.email_outlined, 'Email',
+                    '${tenant['email'] ?? 'N/A'}'),
+                _detailItem(Icons.badge_outlined, 'ID number',
+                    '${tenant['id_number'] ?? 'N/A'}'),
+              ]),
             ],
           ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
+      ),
+    );
+  }
+
+  Widget _detailSection(String title, List<Widget> items) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title,
+              style: GoogleFonts.hind(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: Constants.themePurple)),
+          const SizedBox(height: 6),
+          ...items,
         ],
       ),
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
+  Widget _detailItem(IconData icon, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 100,
-            child: Text(
-              '$label:',
-              style: GoogleFonts.hind(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
-            ),
-          ),
+          Icon(icon, size: 18, color: Colors.grey.shade500),
+          const SizedBox(width: 10),
           Expanded(
+            child: Text(label,
+                style:
+                    GoogleFonts.hind(fontSize: 13, color: Colors.grey.shade700)),
+          ),
+          const SizedBox(width: 12),
+          Flexible(
             child: Text(
               value,
-              style: GoogleFonts.hind(fontSize: 14),
+              textAlign: TextAlign.right,
+              style: GoogleFonts.hind(
+                  fontSize: 13, fontWeight: FontWeight.w600),
             ),
           ),
         ],

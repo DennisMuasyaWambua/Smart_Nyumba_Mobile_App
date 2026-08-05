@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../utils/constants/colors.dart';
-import '../../utils/models/landlord_profile.dart';
+import '../../../widgets/profile_avatar.dart';
 import '../../utils/providers/landlord_provider.dart';
 import '../../utils/providers/shared_preference_builder.dart';
 import '../authentication/login.dart';
@@ -118,19 +118,9 @@ class _LandlordProfileScreenState extends State<LandlordProfileScreen> {
                         ),
                       ),
                       const SizedBox(height: 32),
-                      CircleAvatar(
+                      ProfileAvatar(
+                        initial: firstName.isNotEmpty ? firstName : 'L',
                         radius: 60,
-                        backgroundColor: royalBlue.withOpacity(0.1),
-                        child: Text(
-                          firstName.isNotEmpty
-                              ? firstName[0].toUpperCase()
-                              : 'L',
-                          style: GoogleFonts.hind(
-                            fontSize: 48,
-                            fontWeight: FontWeight.w700,
-                            color: royalBlue,
-                          ),
-                        ),
                       ),
                       const SizedBox(height: 16),
                       Text(

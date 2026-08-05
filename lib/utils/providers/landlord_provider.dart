@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import '../api/api_client.dart';
 
 import '../constants/constants.dart';
@@ -75,6 +74,10 @@ class LandlordProvider {
         logoutUri,
         headers: {
           'Authorization': 'Bearer $token',
+        },
+        // Backend logout blacklists tokens for this email; it 400/401s without it.
+        body: {
+          'email': SharedPrefrenceBuilder.getUserEmail ?? '',
         },
       );
 

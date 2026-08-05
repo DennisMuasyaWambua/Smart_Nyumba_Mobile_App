@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../utils/constants/constants.dart';
 import '../../../utils/providers/auth_provider.dart';
 import '../../utils/models/user_profile.dart';
 import '../../utils/providers/shared_preference_builder.dart';
 import '../../widgets/auth/logout_button.dart';
+import '../../widgets/profile_avatar.dart';
 
 class AccountProfile extends StatefulWidget {
   static const routeName = "/tenant-profile";
@@ -74,10 +74,11 @@ class _ProfileState extends State<AccountProfile> {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.10,
             ),
-            const CircleAvatar(
-              backgroundColor: Colors.amberAccent,
-              backgroundImage: AssetImage(Constants.SMART_NYUMBA_BLACK),
-              radius: 40,
+            Center(
+              child: ProfileAvatar(
+                initial: name.trim().isNotEmpty ? name.trim() : 'T',
+                radius: 46,
+              ),
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.05,

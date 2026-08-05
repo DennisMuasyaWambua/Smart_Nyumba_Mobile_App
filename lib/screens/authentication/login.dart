@@ -14,6 +14,7 @@ import '../admin/_admin.dart';
 import '../caretaker/_caretaker.dart';
 import '../landlord/_landlord.dart';
 import '../tenant/tenant_dashboard.dart';
+import 'forgot_password.dart';
 import 'register.dart';
 
 class Login extends StatefulWidget {
@@ -110,8 +111,22 @@ class _LoginState extends State<Login> {
                     EmailField(controller: _emailController),
                     const FieldLabel(labelName: "PASSWORD"),
                     PasswordField(controller: _passwordController),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () => Navigator.pushNamed(
+                            context, ForgotPasswordScreen.routeName),
+                        child: const Text(
+                          'Forgot password?',
+                          style: TextStyle(
+                            decoration: TextDecoration.none,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
                     const SizedBox(
-                      height: 40,
+                      height: 16,
                     ),
                     ButtonLayout(
                       width: double.infinity,

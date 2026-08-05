@@ -13,6 +13,7 @@ import '../../utils/providers/subscription_provider.dart';
 import '../../widgets/landlord/dashboard_action_card.dart';
 import 'add_house_screen.dart';
 import 'etims_invoices_screen.dart';
+import 'defaulters_screen.dart';
 import 'financial_dashboard.dart';
 import 'landlord_profile.dart';
 import 'landlord_properties.dart';
@@ -290,15 +291,34 @@ class _LandlordHomeState extends State<LandlordHome> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                DashboardActionCard(
-                  title: 'Onboard New Tenant',
-                  icon: Icons.person_add_alt_1,
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      OnboardTenantScreen.routeName,
-                    );
-                  },
+                Row(
+                  children: [
+                    Expanded(
+                      child: DashboardActionCard(
+                        title: 'Defaulters',
+                        icon: Icons.warning_amber_rounded,
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            DefaultersScreen.routeName,
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: DashboardActionCard(
+                        title: 'Onboard New Tenant',
+                        icon: Icons.person_add_alt_1,
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            OnboardTenantScreen.routeName,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

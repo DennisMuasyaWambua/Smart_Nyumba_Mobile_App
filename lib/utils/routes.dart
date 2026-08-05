@@ -9,6 +9,7 @@ import '../screens/tenant/_tenant.dart';
 Map<String, Widget Function(BuildContext)> routes = {
   Login.routeName: (context) => const Login(),
   Register.routeName: (context) => const Register(),
+  ForgotPasswordScreen.routeName: (context) => const ForgotPasswordScreen(),
   Otp.routeName: (context) => const Otp(),
   ActivationPaymentScreen.routeName: (context) => const ActivationPaymentScreen(),
   AccountProfile.routeName: (context) => const AccountProfile(),
@@ -37,6 +38,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   FinancialDashboard.routeName: (context) => const FinancialDashboard(),
   TenantManagementScreen.routeName: (context) => const TenantManagementScreen(),
   TransactionReportsScreen.routeName: (context) => const TransactionReportsScreen(),
+  DefaultersScreen.routeName: (context) => const DefaultersScreen(),
   PropertyDetailsScreen.routeName: (context) => const PropertyDetailsScreen(),
   NotificationsScreen.routeName: (context) => const NotificationsScreen(),
   SettingsScreen.routeName: (context) => const SettingsScreen(),

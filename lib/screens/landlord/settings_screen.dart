@@ -230,6 +230,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
 
     if (confirmed == true && mounted) {
+      final navigator = Navigator.of(context);
       // Show loading
       showDialog(
         context: context,
@@ -239,36 +240,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       );
 
+      // Backend logout is best-effort (token blacklist). Whatever it returns,
+      // we always clear the local session and return to login so the user can
+      // never get stuck signed in.
       try {
-        final success = await LandlordProvider().logout(context);
-
-        if (mounted) {
-          Navigator.pop(context); // Close loading dialog
-
-          if (success) {
-            // Clear local data
-            SharedPrefrenceBuilder.clearInvalidToken();
-
-            // Navigate to login
-            Navigator.of(context).pushNamedAndRemoveUntil(
-              Login.routeName,
-              (route) => false,
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Logout failed. Please try again.')),
-            );
-          }
-        }
+        await LandlordProvider().logout(context);
       } catch (e) {
-        if (mounted) {
-          Navigator.pop(context); // Close loading dialog
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: ${e.toString()}')),
-          );
-        }
         log(e.toString(), name: "LOGOUT ERROR");
       }
+
+      SharedPrefrenceBuilder.clearInvalidToken();
+      if (!mounted) return;
+      navigator.pop(); // Close loading dialog
+      navigator.pushNamedAndRemoveUntil(Login.routeName, (route) => false);
     }
   }
 

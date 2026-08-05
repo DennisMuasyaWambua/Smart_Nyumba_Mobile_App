@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import '../../utils/api/api_client.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
@@ -85,7 +84,8 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      List<dynamic> allTenants = data['tenants'] ?? [];
+      // Backend returns 'tenant' (singular), matching TenantManagementScreen.
+      List<dynamic> allTenants = data['tenant'] ?? [];
 
       // Filter tenants by property block
       setState(() {
@@ -151,22 +151,30 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     return Card(
       elevation: 2,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: color, size: 32),
-            const SizedBox(height: 12),
-            Text(
-              value,
-              style: GoogleFonts.hind(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: Colors.black87,
+            Icon(icon, color: color, size: 26),
+            const SizedBox(height: 8),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                value,
+                maxLines: 1,
+                style: GoogleFonts.hind(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black87,
+                ),
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             Text(
               title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: GoogleFonts.hind(
                 fontSize: 12,
                 color: Colors.grey[600],
@@ -510,7 +518,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                             crossAxisCount: 2,
                             mainAxisSpacing: 12,
                             crossAxisSpacing: 12,
-                            childAspectRatio: 1.5,
+                            childAspectRatio: 1.4,
                             children: [
                               _buildInfoCard(
                                 'Total Houses',
